@@ -68,6 +68,27 @@
                     </a>
                 </li>
                 @endcan
+
+                @can('read-bahan')
+                <li class="nav-item">
+                    <a href="{{ route('bahan.index') }}" class="nav-link {{ request()->is('bahan*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Bahan
+                        </p>
+                    </a>
+                </li>
+                @endcan
+                @can('read-satuan')
+                <li class="nav-item">
+                    <a href="{{ route('satuan.index') }}" class="nav-link {{ request()->is('satuan*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Satuan
+                        </p>
+                    </a>
+                </li>
+                @endcan
                 <li class="nav-item">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

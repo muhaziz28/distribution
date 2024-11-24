@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Bahan</h1>
+                    <h1 class="m-0">Satuan</h1>
                 </div>
                 <div class="col-sm-6">
 
@@ -24,24 +24,22 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title"></h3>
-                            @can('create-bahan')
+                            @can('create-satuan')
                             <div class="card-tools">
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add-bahan">
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add-satuan">
                                     <i class="fas fa-plus mr-2"></i>
-                                    Tambah Bahan Baru
+                                    Tambah Satuan Baru
                                 </button>
                             </div>
                             @endcan
                         </div>
 
                         <div class="card-body">
-                            <table id="bahan-table" class="table table-bordered table-striped">
+                            <table id="satuan-table" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Bahan</th>
-                                        <th>Qty</th>
-                                        <th>Satuan</th>
+                                        <th>Nama Satuan</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -49,9 +47,7 @@
                                 <tfoot>
                                     <tr>
                                         <th>No</th>
-                                        <th>Bahan</th>
-                                        <th>Qty</th>
-                                        <th>Satuan</th>
+                                        <th>Nama Satuan</th>
                                         <th></th>
                                     </tr>
                                 </tfoot>
@@ -64,10 +60,33 @@
     </div>
 </div>
 
-@can('create-bahan')
-@include('bahan.modal-create-bahan')
+@can('create-satuan')
+<div class="modal fade" id="modal-add-satuan">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('satuan.store') }}" method="POST" id="form-add-satuan">
+                @csrf
+                <div class="modal-header">
+                    <h4 class="modal-title" id="title">Tambah Satuan Baru</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="satuan">Nama Satuan</label>
+                        <input type="text" class="form-control" id="satuan" name="satuan" placeholder="Nama Satuan">
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endcan
-
 @endsection
 
 
@@ -75,6 +94,7 @@
 <script>
     $.ajaxSetup({
         headers: {
+
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
@@ -85,23 +105,17 @@
                     data: 'DT_RowIndex',
                 },
                 {
-                    data: 'nama_bahan',
-                },
-                {
-                    data: 'qty'
-                },
-                {
-                    data: 'satuan.satuan'
+                    data: 'satuan',
                 },
                 {
                     data: null,
                     render: function(data, type, row) {
                         if (data.name != 'admin') {
                             return `<div class="flex items-center justify-end space-x-2">
-                            @can('update-bahan')
+                            @can('update-satuan')
                             <button class="btn btn-sm btn-outline-primary edit" data-id="${data.id}">Edit</button>
                             @endcan
-                            @can('delete-bahan')
+                            @can('delete-satuan')
                             <button class="btn btn-sm btn-outline-danger delete" data-id="${data.id}">Delete</button>
                             @endcan
                         </div>`;
@@ -114,11 +128,11 @@
             ];
         }
 
-        var table = $('#bahan-table');
+        var table = $('#satuan-table');
         var config = {
             processing: true,
             serverSide: true,
-            ajax: "{{ route('bahan.data') }}",
+            ajax: "{{ route('satuan.data') }}",
             paging: true,
             ordering: true,
             info: false,
@@ -130,7 +144,7 @@
 
         initializeDataTable(table, config);
 
-        $('#form-add-bahan').on('submit', function(e) {
+        $('#form-add-satuan').on('submit', function(e) {
             e.preventDefault();
             var form = new FormData(this)
             $.ajax({
@@ -141,21 +155,20 @@
                 dataType: 'json',
                 contentType: false,
                 beforeSend: function() {
-                    $('#form-add-bahan button[type="submit"]').attr('disabled', true);
-                    $('#form-add-bahan button[type="submit"]').html('Loading...');
+                    $('#form-add-satuan button[type="submit"]').attr('disabled', true);
+                    $('#form-add-satuan button[type="submit"]').html('Loading...');
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#modal-add-bahan').modal('hide');
-                        $('#form-add-bahan')[0].reset();
+                        $('#modal-add-satuan').modal('hide');
+                        $('#form-add-satuan')[0].reset();
                         toastr.success(response.message);
                         table.DataTable().ajax.reload(null, false);
-                        $('.satuan_id').val(null).trigger('change');
                     } else {
                         toastr.error(response.message);
                     }
-                    $('#form-add-bahan button[type="submit"]').attr('disabled', false);
-                    $('#form-add-bahan button[type="submit"]').html('Save');
+                    $('#form-add-satuan button[type="submit"]').attr('disabled', false);
+                    $('#form-add-satuan button[type="submit"]').html('Save');
                 }
 
             })
@@ -165,18 +178,18 @@
         $(document).on('click', '.delete', function() {
             var id = $(this).data('id')
             console.log(id);
-            var result = confirm('Apakah anda ingin menghapus bahan ini?');
+            var result = confirm('Apakah anda ingin menghapus satuan ini?');
 
             if (result) {
                 $.ajax({
-                    url: '{{ route("bahan.destroy") }}',
+                    url: '{{ route("satuan.destroy") }}',
                     method: "DELETE",
                     data: {
                         id: id
                     },
                     success: function(response) {
                         toastr.success(response.message);
-                        table.DataTable().ajax.reload();
+                        table.DataTable().ajax.reload(null, false);
                     }
                 })
             }
@@ -186,51 +199,22 @@
             e.preventDefault()
             var data = table.DataTable().row($(this).closest('tr')).data();
             console.log(data)
-            $('#modal-add-bahan').modal('show');
-            $('#modal-add-bahan').find('#title').text('Edit Bahan');
-            $('#form-add-bahan').attr('action', '{{ route("bahan.update") }}');
-            $('#form-add-bahan').append('<input type="hidden" name="_method" value="PUT">');
-            $('#form-add-bahan').append('<input type="hidden" name="id" value="' + data.id + '">');
-            $('#nama_bahan').val(data.nama_bahan);
-            $('#qty').val(data.qty);
-            var newOption = new Option(data.satuan.satuan, data.satuan_id, true, true);
 
-
-            $('#satuan_id').append(newOption).trigger('change');
-
+            $('#modal-add-satuan').modal('show');
+            $('#modal-add-satuan').find('#title').text('Edit Satuan');
+            $('#form-add-satuan').attr('action', '{{ route("satuan.update") }}');
+            $('#form-add-satuan').append('<input type="hidden" name="_method" value="PUT">');
+            $('#form-add-satuan').append('<input type="hidden" name="id" value="' + data.id + '">');
+            $('#satuan').val(data.satuan);
         })
 
-        $('#modal-add-bahan').on('hidden.bs.modal', function() {
-            $('#modal-add-bahan').find('#title').text('Tambah Bahan Baru');
-            $('#form-add-bahan input[name="_method"]').remove();
-            $('#form-add-bahan input[name="id"]').remove();
-            $('#form-add-bahan').attr('action', '{{ route("bahan.store") }}');
-            $('#form-add-bahan')[0].reset();
-
-            $('#satuan_id').val(null).trigger('change');
+        $('#modal-add-satuan').on('hidden.bs.modal', function() {
+            $('#modal-add-satuan').find('#title').text('Tambah Satuan Baru');
+            $('#form-add-satuan input[name="_method"]').remove();
+            $('#form-add-satuan input[name="id"]').remove();
+            $('#form-add-satuan').attr('action', '{{ route("satuan.store") }}');
+            $('#form-add-satuan')[0].reset();
         })
-
-        $('#satuan_id').select2({
-            ajax: {
-                url: "{{ route('satuan.data') }}",
-                dataType: 'json',
-                data: function(params) {
-                    return {
-                        search: params.term,
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: data.data.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.satuan,
-                            };
-                        })
-                    };
-                }
-            }
-        });
     })
 </script>
 @endpush

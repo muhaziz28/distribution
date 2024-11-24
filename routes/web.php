@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\BahanController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -53,5 +55,21 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'store')->name('user.store');
         Route::put('update', 'update')->name('user.update');
         Route::delete('destroy', 'destroy')->name('user.destroy');
+    });
+
+    Route::controller(BahanController::class)->prefix('bahan')->group(function () {
+        Route::get('', 'index')->name('bahan.index');
+        Route::get('data', 'data')->name('bahan.data');
+        Route::post('store', 'store')->name('bahan.store');
+        Route::put('update', 'update')->name('bahan.update');
+        Route::delete('destroy', 'destroy')->name('bahan.destroy');
+    });
+
+    Route::controller(SatuanController::class)->prefix('satuan')->group(function () {
+        Route::get('', 'index')->name('satuan.index');
+        Route::get('data', 'data')->name('satuan.data');
+        Route::post('store', 'store')->name('satuan.store');
+        Route::put('update', 'update')->name('satuan.update');
+        Route::delete('destroy', 'destroy')->name('satuan.destroy');
     });
 });
