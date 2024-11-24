@@ -4,6 +4,7 @@ use App\Http\Controllers\BahanController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SatuanController;
+use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -72,5 +73,13 @@ Route::middleware('auth')->group(function () {
         Route::put('update', 'update')->name('satuan.update');
         Route::delete('destroy', 'destroy')->name('satuan.destroy');
         Route::post('restore', 'restore')->name('satuan.restore');
+    });
+
+    Route::controller(TukangController::class)->prefix('tukang')->group(function () {
+        Route::get('', 'index')->name('tukang.index');
+        Route::get('data', 'data')->name('tukang.data');
+        Route::post('store', 'store')->name('tukang.store');
+        Route::put('update', 'update')->name('tukang.update');
+        Route::delete('destroy', 'destroy')->name('tukang.destroy');
     });
 });

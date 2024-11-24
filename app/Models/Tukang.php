@@ -11,6 +11,8 @@ class Tukang extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'tukang';
+
     protected $fillable = [
         'nama_tukang',
         'no_hp',

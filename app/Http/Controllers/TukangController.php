@@ -22,10 +22,10 @@ class TukangController extends Controller
 
     public function data()
     {
-        if (!Gate::allows('read-tukangs')) {
+        if (!Gate::allows('read-tukang')) {
             return response()->json([
                 'success' => false,
-                'message' => 'You do not have permission to read tukangs'
+                'message' => 'You are unauthorized to access this resource',
             ]);
         }
         $tukangs = Tukang::all();
@@ -36,16 +36,16 @@ class TukangController extends Controller
 
     public function store(Request $request)
     {
-        if (!Gate::allows('create-tukangs')) {
+        if (!Gate::allows('create-tukang')) {
             return response()->json([
                 'success' => false,
-                'message' => 'You do not have permission to create tukangs'
+                'message' => 'You are unauthorized to access this resource',
             ]);
         }
         try {
             $validate = Validator::make($request->all(), [
                 'nama_tukang' => 'required|string|max:255',
-                'no_hp' => 'required|digits:12',
+                'no_hp' => 'required|max_digits:12',
             ], [
                 'name.required' => 'The nama tukang field is required',
                 'no_hp.required' => 'The nomor hp field is required',
@@ -81,10 +81,10 @@ class TukangController extends Controller
 
     public function update(Request $request)
     {
-        if (!Gate::allows('update-tukangs')) {
+        if (!Gate::allows('update-tukang')) {
             return response()->json([
                 'success' => false,
-                'message' => 'You do not have permission to update tukangs'
+                'message' => 'You are unauthorized to access this resource',
             ]);
         }
         try {
@@ -135,10 +135,10 @@ class TukangController extends Controller
 
     public function destroy(Request $request)
     {
-        if (!Gate::allows('delete-tukangs')) {
+        if (!Gate::allows('delete-tukang')) {
             return response()->json([
                 'success' => false,
-                'message' => 'You do not have permission to delete tukangs'
+                'message' => 'You are unauthorized to access this resource',
             ]);
         }
         try {
