@@ -27,5 +27,9 @@ class PermissionsSeeder extends Seeder
         foreach ($listPermissions as $permission) {
             \Spatie\Permission\Models\Permission::create(['name' => $permission]);
         }
+
+        // list custom permission
+        $bahanPermission = ["create-bahan", "read-bahan", "update-bahan", 'delete-bahan'];
+        $satuanPermission = ["create-satuan", "read-satuan", "update-satuan", 'delete-satuan'];
     }
 }

@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Permission</h1>
+                    <h1 class="m-0">Satuan</h1>
                 </div>
                 <div class="col-sm-6">
 
@@ -23,23 +23,23 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Permission</h3>
+                            <h3 class="card-title"></h3>
+                            @can('create-satuan')
                             <div class="card-tools">
-                                @can('create-permissions')
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add-permission">
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add-satuan">
                                     <i class="fas fa-plus mr-2"></i>
-                                    Add New Permission
+                                    Tambah Satuan Baru
                                 </button>
-                                @endcan
                             </div>
+                            @endcan
                         </div>
 
                         <div class="card-body">
-                            <table id="permission-table" class="table table-bordered table-striped">
+                            <table id="satuan-table" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th width="40%">Permission Name</th>
+                                        <th>Nama Satuan</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -47,7 +47,7 @@
                                 <tfoot>
                                     <tr>
                                         <th>No</th>
-                                        <th>Permission Name</th>
+                                        <th>Nama Satuan</th>
                                         <th></th>
                                     </tr>
                                 </tfoot>
@@ -60,22 +60,22 @@
     </div>
 </div>
 
-@can('create-permissions')
-<div class="modal fade" id="modal-add-permission">
+@can('create-satuan')
+<div class="modal fade" id="modal-add-satuan">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="{{ route('permission.store') }}" method="POST" id="form-add-permission">
+            <form action="{{ route('satuan.store') }}" method="POST" id="form-add-satuan">
                 @csrf
                 <div class="modal-header">
-                    <h4 class="modal-title" id="title">Add New Permission</h4>
+                    <h4 class="modal-title" id="title">Tambah Satuan Baru</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="permission">Permission Name</label>
-                        <input type="text" class="form-control" id="permission" name="permission" placeholder="Permission name">
+                        <label for="satuan">Nama Satuan</label>
+                        <input type="text" class="form-control" id="satuan" name="satuan" placeholder="Nama Satuan">
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -89,10 +89,12 @@
 @endcan
 @endsection
 
+
 @push('scripts')
 <script>
     $.ajaxSetup({
         headers: {
+
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
@@ -101,46 +103,48 @@
         function defineColumns() {
             return [{
                     data: 'DT_RowIndex',
-                    class: 'table-td'
                 },
                 {
-                    data: 'name',
-                    class: 'table-td'
+                    data: 'satuan',
                 },
                 {
                     data: null,
                     render: function(data, type, row) {
-                        return `<div class="flex items-center justify-end space-x-2">
-                        @can('update-permissions')
+                        if (data.name != 'admin') {
+                            return `<div class="flex items-center justify-end space-x-2">
+                            @can('update-satuan')
                             <button class="btn btn-sm btn-outline-primary edit" data-id="${data.id}">Edit</button>
-                        @endcan
-                        @can('delete-permissions')
+                            @endcan
+                            @can('delete-satuan')
                             <button class="btn btn-sm btn-outline-danger delete" data-id="${data.id}">Delete</button>
-                        @endcan
+                            @endcan
                         </div>`;
+                        }
+
+                        return '';
+
                     }
                 }
-            ]
+            ];
         }
 
-        var table = $('#permission-table');
+        var table = $('#satuan-table');
         var config = {
             processing: true,
             serverSide: true,
-            ajax: "{{ route('permission.data') }}",
+            ajax: "{{ route('satuan.data') }}",
             paging: true,
             ordering: true,
             info: false,
             searching: true,
             lengthChange: true,
             lengthMenu: [10, 25, 50, 100],
-
             columns: defineColumns()
         };
 
         initializeDataTable(table, config);
 
-        $('#form-add-permission').on('submit', function(e) {
+        $('#form-add-satuan').on('submit', function(e) {
             e.preventDefault();
             var form = new FormData(this)
             $.ajax({
@@ -151,38 +155,40 @@
                 dataType: 'json',
                 contentType: false,
                 beforeSend: function() {
-                    $('#form-add-permission button[type="submit"]').attr('disabled', true);
-                    $('#form-add-permission button[type="submit"]').html('<iconify-icon class="text-xl spin-slow ltr:mr-2 rtl:ml-2 relative top-[1px]" icon="line-md:loading-twotone-loop"></iconify-icon><span>Loading</span>');
+                    $('#form-add-satuan button[type="submit"]').attr('disabled', true);
+                    $('#form-add-satuan button[type="submit"]').html('Loading...');
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#modal-add-permission').modal('hide');
-                        $('#form-add-permission')[0].reset();
+                        $('#modal-add-satuan').modal('hide');
+                        $('#form-add-satuan')[0].reset();
                         toastr.success(response.message);
                         table.DataTable().ajax.reload(null, false);
                     } else {
                         toastr.error(response.message);
                     }
-                    $('#form-add-permission button[type="submit"]').attr('disabled', false);
-                    $('#form-add-permission button[type="submit"]').html('Submit');
+                    $('#form-add-satuan button[type="submit"]').attr('disabled', false);
+                    $('#form-add-satuan button[type="submit"]').html('Save');
                 }
 
             })
         })
 
+
         $(document).on('click', '.delete', function() {
             var id = $(this).data('id')
             console.log(id);
-            var result = confirm('Are you sure you want to delete this permission?');
+            var result = confirm('Apakah anda ingin menghapus satuan ini?');
 
             if (result) {
                 $.ajax({
-                    url: '{{ route("permission.destroy") }}',
+                    url: '{{ route("satuan.destroy") }}',
                     method: "DELETE",
                     data: {
                         id: id
                     },
                     success: function(response) {
+                        toastr.success(response.message);
                         table.DataTable().ajax.reload(null, false);
                     }
                 })
@@ -192,21 +198,22 @@
         $(document).on('click', '.edit', function(e) {
             e.preventDefault()
             var data = table.DataTable().row($(this).closest('tr')).data();
+            console.log(data)
 
-            $('#modal-add-permission').modal('show');
-            $('#modal-add-permission').find('#title').text('Edit Permission');
-            $('#form-add-permission').attr('action', '{{ route("permission.update") }}');
-            $('#form-add-permission').append('<input type="hidden" name="_method" value="PUT">');
-            $('#form-add-permission').append('<input type="hidden" name="id" value="' + data.id + '">');
-            $('#permission').val(data.name);
+            $('#modal-add-satuan').modal('show');
+            $('#modal-add-satuan').find('#title').text('Edit Satuan');
+            $('#form-add-satuan').attr('action', '{{ route("satuan.update") }}');
+            $('#form-add-satuan').append('<input type="hidden" name="_method" value="PUT">');
+            $('#form-add-satuan').append('<input type="hidden" name="id" value="' + data.id + '">');
+            $('#satuan').val(data.satuan);
         })
 
-        $('#modal-add-permission').on('hidden.bs.modal', function() {
-            $('#modal-add-permission').find('#title').text('Add Permission');
-            $('#form-add-permission input[name="_method"]').remove();
-            $('#form-add-permission input[name="id"]').remove();
-            $('#form-add-permission').attr('action', '{{ route("permission.store") }}');
-            $('#form-add-permission')[0].reset();
+        $('#modal-add-satuan').on('hidden.bs.modal', function() {
+            $('#modal-add-satuan').find('#title').text('Tambah Satuan Baru');
+            $('#form-add-satuan input[name="_method"]').remove();
+            $('#form-add-satuan input[name="id"]').remove();
+            $('#form-add-satuan').attr('action', '{{ route("satuan.store") }}');
+            $('#form-add-satuan')[0].reset();
         })
     })
 </script>
