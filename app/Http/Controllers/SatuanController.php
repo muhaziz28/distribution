@@ -21,10 +21,14 @@ class SatuanController extends Controller
         return view('error.unauthorize');
     }
 
-    public function data()
+    public function data(Request $request)
     {
         if (Gate::allows('read-satuan')) {
-            $result = Satuan::get();
+            $result = Satuan::query()
+                ->when($request->has('search') && is_string($request->search), function ($query) use ($request) {
+                    $query->where('satuan', 'like', '%' . $request->search . '%');
+                })
+                ->get();
             return DataTables::of($result)->addIndexColumn()->toJson();
         } else {
             return response()->json([
@@ -36,85 +40,60 @@ class SatuanController extends Controller
 
     public function store(Request $request)
     {
-        if (Gate::allows('create-satuan')) {
-            try {
-                $validationResponse = $this->validateRequest($request);
-                if ($validationResponse) {
-                    return $validationResponse;
-                }
-
-                $exitingOnTrash = Satuan::withTrashed()->where('satuan', $request->satuan)->first();
-
-                if ($exitingOnTrash) {
-                    $exitingOnTrash->restore();
-
-                    return response()->json([
-                        'success' => true,
-                        'message' => $exitingOnTrash->satuan . ' berhasil ditambahkan'
-                    ]);
-                }
-                $exiting = Satuan::where('satuan', $request->satuan)->first();
-                if (!$exiting) {
-                    $result = Satuan::create([
-                        'satuan' => $request->satuan,
-                    ]);
-
-                    return response()->json([
-                        'success' => true,
-                        'message' => $result->satuan . ' berhasil ditambahkan',
-                        'data' => null
-                    ]);
-                } else {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Nama satuan sudah digunakan'
-                    ]);
-                }
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $e->getMessage()
-                ]);
-            }
-        } else {
+        if (!Gate::allows('create-satuan')) {
             return response()->json([
                 'success' => false,
                 'message' => 'You are unauthorized to access this resource'
             ]);
         }
+
+        try {
+            $validationResponse = $this->validateRequest($request);
+            if ($validationResponse) return $validationResponse;
+
+            $existingSatuan = Satuan::findIncludingTrashed($request->satuan)->first();
+
+            if ($existingSatuan) {
+                if ($existingSatuan->trashed()) {
+                    $existingSatuan->restore();
+                    $message = $existingSatuan->satuan . ' berhasil dipulihkan.';
+                } else {
+                    $message = 'Nama satuan sudah digunakan.';
+                    return response()->json(['success' => false, 'message' => $message]);
+                }
+            } else {
+                $newSatuan = Satuan::create(['satuan' => $request->satuan]);
+                $message = $newSatuan->satuan . ' berhasil ditambahkan.';
+            }
+
+            return response()->json(['success' => true, 'message' => $message]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
+
 
     public function update(Request $request)
     {
         if (Gate::allows('update-satuan')) {
             try {
-                $validationResponse = $this->validateRequest($request);
-                if ($validationResponse) {
-                    return $validationResponse;
-                }
+                $satuan = Satuan::findOrFail($request->id);
 
-                $satuan = Satuan::find($request->id);
-                if ($satuan) {
-                    $exiting = Satuan::where('satuan', $request->satuan)->first();
-                    if ($exiting) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'Nama satuan sudah digunakan'
-                        ]);
-                    }
-                    $satuan->satuan = $request->satuan;
-                    $satuan->save();
-                } else {
+                $isDuplicate = Satuan::checkDuplicate($request->satuan, $satuan->id)->exists();
+                if ($isDuplicate) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Satuan tidak ditemukan'
+                        'message' => 'Nama satuan sudah digunakan'
                     ]);
                 }
 
+                $satuan->update([
+                    'satuan' => $request->satuan
+                ]);
+
                 return response()->json([
                     'success' => true,
-                    'message' => $satuan->satuan . ' berhasil diupdate',
-                    'data' => null
+                    'message' => $satuan->satuan . ' berhasil diupdate'
                 ]);
             } catch (\Exception $e) {
                 return response()->json([

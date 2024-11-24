@@ -30,6 +30,13 @@ class PermissionsSeeder extends Seeder
 
         // list custom permission
         $bahanPermission = ["create-bahan", "read-bahan", "update-bahan", 'delete-bahan'];
+        foreach ($bahanPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
+
         $satuanPermission = ["create-satuan", "read-satuan", "update-satuan", 'delete-satuan'];
+        foreach ($satuanPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
     }
 }

@@ -13,4 +13,17 @@ class Satuan extends Model
     protected $fillable = [
         "satuan"
     ];
+
+    public function scopeFindIncludingTrashed($query, $satuan)
+    {
+        return $query->withTrashed()->where('satuan', $satuan);
+    }
+
+    public function scopeCheckDuplicate($query, $satuan, $excludeId = null)
+    {
+        return $query->where('satuan', $satuan)
+            ->when($excludeId, function ($q) use ($excludeId) {
+                $q->where('id', '!=', $excludeId);
+            });
+    }
 }

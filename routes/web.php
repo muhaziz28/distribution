@@ -61,6 +61,8 @@ Route::middleware('auth')->group(function () {
         Route::get('', 'index')->name('bahan.index');
         Route::get('data', 'data')->name('bahan.data');
         Route::post('store', 'store')->name('bahan.store');
+        Route::put('update', 'update')->name('bahan.update');
+        Route::delete('destroy', 'destroy')->name('bahan.destroy');
     });
 
     Route::controller(SatuanController::class)->prefix('satuan')->group(function () {
