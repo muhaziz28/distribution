@@ -68,7 +68,16 @@
                     </a>
                 </li>
                 @endcan
-
+                @can('read-tukang')
+                <li class="nav-item">
+                    <a href="{{ route('tukang.index') }}" class="nav-link {{ request()->is('tukang*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Tukang
+                        </p>
+                    </a>
+                </li>
+                @endcan
                 @can('read-bahan')
                 <li class="nav-item">
                     <a href="{{ route('bahan.index') }}" class="nav-link {{ request()->is('bahan*') ? 'active' : '' }}">
