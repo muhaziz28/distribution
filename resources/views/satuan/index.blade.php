@@ -35,7 +35,7 @@
                         </div>
 
                         <div class="card-body">
-                            <table id="satuan-table" class="table table-bordered table-striped">
+                            <table id="satuan-table" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                     <tr>
                                         <th>No</th>

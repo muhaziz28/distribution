@@ -14,6 +14,15 @@ class Satuan extends Model
         "satuan"
     ];
 
+    public function scopeSearch($query)
+    {
+        if (!empty($search)) {
+            return $query->where('satuan', 'like', '%' . $search . '%');
+        }
+
+        return $query;
+    }
+
     public function scopeFindIncludingTrashed($query, $satuan)
     {
         return $query->withTrashed()->where('satuan', $satuan);
