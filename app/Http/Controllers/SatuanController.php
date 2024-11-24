@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Satuan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -133,6 +134,50 @@ class SatuanController extends Controller
             ]);
         }
     }
+
+    public function restore(Request $request)
+    {
+        if (!Gate::allows('create-satuan')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are unauthorized to access this resource',
+            ]);
+        }
+
+        Log::info($request->all());
+        try {
+            $satuan = Satuan::withTrashed()
+                ->where('satuan', $request->satuan)
+                ->first();
+
+            if (!$satuan) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data satuan tidak ditemukan.',
+                ]);
+            }
+
+            if (!$satuan->trashed()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data satuan sudah aktif.',
+                ]);
+            }
+
+            $satuan->restore();
+
+            return response()->json([
+                'success' => true,
+                'message' => $satuan->satuan . ' berhasil dipulihkan.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
 
     private function validateRequest($request)
     {

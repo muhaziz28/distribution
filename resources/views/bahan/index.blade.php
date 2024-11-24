@@ -35,7 +35,7 @@
                         </div>
 
                         <div class="card-body">
-                            <table id="bahan-table" class="table table-bordered table-striped">
+                            <table id="bahan-table" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -91,13 +91,19 @@
                     data: 'qty'
                 },
                 {
-                    data: 'satuan.satuan'
+                    data: 'satuan',
+                    render: function(data, type, row) {
+                        if (data.deleted_at != null) {
+                            return data.satuan + ` <span class="badge bg-danger"><div class="fa fa-times-circle"></div> Satuan sudah dihapus</span>  <button class="btn btn-xs btn-info restore-satuan"> Ketuk untuk menambahkan kembali</button>`
+                        }
+
+                        return data.satuan
+                    }
                 },
                 {
                     data: null,
                     render: function(data, type, row) {
-                        if (data.name != 'admin') {
-                            return `<div class="flex items-center justify-end space-x-2">
+                        return `<div class="flex items-center justify-end space-x-2">
                             @can('update-bahan')
                             <button class="btn btn-sm btn-outline-primary edit" data-id="${data.id}">Edit</button>
                             @endcan
@@ -105,9 +111,7 @@
                             <button class="btn btn-sm btn-outline-danger delete" data-id="${data.id}">Delete</button>
                             @endcan
                         </div>`;
-                        }
 
-                        return '';
 
                     }
                 }
@@ -231,6 +235,46 @@
                 }
             }
         });
+        $(document).on('click', '.restore-satuan', function(e) {
+            e.preventDefault()
+            var data = table.DataTable().row($(this).closest('tr')).data();
+            console.log(data.satuan);
+
+            if (!confirm('Apakah Anda yakin ingin mengembalikan data ini?')) {
+                return;
+            }
+
+            var $this = $(this);
+            $.ajax({
+                url: "{{ route('satuan.restore') }}",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    satuan: data.satuan.satuan
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    $this.attr('disabled', true).text('Loading...');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        table.DataTable().ajax.reload(null, false);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                    toastr.error('Terjadi kesalahan saat memproses permintaan.');
+                },
+                complete: function() {
+                    $this.attr('disabled', false).text('Restore');
+                }
+            });
+
+        })
+
     })
 </script>
 @endpush

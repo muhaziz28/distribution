@@ -131,6 +131,7 @@ class BahanController extends Controller
         }
     }
 
+
     private function validateRequest($request)
     {
         $validate = Validator::make($request->all(), [

@@ -71,5 +71,6 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'store')->name('satuan.store');
         Route::put('update', 'update')->name('satuan.update');
         Route::delete('destroy', 'destroy')->name('satuan.destroy');
+        Route::post('restore', 'restore')->name('satuan.restore');
     });
 });
