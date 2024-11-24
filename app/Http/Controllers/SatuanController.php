@@ -25,11 +25,8 @@ class SatuanController extends Controller
     public function data(Request $request)
     {
         if (Gate::allows('read-satuan')) {
-            $result = Satuan::query()
-                ->when($request->has('search') && is_string($request->search), function ($query) use ($request) {
-                    $query->where('satuan', 'like', '%' . $request->search . '%');
-                })
-                ->get();
+            $result = Satuan::search($request->search)->get();
+
             return DataTables::of($result)->addIndexColumn()->toJson();
         } else {
             return response()->json([
