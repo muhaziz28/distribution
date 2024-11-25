@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Permission\Models\Role;
+
+class Project extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $table = 'project';
+
+    protected $fillable = [
+        'tahun_anggaran',
+        'kegiatan',
+        'pekerjaan',
+        'lokasi',
+        'status',
+    ];
+
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+}

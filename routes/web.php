@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BahanController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\TukangController;
@@ -81,5 +82,13 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'store')->name('tukang.store');
         Route::put('update', 'update')->name('tukang.update');
         Route::delete('destroy', 'destroy')->name('tukang.destroy');
+    });
+    
+    Route::controller(ProjectController::class)->prefix('project')->group(function () {
+        Route::get('', 'index')->name('project.index');
+        Route::get('data', 'data')->name('project.data');
+        Route::post('store', 'store')->name('project.store');
+        Route::put('update', 'update')->name('project.update');
+        Route::delete('destroy', 'destroy')->name('project.destroy');
     });
 });
