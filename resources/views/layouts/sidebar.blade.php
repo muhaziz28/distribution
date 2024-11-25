@@ -59,6 +59,16 @@
                     </a>
                 </li>
                 @endcan
+                @can('read-vendor')
+                <li class="nav-item">
+                    <a href="{{ route('vendor.index') }}" class="nav-link {{ request()->is('vendor*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Vendor
+                        </p>
+                    </a>
+                </li>
+                @endcan
                 @can('read-bahan')
                 <li class="nav-header">MASTER BAHAN</li>
                 @endcan

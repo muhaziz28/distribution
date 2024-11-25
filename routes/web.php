@@ -6,6 +6,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -81,5 +82,13 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'store')->name('tukang.store');
         Route::put('update', 'update')->name('tukang.update');
         Route::delete('destroy', 'destroy')->name('tukang.destroy');
+    });
+
+    Route::controller(VendorController::class)->prefix('vendor')->group(function () {
+        Route::get('', 'index')->name('vendor.index');
+        Route::get('data', 'data')->name('vendor.data');
+        Route::post('store', 'store')->name('vendor.store');
+        Route::put('update', 'update')->name('vendor.update');
+        Route::delete('destroy', 'destroy')->name('vendor.destroy');
     });
 });
