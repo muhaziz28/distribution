@@ -55,7 +55,6 @@ class BahanController extends Controller
             } else {
                 $newBahan = Bahan::create([
                     'nama_bahan' => $request->nama_bahan,
-                    'qty'        => $request->qty,
                     'satuan_id'  => $request->satuan_id,
                 ]);
                 $message = $newBahan->nama_bahan . ' berhasil ditambahkan.';
@@ -84,7 +83,6 @@ class BahanController extends Controller
 
                 $bahan->update([
                     'nama_bahan' => $request->nama_bahan,
-                    'qty'         => $request->qty ?? 0,
                     'satuan_id'   => $request->satuan_id,
                 ]);
 
@@ -136,11 +134,9 @@ class BahanController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'nama_bahan'    => 'required',
-            'qty'           => 'integer',
             'satuan_id'     => 'required|integer'
         ], [
             'nama_bahan.required'   => 'Nama bahan tidak boleh kosong',
-            'qty.integer'           => 'Qty harus berupa angka',
             'satuan_id.required'    => 'Satuan tidak boleh kosong'
         ]);
 

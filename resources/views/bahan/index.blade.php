@@ -40,7 +40,6 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Bahan</th>
-                                        <th>Qty</th>
                                         <th>Satuan</th>
                                         <th></th>
                                     </tr>
@@ -50,7 +49,6 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Bahan</th>
-                                        <th>Qty</th>
                                         <th>Satuan</th>
                                         <th></th>
                                     </tr>
@@ -86,9 +84,6 @@
                 },
                 {
                     data: 'nama_bahan',
-                },
-                {
-                    data: 'qty'
                 },
                 {
                     data: 'satuan',
@@ -196,7 +191,6 @@
             $('#form-add-bahan').append('<input type="hidden" name="_method" value="PUT">');
             $('#form-add-bahan').append('<input type="hidden" name="id" value="' + data.id + '">');
             $('#nama_bahan').val(data.nama_bahan);
-            $('#qty').val(data.qty);
             var newOption = new Option(data.satuan.satuan, data.satuan_id, true, true);
 
 
