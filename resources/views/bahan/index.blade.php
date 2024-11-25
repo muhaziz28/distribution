@@ -38,7 +38,7 @@
                             <table id="bahan-table" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
+                                        <th style="width: 10px;">No</th>
                                         <th>Bahan</th>
                                         <th>Satuan</th>
                                         <th></th>
@@ -100,10 +100,16 @@
                     render: function(data, type, row) {
                         return `<div class="flex items-center justify-end space-x-2">
                             @can('update-bahan')
-                            <button class="btn btn-sm btn-outline-primary edit" data-id="${data.id}">Edit</button>
+                            <button class="btn btn-sm btn-info edit" data-id="${data.id}">
+                                <i class="fas fa-pen mr-2"></i>
+                                Edit
+                            </button>
                             @endcan
                             @can('delete-bahan')
-                            <button class="btn btn-sm btn-outline-danger delete" data-id="${data.id}">Delete</button>
+                            <button class="btn btn-sm btn-danger delete" data-id="${data.id}">
+                                <i class="fas fa-trash mr-2"></i>
+                                Delete
+                            </button>
                             @endcan
                         </div>`;
 

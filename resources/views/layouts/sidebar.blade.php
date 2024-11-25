@@ -31,13 +31,61 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link {{ request()->is('home') ? 'active' : '' }}">
+                    <a href="{{ route('home') }}" class="nav-link {{ request()->is('home') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Dashboard
                         </p>
                     </a>
                 </li>
+
+                @can('read-users')
+                <li class="nav-item">
+                    <a href="{{ route('user.index') }}" class="nav-link {{ request()->is('user*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            User
+                        </p>
+                    </a>
+                </li>
+                @endcan
+                @can('read-tukang')
+                <li class="nav-item">
+                    <a href="{{ route('tukang.index') }}" class="nav-link {{ request()->is('tukang*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Worker/Tukang
+                        </p>
+                    </a>
+                </li>
+                @endcan
+                @can('read-bahan')
+                <li class="nav-header">MASTER BAHAN</li>
+                @endcan
+                @can('read-bahan')
+                <li class="nav-item">
+                    <a href="{{ route('bahan.index') }}" class="nav-link {{ request()->is('bahan*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-th-large"></i>
+                        <p>
+                            Bahan
+                        </p>
+                    </a>
+                </li>
+                @endcan
+                @can('read-satuan')
+                <li class="nav-item">
+                    <a href="{{ route('satuan.index') }}" class="nav-link {{ request()->is('satuan*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-bars"></i>
+                        <p>
+                            Satuan
+                        </p>
+                    </a>
+                </li>
+                @endcan
+
+                @can(['read-roles', 'read-permissions'])
+                <li class="nav-header">ACCESS & PERMISSIONS</li>
+                @endcan
                 @can('read-roles')
                 <li class="nav-item">
                     <a href="{{ route('role.index') }}" class="nav-link {{ request()->is('role*') ? 'active' : '' }}">
@@ -58,46 +106,7 @@
                     </a>
                 </li>
                 @endcan
-                @can('read-users')
-                <li class="nav-item">
-                    <a href="{{ route('user.index') }}" class="nav-link {{ request()->is('user*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            User
-                        </p>
-                    </a>
-                </li>
-                @endcan
-                @can('read-tukang')
-                <li class="nav-item">
-                    <a href="{{ route('tukang.index') }}" class="nav-link {{ request()->is('tukang*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Tukang
-                        </p>
-                    </a>
-                </li>
-                @endcan
-                @can('read-bahan')
-                <li class="nav-item">
-                    <a href="{{ route('bahan.index') }}" class="nav-link {{ request()->is('bahan*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Bahan
-                        </p>
-                    </a>
-                </li>
-                @endcan
-                @can('read-satuan')
-                <li class="nav-item">
-                    <a href="{{ route('satuan.index') }}" class="nav-link {{ request()->is('satuan*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Satuan
-                        </p>
-                    </a>
-                </li>
-                @endcan
+
                 <li class="nav-item">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
