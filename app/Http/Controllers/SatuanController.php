@@ -26,6 +26,7 @@ class SatuanController extends Controller
     {
         if (Gate::allows('read-satuan')) {
             $result = Satuan::search($request->search)->get();
+            Log::info($result);
 
             return DataTables::of($result)->addIndexColumn()->toJson();
         } else {

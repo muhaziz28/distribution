@@ -15,10 +15,6 @@
                         <input type="text" class="form-control" id="nama_bahan" name="nama_bahan" placeholder="Nama bahan">
                     </div>
                     <div class="form-group">
-                        <label for="qty">Qty</label>
-                        <input type="number" class="form-control" id="qty" name="qty" placeholder="Qty">
-                    </div>
-                    <div class="form-group">
                         <label for="satuan_id">Satuan</label>
                         <select class="form-control" name="satuan_id" id="satuan_id"></select>
                     </div>

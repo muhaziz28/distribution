@@ -14,7 +14,7 @@ class Satuan extends Model
         "satuan"
     ];
 
-    public function scopeSearch($query)
+    public function scopeSearch($query, $search)
     {
         if (!empty($search)) {
             return $query->where('satuan', 'like', '%' . $search . '%');
