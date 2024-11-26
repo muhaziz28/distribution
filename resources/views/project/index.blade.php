@@ -16,7 +16,6 @@
         </div>
     </div>
 
-
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -162,17 +161,22 @@
                 },
                 {
                     data: null,
-                    render: function(data, type, row) {
-                        return `<div class="flex items-center justify-end space-x-2">
-                                @can('update-project')
-                                    <button class="btn btn-sm btn-info edit" data-id="${data.id}">
-                                    <i class="fas fa-pen mr-2"></i>
-                                    Edit</button>
-                                @endcan
-                                @can('delete-project')
-                                    <button class="btn btn-sm btn-danger delete" data-id="${data.id}"><i class="fas fa-trash mr-2"></i> Delete</button>
-                                @endcan
-                                </div>`;
+                    render: function(data) {
+                        return `
+                    <div class="flex items-center justify-end space-x-2">
+                        <a href="${data.detail_url}" class="btn btn-sm btn-default">
+                            <i class="fas fa-eye mr-2"></i> Detail
+                        </a>
+                        ${data.can_update ? `
+                        <button class="btn btn-sm btn-info edit" data-id="${data.id}">
+                            <i class="fas fa-pen mr-2"></i> Edit
+                        </button>` : ''}
+                        ${data.can_delete ? `
+                        <button class="btn btn-sm btn-danger delete" data-id="${data.id}">
+                            <i class="fas fa-trash mr-2"></i> Delete
+                        </button>` : ''}
+                    </div>
+                `;
                     }
                 }
             ]

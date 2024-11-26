@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BahanController;
+use App\Http\Controllers\DetailProjectController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RoleController;
@@ -85,7 +86,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('destroy', 'destroy')->name('tukang.destroy');
     });
 
-    
+
     Route::controller(ProjectController::class)->prefix('project')->group(function () {
         Route::get('', 'index')->name('project.index');
         Route::get('data', 'data')->name('project.data');
@@ -93,12 +94,17 @@ Route::middleware('auth')->group(function () {
         Route::put('update', 'update')->name('project.update');
         Route::delete('destroy', 'destroy')->name('project.destroy');
     });
-  
+
     Route::controller(VendorController::class)->prefix('vendor')->group(function () {
         Route::get('', 'index')->name('vendor.index');
         Route::get('data', 'data')->name('vendor.data');
         Route::post('store', 'store')->name('vendor.store');
         Route::put('update', 'update')->name('vendor.update');
         Route::delete('destroy', 'destroy')->name('vendor.destroy');
+    });
+
+    Route::controller(DetailProjectController::class)->prefix('detail-project')->group(function () {
+        Route::get('/{id}', 'index')->name('project.detail');
+        Route::get('/material-purchases-data/{id}', 'materialPurchasesData')->name('project.materialPurchasesData');
     });
 });

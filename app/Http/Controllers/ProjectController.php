@@ -29,7 +29,19 @@ class ProjectController extends Controller
                 'message' => 'You are unauthorized to access this resource',
             ]);
         }
-        $project = Project::all();
+        $project = Project::all()->map(function ($project) {
+            return [
+                'id' => $project->id,
+                'tahun_anggaran' => $project->tahun_anggaran,
+                'kegiatan' => $project->kegiatan,
+                'pekerjaan' => $project->pekerjaan,
+                'lokasi' => $project->lokasi,
+                'status' => $project->status,
+                'detail_url' => route('project.detail', $project->id),
+                'can_update' => Gate::allows('update-project', $project),
+                'can_delete' => Gate::allows('delete-project', $project),
+            ];
+        });
 
         return DataTables::of($project)->addIndexColumn()->toJson();
     }
