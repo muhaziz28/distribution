@@ -48,5 +48,10 @@ class PermissionsSeeder extends Seeder
         foreach ($tukangPermission as $permission) {
             \Spatie\Permission\Models\Permission::create(['name' => $permission]);
         }
+
+        $tukangPermission = ["create-project", "read-project", "update-project", 'delete-project'];
+        foreach ($tukangPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
     }
 }

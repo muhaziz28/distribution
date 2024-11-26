@@ -45,17 +45,17 @@ class ProjectController extends Controller
         }
         try {
             $validate = Validator::make($request->all(), [
-                'tahun_anggaran' => 'required|string|max:255',
-                'kegiatan' => 'required|string|max:255',
-                'pekerjaan' => 'required|string|max:255',
-                'lokasi' => 'required|string|max:255',
-                'status' => 'required|string|max:255',
+                'tahun_anggaran'    => 'required|string|max:255',
+                'kegiatan'          => 'required|string|max:255',
+                'pekerjaan'         => 'required|string|max:255',
+                'lokasi'            => 'required|string|max:255',
+                'status'            => 'required|string|max:255',
             ], [
-                'tahun_anggaran.required' => 'The Tahun Anggaran field is required',
-                'kegiatan.required' => 'The Kegiatan field is required',
-                'pekerjaan.required' => 'The Pekerjaan field is required',
-                'lokasi.required' => 'The Lokasi field is required',
-                'status.required' => 'The Status field is required',
+                'tahun_anggaran.required'   => 'Tahun Anggaran wajib diisi',
+                'kegiatan.required'         => 'Kegiatan wajib diisi',
+                'pekerjaan.required'        => 'Pekerjaan wajib diisi',
+                'lokasi.required'           => 'Lokasi wajib diisi',
+                'status.required'           => 'Status wajib diisi',
             ]);
 
             if ($validate->fails()) {
@@ -76,7 +76,7 @@ class ProjectController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Project ' . $project->tahun_anggaran . ' has been created',
+                'message' => 'Project ' . $project->kegiatan . ' berhasil ditambahkan',
                 'data' => $project
             ]);
         } catch (\Exception $e) {
@@ -98,17 +98,17 @@ class ProjectController extends Controller
         }
         try {
             $validate = Validator::make($request->all(), [
-                'tahun_anggaran' => 'required|string|max:255',
-                'kegiatan' => 'required|string|max:255',
-                'pekerjaan' => 'required|string|max:255',
-                'lokasi' => 'required|string|max:255',
-                'status' => 'required|string|max:255',
+                'tahun_anggaran'    => 'required|string|max:255',
+                'kegiatan'          => 'required|string|max:255',
+                'pekerjaan'         => 'required|string|max:255',
+                'lokasi'            => 'required|string|max:255',
+                'status'            => 'required|string|max:255',
             ], [
-                'tahun_anggaran.required' => 'The Tahun Anggaran field is required',
-                'kegiatan.required' => 'The Kegiatan field is required',
-                'pekerjaan.required' => 'The Pekerjaan field is required',
-                'lokasi.required' => 'The Lokasi field is required',
-                'status.required' => 'The Status field is required',
+                'tahun_anggaran.required'   => 'Tahun Anggaran wajib diisi',
+                'kegiatan.required'         => 'Kegiatan wajib diisi',
+                'pekerjaan.required'        => 'Pekerjaan wajib diisi',
+                'lokasi.required'           => 'Lokasi wajib diisi',
+                'status.required'           => 'Status wajib diisi',
             ]);
 
             if ($validate->fails()) {
@@ -129,7 +129,7 @@ class ProjectController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Project ' . $project->tahun_anggaran . ' has been updated',
+                'message' => 'Project ' . $project->kegiatan . ' berhasil diupdate',
                 'data' => $project
             ]);
         } catch (\Exception $e) {
@@ -160,7 +160,7 @@ class ProjectController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Project ' . $project->tahun_anggaran . ' has been deleted'
+                'message' => 'Project ' . $project->kegiatan . ' berhasil dihapus'
             ]);
         } catch (\Exception $e) {
             return response()->json([

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('kegiatan');
             $table->string('pekerjaan');
             $table->string('lokasi');
-            $table->string('status');
+            $table->enum('status', ['pending', 'process', 'finished'])->default('pending');
             $table->softDeletes();
             $table->timestamps();
         });
