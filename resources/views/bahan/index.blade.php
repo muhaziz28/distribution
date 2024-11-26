@@ -63,7 +63,7 @@
 </div>
 
 @can('create-bahan')
-@include('bahan.modal-create-bahan')
+@include('bahan.modal')
 @endcan
 
 @endsection
