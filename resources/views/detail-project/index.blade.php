@@ -32,11 +32,10 @@
                                         <div class="tab-pane text-left fade show active" id="vert-tabs-home" role="tabpanel" aria-labelledby="vert-tabs-home-tab">
                                             <div class="d-flex justify-content-between">
                                                 <h4>Pembelian Material</h4>
-                                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                                    data-target="#modal-add-project">
+                                                <a href="{{ route('transaction-materials.index', $result->id) }}" class="btn btn-primary">
                                                     <i class="fas fa-plus mr-2"></i>
                                                     Tambah Pembelian Material
-                                                </button>
+                                                </a>
                                             </div>
                                             <div class="mt-3">
                                                 <table id="role-table" class="table table-bordered table-striped">
@@ -72,8 +71,6 @@
         </div>
     </div>
 </div>
-
-@include('detail-project.modal-transaction')
 @endsection
 
 
