@@ -112,6 +112,7 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(TransactionMaterialController::class)->prefix('transaction-materials')->group(function () {
         Route::get('/{projectID}', 'index')->name('transaction-materials.index');
+        Route::post('/store', 'store')->name('transaction-materials.store');
     });
 
     Route::post('uploads/process', [FileUploadController::class, 'process'])->name('uploads.process');

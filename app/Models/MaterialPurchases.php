@@ -25,4 +25,9 @@ class MaterialPurchases extends Model
     {
         return $this->belongsTo(Vendor::class)->withTrashed();
     }
+
+    public function materialPurchaseItems()
+    {
+        return $this->hasMany(MaterialPurchaseItems::class);
+    }
 }

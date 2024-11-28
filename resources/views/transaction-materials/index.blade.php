@@ -24,11 +24,29 @@
                         </div>
 
                         <div class="card-body">
-                            <form action="{{ route('uploads.save') }}" method="POST">
-                                @csrf
 
-                                <input type="file" name="file" class="filepond" />
-                            </form>
+                            <!-- ini input file nya -->
+                            <input type="file" name="file" id="file" class="filepond" />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="m-0">Vendor</h4>
+                            </div>
+                            <div class="card-body">
+                                <input type="hidden" name="project_id" id="project_id" value="{{ $projectID }}">
+                                <select name="vendor_id" id="vendor_id" class="form-control">
+                                    <option value="">Pilih Vendor</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -62,7 +80,7 @@
                             </div>
                         </div>
                     </div>
-                    <a class="btn btn-primary float-end mt-3 btn_process">Proses Belanja</a>
+                    <button type="submit" class="btn btn-primary float-end mt-3 btn_process">Proses Belanja</button>
                 </div>
                 <div class="col-md-4">
                     <div class="card">
@@ -134,6 +152,33 @@
     }
 
     $(document).ready(function() {
+        $('#vendor_id').select2({
+            placeholder: 'Pilih Vendor',
+            ajax: {
+                url: "{{ route('vendor.data') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                    }
+                    return query;
+                },
+                processResults: function(data) {
+                    return {
+                        results: data.data.map(function(item) {
+                            console.log(data)
+                            return {
+                                text: item.nama_vendor,
+                                id: item.id
+                            }
+                        })
+                    };
+                },
+                cache: true,
+            }
+        });
+
         $('#bahan-select').select2({
             placeholder: 'Pilih Bahan',
             ajax: {
@@ -179,27 +224,29 @@
         $('#bahan-form').submit(function(e) {
             e.preventDefault();
 
-            var namaBahan = $('#bahan-select').select2('data')[0].text;
-            var qty = $('#total_qty').val();
-            var hargaSatuan = $('#harga_satuan').val();
+            var namaBahan = $('#bahan-select').select2('data')[0].text
+            var idBahan = $('#bahan-select').select2('data')[0].id
+            var qty = $('#total_qty').val()
+            var hargaSatuan = $('#harga_satuan').val()
 
             if (qty == '' || qty == 0 || qty == null) {
                 alert('QTY tidak boleh kosong.');
-                return;
+                return
             }
 
             var total = qty * hargaSatuan;
 
             var rowNumber = $('tbody tr').length + 1
-
             var newRow = "<tr>" +
                 "<td>" + rowNumber + "</td>" +
                 "<td>" + namaBahan + "</td>" +
                 "<td><input type='number' class='form-control qty-input' value='" + qty + "' min='1' /></td>" +
                 "<td>" + formatCurrency(hargaSatuan) + "</td>" +
                 "<td class='total-td'>" + formatCurrency(total) + "</td>" +
-                "<td><button type='button' class='btn btn-default' onclick='removeRow(this)'><i class='fas fa-trash text-danger'></i></button></td>" +
+                "<td><input type='hidden' name='bahan_id' value='" + idBahan + "' />" +
+                "<button type='button' class='btn btn-default' onclick='removeRow(this)'><i class='fas fa-trash text-danger'></i></button></td>" +
                 "</tr>";
+
 
             $('tbody').append(newRow);
 
@@ -209,25 +256,6 @@
             $('#qty').val('');
             $('#total_qty').val('');
             $('#harga_satuan').val('');
-        });
-
-        $('tbody').on('input', '.qty-input', function() {
-            const $row = $(this).closest('tr');
-            const qty = parseFloat($(this).val());
-            const hargaSatuan = parseFloat($row.find('td:nth-child(4)').text().replace(/[^\d,-]/g, '').replace(',', '.'))
-            const $totalCell = $row.find('.total-td');
-
-            if (isNaN(qty) || qty <= 0) {
-                alert('QTY tidak valid. Harus angka positif.');
-                $(this).val(1);
-                return;
-            }
-
-            const total = qty * hargaSatuan;
-            const formattedTotal = formatCurrency(total);
-            $totalCell.text(formattedTotal);
-
-            updateTotal();
         });
     })
 </script>

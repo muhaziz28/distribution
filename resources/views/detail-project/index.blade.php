@@ -38,20 +38,33 @@
                                                 </a>
                                             </div>
                                             <div class="mt-3">
-                                                <table id="role-table" class="table table-bordered table-striped">
+                                                <table id="purchase-table" class="table table-bordered table-striped">
                                                     <thead>
                                                         <tr>
                                                             <th style="width: 5px;"> No</th>
                                                             <th>Vendor</th>
                                                             <th>Total</th>
+                                                            <th>Bukti Transaksi</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody></tbody>
+                                                    <tbody>
+                                                        @foreach ($materialPurchases as $index => $item)
+                                                        <tr>
+                                                            <td>{{ $index + 1 }}</td>
+                                                            <td>{{ $item->vendor->nama_vendor }}</td>
+                                                            <td>Rp {{ number_format($item->total, 2, ',', '.') }}</td>
+                                                            <td>
+                                                                <a href="{{ $item->attachment }}" class="btn btn-default" target="_blank"><i class="fas fa-eye mr-2"></i>Lihat</a>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
                                                     <tfoot>
                                                         <tr>
-                                                            <th>No</th>
-                                                            <th>Vendor</th>
-                                                            <th>Total</th>
+                                                            <th colspan="2">Total</th>
+
+                                                            <th>Rp {{ number_format($total, 2, ',', '.') }}</th>
+
                                                         </tr>
                                                     </tfoot>
                                                 </table>
@@ -80,78 +93,6 @@
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-    });
-
-    $(function() {
-        function defineColumns() {
-            return [{
-                    data: 'DT_RowIndex',
-                    class: 'table-td'
-                },
-                {
-                    data: 'tahun_anggaran',
-                },
-                {
-                    data: 'kegiatan',
-                },
-                {
-                    data: 'pekerjaan',
-                },
-                {
-                    data: 'lokasi',
-                },
-                {
-                    data: 'status',
-                    render: function(data, type, row) {
-                        if (data == "pending") {
-                            return `<span class="badge bg-warning">Pending</span`
-                        } else if (data == "process") {
-                            return `<span class="badge bg-info">Process</span`
-                        } else {
-                            return `<span class="badge bg-success">Finished</span`
-                        }
-                    }
-                },
-                {
-                    data: null,
-                    render: function(data) {
-                        return `
-                    <div class="flex items-center justify-end space-x-2">
-                        <a href="${data.detail_url}" class="btn btn-sm btn-default">
-                            <i class="fas fa-eye mr-2"></i> Detail
-                        </a>
-                        ${data.can_update ? `
-                        <button class="btn btn-sm btn-info edit" data-id="${data.id}">
-                            <i class="fas fa-pen mr-2"></i> Edit
-                        </button>` : ''}
-                        ${data.can_delete ? `
-                        <button class="btn btn-sm btn-danger delete" data-id="${data.id}">
-                            <i class="fas fa-trash mr-2"></i> Delete
-                        </button>` : ''}
-                    </div>
-                `;
-                    }
-                }
-            ]
-        }
-
-        var table = $('#project-table');
-        var config = {
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('project.data') }}",
-            paging: true,
-            ordering: true,
-            info: false,
-            searching: true,
-            lengthChange: true,
-            lengthMenu: [10, 25, 50, 100],
-
-            columns: defineColumns()
-        };
-
-        initializeDataTable(table, config);
-
     });
 </script>
 @endpush

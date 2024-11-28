@@ -163,14 +163,15 @@
                     $('#form-add-satuan button[type="submit"]').html('Loading...');
                 },
                 success: function(response) {
+                    console.log(response)
                     if (response.success) {
-                        $('#modal-add-satuan').modal('hide');
                         $('#form-add-satuan')[0].reset();
                         toastr.success(response.message);
                         table.DataTable().ajax.reload(null, false);
                     } else {
                         toastr.error(response.message);
                     }
+                    $('#modal-add-satuan').modal('hide');
                     $('#form-add-satuan button[type="submit"]').attr('disabled', false);
                     $('#form-add-satuan button[type="submit"]').html('Save');
                 }

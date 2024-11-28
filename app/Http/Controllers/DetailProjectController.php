@@ -18,10 +18,18 @@ class DetailProjectController extends Controller
     {
         $result = Project::findOrFail($id);
 
-        $materialPurchases = MaterialPurchases::where('project_id', $id)->get();
 
+        $materialPurchases = MaterialPurchases::with('materialPurchaseItems')->get();
 
-        return view('detail-project.index', compact('result', 'materialPurchases'));
+        foreach ($materialPurchases as $materialPurchase) {
+            $materialPurchase->total = $materialPurchase->materialPurchaseItems->sum(function ($item) {
+                return $item->qty * $item->harga_satuan;
+            });
+        }
+
+        $total = $materialPurchases->sum('total');
+
+        return view('detail-project.index', compact('result', 'materialPurchases', 'total'));
     }
 
     public function materialPurchasesData()
