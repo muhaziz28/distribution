@@ -38,6 +38,7 @@ class TransactionMaterialController extends Controller
             'file' => $filePath,
         ], [
             'purchase.vendor_id' => 'required|exists:vendors,id',
+            'purchase.transaction_date' => 'required',
             'purchase.project_id' => 'required|exists:project,id',
             'belanja' => 'required|array',
             'belanja.*.bahan_id' => 'required|exists:bahans,id',
@@ -80,9 +81,10 @@ class TransactionMaterialController extends Controller
             }
 
             $materialPurchase = MaterialPurchases::create([
-                'vendor_id' => $purchase['vendor_id'],
-                'project_id' => $purchase['project_id'],
-                'attachment' => $relativeFilePathUrl ?? null,
+                'vendor_id'         => $purchase['vendor_id'],
+                'project_id'        => $purchase['project_id'],
+                'transaction_date'  => $purchase['transaction_date'],
+                'attachment'        => $relativeFilePathUrl ?? null,
             ]);
 
             foreach ($belanja as $item) {

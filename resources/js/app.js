@@ -19,17 +19,18 @@ if (inputElement) {
 
 
 
-$('.btn_process').on('click', function(e) {
+$('.btn_process').on('click', function (e) {
     e.preventDefault();
 
     let belanjaData = [];
     let purchase = {
         vendor_id: $('#vendor_id').select2('data')[0].id,
-        project_id: $('#project_id').val()
+        project_id: $('#project_id').val(),
+        transaction_date: $('#transaction_date').val()
     }
 
     // Ambil data dari tabel
-    $('#table-belanja tbody tr').each(function() {
+    $('#table-belanja tbody tr').each(function () {
         const namaBahan = $(this).find('td:nth-child(2)').text().trim();
         const qty = $(this).find('.qty-input').val();
         const hargaSatuan = $(this).find('td:nth-child(4)').text().replace(/[^\d,-]/g, '').replace(',', '.');
@@ -57,22 +58,35 @@ $('.btn_process').on('click', function(e) {
 
     if (hiddenInput && hiddenInput.value) {
         const filePath = hiddenInput.value;
-        
+
         formData.append('file', filePath)
     } else {
         console.warn('File tidak ditemukan');
     }
 
     $.ajax({
-        url: "/transaction-materials/store", 
+        url: "/transaction-materials/store",
         type: 'POST',
         data: formData,
         contentType: false,
         processData: false,
-        success: function(response) {
-            alert(response.message);
+        success: function (response) {
+            console.log(response)
+            if (response.success) {
+                toastr.success(response.message);
+                $('#table-belanja tbody').empty();
+                $('#vendor_id').val(null).trigger('change');
+                $('#file').val('');
+                const fileInput = document.querySelector('.filepond');
+                if (fileInput && FilePond.find(fileInput)) {
+                    FilePond.find(fileInput).removeFiles();
+                }
+                $('#total_belanja').text('0');
+            } else {
+                toastr.error(response.message);
+            }
         },
-        error: function(xhr) {
+        error: function (xhr) {
             console.error(xhr.responseText);
             alert('Terjadi kesalahan saat menyimpan data.');
         }

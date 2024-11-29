@@ -126,7 +126,7 @@ class VendorController extends Controller
             'kontak'      => 'required|max_digits:15',
         ], [
             'nama_vendor.required' => 'Nama vendor wajib diisi',
-            'kontak.required'      => 'Kontak vendir wajib diisi',
+            'kontak.required'      => 'Kontak vendor wajib diisi',
             'kontak.max_digits'    => 'Kontak tidak boleh lebih dari 15 karakter',
         ]);
 

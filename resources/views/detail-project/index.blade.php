@@ -43,6 +43,7 @@
                                                         <tr>
                                                             <th style="width: 5px;"> No</th>
                                                             <th>Vendor</th>
+                                                            <th>Tanggal Transaksi</th>
                                                             <th>Total</th>
                                                             <th>Bukti Transaksi</th>
                                                         </tr>
@@ -52,6 +53,7 @@
                                                         <tr>
                                                             <td>{{ $index + 1 }}</td>
                                                             <td>{{ $item->vendor->nama_vendor }}</td>
+                                                            <td>{{ $item->transaction_date }}</td>
                                                             <td>Rp {{ number_format($item->total, 2, ',', '.') }}</td>
                                                             <td>
                                                                 <a href="{{ $item->attachment }}" class="btn btn-default" target="_blank"><i class="fas fa-eye mr-2"></i>Lihat</a>
@@ -61,10 +63,10 @@
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
-                                                            <th colspan="2">Total</th>
+                                                            <th colspan="3">Total</th>
 
                                                             <th>Rp {{ number_format($total, 2, ',', '.') }}</th>
-
+                                                            <th></th>
                                                         </tr>
                                                     </tfoot>
                                                 </table>

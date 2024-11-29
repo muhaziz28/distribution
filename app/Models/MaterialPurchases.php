@@ -13,6 +13,7 @@ class MaterialPurchases extends Model
     protected $fillable = [
         "project_id",
         "vendor_id",
+        "transaction_date",
         "attachment",
     ];
 

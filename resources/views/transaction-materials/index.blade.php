@@ -24,10 +24,7 @@
                         </div>
 
                         <div class="card-body">
-
-                            <!-- ini input file nya -->
                             <input type="file" name="file" id="file" class="filepond" />
-
                         </div>
                     </div>
                 </div>
@@ -38,14 +35,20 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header">
-                                <h4 class="m-0">Vendor</h4>
-                            </div>
                             <div class="card-body">
-                                <input type="hidden" name="project_id" id="project_id" value="{{ $projectID }}">
-                                <select name="vendor_id" id="vendor_id" class="form-control">
-                                    <option value="">Pilih Vendor</option>
-                                </select>
+                                <div class="row">
+                                    <input type="hidden" name="project_id" id="project_id" value="{{ $projectID }}">
+                                    <div class="col-md-6">
+                                        <label for="">Tanggal Transaksi</label>
+                                        <input type="date" name="transaction_date" id="transaction_date" class="form-control" placeholder="Tanggal Transaksi" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="">Vendor</label>
+                                        <select name="vendor_id" id="vendor_id" class="form-control" required>
+                                            <option value="">Pilih Vendor</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
