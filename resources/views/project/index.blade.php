@@ -25,9 +25,10 @@
                             <h3 class="card-title">Project</h3>
                             <div class="card-tools">
                                 @can('create-project')
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
                                     data-target="#modal-add-project">
-                                    <i class="fas fa-plus mr-2"></i>
+                                    <i
+                                        class="nav-icon fas fa-plus-circle"></i>&nbsp;
                                     Add New Project
                                 </button>
                                 @endcan
@@ -162,21 +163,51 @@
                 {
                     data: null,
                     render: function(data) {
+                        if (data.status === 'pending') {
+                            return `<div class="flex items-center justify-end space-x-2">
+                                    <button class="btn btn-sm btn-success continue" data-id="${data.id}">
+                                        <i class="fas fa-play mr-2"></i> Continue
+                                    </button>
+                                    ${data.can_update ? `
+                                    <button class="btn btn-sm btn-info edit" data-id="${data.id}">
+                                    <i class="fas fa-pen mr-2"></i> Edit
+                                    </button>` : ''}
+                                    ${data.can_delete ? `
+                                    <button class="btn btn-sm btn-danger delete" data-id="${data.id}">
+                                    <i class="fas fa-trash mr-2"></i> Delete
+                                    </button>` : ''}
+                                </div>`
+                        }
+
+                        if (data.status === 'finished') {
+                            return `<div class="flex items-center justify-end space-x-2">
+                                    <a href="${data.detail_url}" class="btn btn-sm btn-default">
+                                        <i class="fas fa-eye mr-2"></i> Detail
+                                    </a>
+                                </div>`
+                        }
+
                         return `
-                    <div class="flex items-center justify-end space-x-2">
-                        <a href="${data.detail_url}" class="btn btn-sm btn-default">
-                            <i class="fas fa-eye mr-2"></i> Detail
-                        </a>
-                        ${data.can_update ? `
-                        <button class="btn btn-sm btn-info edit" data-id="${data.id}">
-                            <i class="fas fa-pen mr-2"></i> Edit
-                        </button>` : ''}
-                        ${data.can_delete ? `
-                        <button class="btn btn-sm btn-danger delete" data-id="${data.id}">
-                            <i class="fas fa-trash mr-2"></i> Delete
-                        </button>` : ''}
-                    </div>
-                `;
+                                <div class="flex items-center justify-end space-2">
+                                    <a href="${data.detail_url}" class="btn btn-sm btn-default">
+                                        <i class="fas fa-eye mr-2"></i> Detail
+                                    </a>
+                                    <button data-id="${data.id}" class="btn btn-sm btn-warning pending">
+                                        <i class="fas fa-pause mr-2"></i> Pending
+                                    </button>
+                                    <button data-id="${data.id}" class="btn btn-sm btn-success finish">
+                                        <i class="fas fa-check-circle mr-2"></i> Finish
+                                    </button>
+                                    ${data.can_update ? `
+                                    <button class="btn btn-sm btn-info edit" data-id="${data.id}">
+                                    <i class="fas fa-pen mr-2"></i> Edit
+                                    </button>` : ''}
+                                    ${data.can_delete ? `
+                                    <button class="btn btn-sm btn-danger delete" data-id="${data.id}">
+                                    <i class="fas fa-trash mr-2"></i> Delete
+                                    </button>` : ''}
+                                </div>
+                            `;
                     }
                 }
             ]
@@ -278,16 +309,118 @@
 
 
         function ambilTahun(input) {
-            // Ambil nilai input date
             const tanggal = new Date(input.value);
             if (input.value) {
-                // Ambil hanya tahun
                 const tahun = tanggal.getFullYear();
-                // Set kembali hanya tahun
-                input.value = tahun + "-01-01"; // Default ke tanggal 1 Januari tahun itu
-                alert("Tahun yang dipilih: " + tahun); // Optional
+                input.value = tahun + "-01-01";
+                alert("Tahun yang dipilih: " + tahun);
             }
         }
+
+        $(document).on('click', '.continue', function() {
+            var id = $(this).data('id')
+            var data = table.DataTable().row($(this).closest('tr')).data();
+            console.log(data)
+            var result = confirm('Lanjutkan project ini?');
+
+            if (result) {
+                var form = new FormData();
+                form.append('id', id);
+                form.append('tahun_anggaran', data.tahun_anggaran);
+                form.append('kegiatan', data.kegiatan);
+                form.append('pekerjaan', data.pekerjaan);
+                form.append('lokasi', data.lokasi);
+                form.append('status', 'process');
+                form.append('_method', 'PUT');
+
+                $.ajax({
+                    url: "{{ route('project.update') }}",
+                    method: "POST",
+                    data: form,
+                    processData: false,
+                    dataType: 'json',
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            table.DataTable().ajax.reload(null, false);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    }
+                })
+            }
+        })
+
+        $(document).on('click', '.pending', function() {
+            var id = $(this).data('id')
+            var data = table.DataTable().row($(this).closest('tr')).data();
+            console.log(data)
+            var result = confirm('Hentikan project ini?');
+
+            if (result) {
+                var form = new FormData();
+                form.append('id', id);
+                form.append('tahun_anggaran', data.tahun_anggaran);
+                form.append('kegiatan', data.kegiatan);
+                form.append('pekerjaan', data.pekerjaan);
+                form.append('lokasi', data.lokasi);
+                form.append('status', 'pending');
+                form.append('_method', 'PUT');
+
+                $.ajax({
+                    url: "{{ route('project.update') }}",
+                    method: "POST",
+                    data: form,
+                    processData: false,
+                    dataType: 'json',
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            table.DataTable().ajax.reload(null, false);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    }
+                })
+            }
+        })
+
+        $(document).on('click', '.finish', function() {
+            var id = $(this).data('id')
+            var data = table.DataTable().row($(this).closest('tr')).data();
+            console.log(data)
+            var result = confirm('Tandai project ini selesai?');
+
+            if (result) {
+                var form = new FormData();
+                form.append('id', id);
+                form.append('tahun_anggaran', data.tahun_anggaran);
+                form.append('kegiatan', data.kegiatan);
+                form.append('pekerjaan', data.pekerjaan);
+                form.append('lokasi', data.lokasi);
+                form.append('status', 'finished');
+                form.append('_method', 'PUT');
+
+                $.ajax({
+                    url: "{{ route('project.update') }}",
+                    method: "POST",
+                    data: form,
+                    processData: false,
+                    dataType: 'json',
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            table.DataTable().ajax.reload(null, false);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    }
+                })
+            }
+        })
     })
 </script>
 @endpush

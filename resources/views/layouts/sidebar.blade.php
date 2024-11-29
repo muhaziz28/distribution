@@ -44,96 +44,97 @@
                 </li>
 
                 @can('read-users')
-                    <li class="nav-item">
-                        <a href="{{ route('user.index') }}" class="nav-link {{ request()->is('user*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                User
-                            </p>
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a href="{{ route('user.index') }}" class="nav-link {{ request()->is('user*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            User
+                        </p>
+                    </a>
+                </li>
                 @endcan
-                @can('read-tukang')
-                    <li class="nav-item">
-                        <a href="{{ route('tukang.index') }}"
-                            class="nav-link {{ request()->is('tukang*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Worker/Tukang
-                            </p>
-                        </a>
-                    </li>
-                @endcan
+
                 @can('read-project')
-                    <li class="nav-item">
-                        <a href="{{ route('project.index') }}"
-                            class="nav-link {{ request()->is('project*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Project
-                            </p>
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a href="{{ route('project.index') }}"
+                        class="nav-link {{ request()->is('project*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-building"></i>
+                        <p>
+                            Project
+                        </p>
+                    </a>
+                </li>
                 @endcan
                 @can('read-vendor')
                 <li class="nav-item">
                     <a href="{{ route('vendor.index') }}" class="nav-link {{ request()->is('vendor*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <i class="nav-icon fas fa-briefcase"></i>
                         <p>
                             Vendor
                         </p>
                     </a>
                 </li>
                 @endcan
-                @can('read-bahan')
-                    <li class="nav-header">MASTER BAHAN</li>
+                @can('read-tukang')
+                <li class="nav-item">
+                    <a href="{{ route('tukang.index') }}"
+                        class="nav-link {{ request()->is('tukang*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Worker/Tukang
+                        </p>
+                    </a>
+                </li>
                 @endcan
                 @can('read-bahan')
-                    <li class="nav-item">
-                        <a href="{{ route('bahan.index') }}"
-                            class="nav-link {{ request()->is('bahan*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-th-large"></i>
-                            <p>
-                                Bahan
-                            </p>
-                        </a>
-                    </li>
+                <li class="nav-header">MASTER BAHAN</li>
+                @endcan
+                @can('read-bahan')
+                <li class="nav-item">
+                    <a href="{{ route('bahan.index') }}"
+                        class="nav-link {{ request()->is('bahan*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-th-large"></i>
+                        <p>
+                            Bahan
+                        </p>
+                    </a>
+                </li>
                 @endcan
                 @can('read-satuan')
-                    <li class="nav-item">
-                        <a href="{{ route('satuan.index') }}"
-                            class="nav-link {{ request()->is('satuan*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-bars"></i>
-                            <p>
-                                Satuan
-                            </p>
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a href="{{ route('satuan.index') }}"
+                        class="nav-link {{ request()->is('satuan*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-bars"></i>
+                        <p>
+                            Satuan
+                        </p>
+                    </a>
+                </li>
                 @endcan
 
                 @can(['read-roles', 'read-permissions'])
-                    <li class="nav-header">ACCESS & PERMISSIONS</li>
+                <li class="nav-header">ACCESS & PERMISSIONS</li>
                 @endcan
                 @can('read-roles')
-                    <li class="nav-item">
-                        <a href="{{ route('role.index') }}" class="nav-link {{ request()->is('role*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Role
-                            </p>
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a href="{{ route('role.index') }}" class="nav-link {{ request()->is('role*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Role
+                        </p>
+                    </a>
+                </li>
                 @endcan
                 @can('read-permissions')
-                    <li class="nav-item">
-                        <a href="{{ route('permission.index') }}"
-                            class="nav-link {{ request()->is('permission*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Permission
-                            </p>
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a href="{{ route('permission.index') }}"
+                        class="nav-link {{ request()->is('permission*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Permission
+                        </p>
+                    </a>
+                </li>
                 @endcan
 
                 <li class="nav-item">

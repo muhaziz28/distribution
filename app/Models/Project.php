@@ -26,4 +26,14 @@ class Project extends Model
     {
         return $this->belongsToMany(Role::class);
     }
+
+    public function workerProjects()
+    {
+        return $this->hasMany(WorkerProject::class, 'project_id');
+    }
+
+    public function tukangs()
+    {
+        return $this->hasMany(Tukang::class, 'project_id');
+    }
 }

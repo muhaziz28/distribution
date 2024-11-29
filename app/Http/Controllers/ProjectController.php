@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Project;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 
 
@@ -102,6 +103,7 @@ class ProjectController extends Controller
 
     public function update(Request $request)
     {
+        Log::info($request->all());
         if (!Gate::allows('update-project')) {
             return response()->json([
                 'success' => false,

@@ -11,6 +11,8 @@ use App\Http\Controllers\TransactionMaterialController;
 use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\WorkerPaymentController;
+use App\Models\WorkerPayment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -108,11 +110,21 @@ Route::middleware('auth')->group(function () {
     Route::controller(DetailProjectController::class)->prefix('detail-project')->group(function () {
         Route::get('/{id}', 'index')->name('project.detail');
         Route::get('/material-purchases-data/{id}', 'materialPurchasesData')->name('project.materialPurchasesData');
+        Route::get('/worker-assignment-data/{id}', 'workerAssignmentData')->name('project.workerAssignmentData');
+        Route::post('addDetail/{id}', 'addDetail')->name('project.addDetail');
+        Route::delete('hapusDetail', 'hapusDetail')->name('project.hapusDetail');
     });
 
     Route::controller(TransactionMaterialController::class)->prefix('transaction-materials')->group(function () {
         Route::get('/{projectID}', 'index')->name('transaction-materials.index');
         Route::post('/store', 'store')->name('transaction-materials.store');
+        Route::get('/transaction-detail/{materialPurchasesID}', 'detailTransaction')->name('transaction-materials.detailTransaction');
+    });
+
+    Route::controller(WorkerPaymentController::class)->prefix("worker-payment")->group(function () {
+        Route::get('/{projectID}', 'data')->name("worker-payment.data");
+        Route::delete('destroy', 'destroy')->name("worker-payment.destroy");
+        Route::post('store', 'store')->name("worker-payment.store");
     });
 
     Route::post('uploads/process', [FileUploadController::class, 'process'])->name('uploads.process');

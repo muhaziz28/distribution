@@ -132,4 +132,14 @@ class TransactionMaterialController extends Controller
 
         rmdir($dir);
     }
+
+    public function detailTransaction($materialPurchaseID)
+    {
+        $result = MaterialPurchases::with('materialPurchaseItems.bahan')->find($materialPurchaseID);
+        foreach ($result->materialPurchaseItems as $materialPurchaseItem) {
+            $materialPurchaseItem->total = $materialPurchaseItem->qty * $materialPurchaseItem->harga_satuan;
+        }
+        $total = $result->materialPurchaseItems->sum('total');
+        return view('detail-project.detail-transaction', compact('result', 'total'));
+    }
 }

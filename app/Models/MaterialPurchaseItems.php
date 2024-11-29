@@ -15,4 +15,9 @@ class MaterialPurchaseItems extends Model
         "qty",
         "harga_satuan",
     ];
+
+    public function bahan()
+    {
+        return $this->belongsTo(Bahan::class);
+    }
 }
