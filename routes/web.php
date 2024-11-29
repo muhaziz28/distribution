@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\BahanController;
+use App\Http\Controllers\DetailProjectController;
+use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SatuanController;
+use App\Http\Controllers\TransactionMaterialController;
 use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
@@ -85,7 +88,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('destroy', 'destroy')->name('tukang.destroy');
     });
 
-    
+
     Route::controller(ProjectController::class)->prefix('project')->group(function () {
         Route::get('', 'index')->name('project.index');
         Route::get('data', 'data')->name('project.data');
@@ -93,7 +96,7 @@ Route::middleware('auth')->group(function () {
         Route::put('update', 'update')->name('project.update');
         Route::delete('destroy', 'destroy')->name('project.destroy');
     });
-  
+
     Route::controller(VendorController::class)->prefix('vendor')->group(function () {
         Route::get('', 'index')->name('vendor.index');
         Route::get('data', 'data')->name('vendor.data');
@@ -101,4 +104,18 @@ Route::middleware('auth')->group(function () {
         Route::put('update', 'update')->name('vendor.update');
         Route::delete('destroy', 'destroy')->name('vendor.destroy');
     });
+
+    Route::controller(DetailProjectController::class)->prefix('detail-project')->group(function () {
+        Route::get('/{id}', 'index')->name('project.detail');
+        Route::get('/material-purchases-data/{id}', 'materialPurchasesData')->name('project.materialPurchasesData');
+    });
+
+    Route::controller(TransactionMaterialController::class)->prefix('transaction-materials')->group(function () {
+        Route::get('/{projectID}', 'index')->name('transaction-materials.index');
+        Route::post('/store', 'store')->name('transaction-materials.store');
+    });
+
+    Route::post('uploads/process', [FileUploadController::class, 'process'])->name('uploads.process');
+    Route::post('save', [FileUploadController::class, 'save'])->name('uploads.save');
+    Route::delete('/uploads/revert', [FileUploadController::class, 'revert'])->name('uploads.revert');
 });

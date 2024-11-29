@@ -16,9 +16,9 @@ class Vendor extends Model
         "kontak",
     ];
 
-    public function scopeSearch($query)
+    public function scopeSearch($query, $search)
     {
-        if (!empty($search)) {
+        if (!empty($search) && is_string($search)) {
             return $query->where('nama_vendor', 'like', '%' . $search . '%');
         }
 

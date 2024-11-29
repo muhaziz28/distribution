@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css?v=3.2.0') }}">
+
+    @vite('resources/js/app.js')
 </head>
 
 <body class="hold-transition <?php echo auth()->check() ? 'sidebar-mini' : 'login-page'; ?>">

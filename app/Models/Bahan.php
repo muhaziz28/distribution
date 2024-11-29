@@ -20,6 +20,15 @@ class Bahan extends Model
         return $this->belongsTo(Satuan::class)->withTrashed();
     }
 
+    public function scopeSearch($query, $search)
+    {
+        if (!empty($search) && is_string($search)) {
+            return $query->where('nama_bahan', 'like', '%' . $search . '%');
+        }
+
+        return $query;
+    }
+
     public function scopeForDataTable($query)
     {
         return $query->with(['satuan' => function ($q) {

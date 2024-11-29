@@ -16,10 +16,10 @@ class BahanController extends Controller
         return view('error.unauthorize');
     }
 
-    public function data()
+    public function data(Request $request)
     {
         if (Gate::allows('read-bahan')) {
-            $bahan = Bahan::forDataTable()->get();
+            $bahan = Bahan::search($request->search)->forDataTable()->get();
             return DataTables::of($bahan)->addIndexColumn()->toJson();
         } else {
             return response()->json([
