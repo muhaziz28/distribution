@@ -29,7 +29,7 @@ class DetailProjectController extends Controller
         }
 
 
-        $materialPurchases = MaterialPurchases::with('materialPurchaseItems')->get();
+        $materialPurchases = MaterialPurchases::with('materialPurchaseItems')->where('project_id', $result->id)->get();
 
         foreach ($materialPurchases as $materialPurchase) {
             $materialPurchase->total = $materialPurchase->materialPurchaseItems->sum(function ($item) {
