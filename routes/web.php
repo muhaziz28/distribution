@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthOtpController;
 use App\Http\Controllers\BahanController;
 use App\Http\Controllers\DetailProjectController;
 use App\Http\Controllers\FileUploadController;
@@ -35,12 +36,19 @@ Route::get('/', function () {
     return view('/home');
 });
 
-Auth::routes();
+// Auth::routes();
+Route::get('login', [AuthOtpController::class, 'login'])->name('login');
+Route::controller(AuthOtpController::class)->prefix("otp")->group(function () {
+    Route::post('/otp/generate', 'generate')->name('otp.generate');
+    Route::get('/otp/verification/{user_id}', 'verification')->name('otp.verification');
+    Route::post('/otp/login', 'loginWithOtp')->name('otp.getlogin');
+});
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // middleware('auth') digunakan untuk membatasi akses ke halaman ini hanya untuk user yang sudah login
 Route::middleware('auth')->group(function () {
+    Route::post('logout', [AuthOtpController::class, 'logout'])->name('logout');
     Route::controller(RoleController::class)->prefix('role')->group(function () {
         Route::get('', 'index')->name('role.index');
         Route::get('data', 'data')->name('role.data');
@@ -126,6 +134,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('destroy', 'destroy')->name("worker-payment.destroy");
         Route::post('store', 'store')->name("worker-payment.store");
     });
+
+
 
     Route::post('uploads/process', [FileUploadController::class, 'process'])->name('uploads.process');
     Route::post('save', [FileUploadController::class, 'save'])->name('uploads.save');
