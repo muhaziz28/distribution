@@ -1,66 +1,41 @@
-@extends('layouts.app')
+@extends('layouts.apps')
 
 @section('content')
-<div class="content-wrapper">
-
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Users</h1>
-                </div>
-                <div class="col-sm-6">
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Users</h3>
-                            <div class="card-tools">
-                                @can('create-users')
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add-user">
-                                    <i class="fas fa-plus mr-2"></i>
-                                    Add New User
-                                </button>
-                                @endcan
-                            </div>
-                        </div>
-
-                        <div class="card-body">
-                            <table id="user-table" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Username</th>
-                                        <th width="40%">Role</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Username</th>
-                                        <th>Role</th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
+<div class="intro-y flex flex-col sm:flex-row items-center mt-8">
+    <h2 class="text-lg font-medium mr-auto">
+        Datatable
+    </h2>
+    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+        <button class="button text-white bg-theme-1 shadow-md mr-2">Add New Product</button>
+        <div class="dropdown relative ml-auto sm:ml-0">
+            <button class="dropdown-toggle button px-2 box text-gray-700">
+                <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-feather="plus"></i> </span>
+            </button>
+            <div class="dropdown-box mt-10 absolute w-40 top-0 right-0 z-20">
+                <div class="dropdown-box__content box p-2">
+                    <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white hover:bg-gray-200 rounded-md"> <i data-feather="file-plus" class="w-4 h-4 mr-2"></i> New Category </a>
+                    <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white hover:bg-gray-200 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> New Group </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div class="intro-y datatable-wrapper box p-5 mt-5">
+    <table class="table table-report table-report--bordered display datatable w-full" id="user-table">
+        <thead>
+            <tr>
+                <th class="border-b-2 whitespace-no-wrap">NO</th>
+                <th class="border-b-2 whitespace-no-wrap">NAME</th>
+                <th class="border-b-2 whitespace-no-wrap">EMAIL</th>
+                <th class="border-b-2 whitespace-no-wrap">ROLE</th>
+                <th class="border-b-2 whitespace-no-wrap">ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
 
 @can('create-users')
 <div class="modal fade" id="modal-add-user">
@@ -120,6 +95,9 @@
                 },
                 {
                     data: 'name',
+                },
+                {
+                    data: 'email',
                 },
                 {
                     data: 'roles',
@@ -200,17 +178,17 @@
             console.log(id);
             var result = confirm('Are you sure you want to delete this user?');
 
-            if(result) {
+            if (result) {
                 $.ajax({
-                url: '{{ route("user.destroy") }}',
-                method: "DELETE",
-                data: {
-                    id: id
-                },
-                success: function(response) {
-                    table.DataTable().ajax.reload();
-                }
-            })
+                    url: '{{ route("user.destroy") }}',
+                    method: "DELETE",
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        table.DataTable().ajax.reload();
+                    }
+                })
             }
         })
 
