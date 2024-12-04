@@ -1,42 +1,69 @@
-@extends('layouts.apps')
+@extends('layouts.app')
 
 @section('content')
-<div class="intro-y flex flex-col sm:flex-row items-center mt-8">
-    <h2 class="text-lg font-medium mr-auto">
-        Datatable
-    </h2>
-    <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-        <button class="button text-white bg-theme-1 shadow-md mr-2">Add New Product</button>
-        <div class="dropdown relative ml-auto sm:ml-0">
-            <button class="dropdown-toggle button px-2 box text-gray-700">
-                <span class="w-5 h-5 flex items-center justify-center"> <i class="w-4 h-4" data-feather="plus"></i> </span>
-            </button>
-            <div class="dropdown-box mt-10 absolute w-40 top-0 right-0 z-20">
-                <div class="dropdown-box__content box p-2">
-                    <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white hover:bg-gray-200 rounded-md"> <i data-feather="file-plus" class="w-4 h-4 mr-2"></i> New Category </a>
-                    <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white hover:bg-gray-200 rounded-md"> <i data-feather="users" class="w-4 h-4 mr-2"></i> New Group </a>
+<div class="content-wrapper">
+
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">User</h1>
+                </div>
+                <div class="col-sm-6">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">User</h3>
+                            <div class="card-tools">
+                                @can('create-user')
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#modal-add-user">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Add New user
+                                </button>
+                                @endcan
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <table id="user-table" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px;">No</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="intro-y datatable-wrapper box p-5 mt-5">
-    <table class="table table-report table-report--bordered display datatable w-full" id="user-table">
-        <thead>
-            <tr>
-                <th class="border-b-2 whitespace-no-wrap">NO</th>
-                <th class="border-b-2 whitespace-no-wrap">NAME</th>
-                <th class="border-b-2 whitespace-no-wrap">EMAIL</th>
-                <th class="border-b-2 whitespace-no-wrap">ROLE</th>
-                <th class="border-b-2 whitespace-no-wrap">ACTIONS</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
-
-
 @can('create-users')
 <div class="modal fade" id="modal-add-user">
     <div class="modal-dialog">
@@ -62,10 +89,6 @@
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" name="email" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="text" class="form-control" id="password" name="password" placeholder="Password">
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -104,9 +127,9 @@
                     render: function(data, type, row) {
                         if (data.length > 0) {
 
-                            return data[0].name;
+                            return data[0].name
                         } else {
-                            return '';
+                            return ''
                         }
                     }
                 },
@@ -115,10 +138,14 @@
                     render: function(data, type, row) {
                         return `<div class="flex items-center justify-end space-x-2">
                         @can('update-users')
-                            <button class="btn btn-sm btn-outline-primary edit" data-id="${data.id}">Edit</button>
+                            <button class="btn btn-sm btn-info edit" data-id="${data.id}">
+                                <i class="fas fa-pen mr-2"></i> Edit
+                            </button>
                         @endcan
                         @can('delete-users')
-                            <button class="btn btn-sm btn-outline-danger delete" data-id="${data.id}">Delete</button>
+                            <button class="btn btn-sm btn-danger delete" data-id="${data.id}">
+                               <i class="fas fa-trash mr-2"></i> Delete
+                            </button>
                         @endcan
                         </div>`;
                     }
@@ -204,8 +231,6 @@
 
             $('#form-add-user input[name="name"]').val(data.name);
             $('#form-add-user input[name="email"]').val(data.email);
-            // disable input password
-            $('#form-add-user input[name="password"]').attr('disabled', true);
             var role = new Option(data.roles[0].name, data.roles[0].id, true, true);
             $('#form-add-user .role-select').append(role).trigger('change');
 
@@ -219,7 +244,6 @@
             $('#form-add-user').attr('action', '{{ route("user.store") }}');
             $('#form-add-user')[0].reset();
             $('#form-add-user .role-select').val(null).trigger('change');
-            $('#form-add-user input[name="password"]').attr('disabled', false);
         })
 
         $('.role-select').select2({
