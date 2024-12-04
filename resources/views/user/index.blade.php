@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Users</h1>
+                    <h1 class="m-0">User</h1>
                 </div>
                 <div class="col-sm-6">
 
@@ -23,12 +23,13 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Users</h3>
+                            <h3 class="card-title">User</h3>
                             <div class="card-tools">
-                                @can('create-users')
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add-user">
+                                @can('create-user')
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#modal-add-user">
                                     <i class="fas fa-plus mr-2"></i>
-                                    Add New User
+                                    Add New user
                                 </button>
                                 @endcan
                             </div>
@@ -38,9 +39,10 @@
                             <table id="user-table" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Username</th>
-                                        <th width="40%">Role</th>
+                                        <th style="width: 10px;">No</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -48,7 +50,8 @@
                                 <tfoot>
                                     <tr>
                                         <th>No</th>
-                                        <th>Username</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
                                         <th>Role</th>
                                         <th></th>
                                     </tr>
@@ -61,7 +64,6 @@
         </div>
     </div>
 </div>
-
 @can('create-users')
 <div class="modal fade" id="modal-add-user">
     <div class="modal-dialog">
@@ -87,10 +89,6 @@
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" name="email" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="text" class="form-control" id="password" name="password" placeholder="Password">
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -122,13 +120,16 @@
                     data: 'name',
                 },
                 {
+                    data: 'email',
+                },
+                {
                     data: 'roles',
                     render: function(data, type, row) {
                         if (data.length > 0) {
 
-                            return data[0].name;
+                            return data[0].name
                         } else {
-                            return '';
+                            return ''
                         }
                     }
                 },
@@ -137,10 +138,14 @@
                     render: function(data, type, row) {
                         return `<div class="flex items-center justify-end space-x-2">
                         @can('update-users')
-                            <button class="btn btn-sm btn-outline-primary edit" data-id="${data.id}">Edit</button>
+                            <button class="btn btn-sm btn-info edit" data-id="${data.id}">
+                                <i class="fas fa-pen mr-2"></i> Edit
+                            </button>
                         @endcan
                         @can('delete-users')
-                            <button class="btn btn-sm btn-outline-danger delete" data-id="${data.id}">Delete</button>
+                            <button class="btn btn-sm btn-danger delete" data-id="${data.id}">
+                               <i class="fas fa-trash mr-2"></i> Delete
+                            </button>
                         @endcan
                         </div>`;
                     }
@@ -200,17 +205,17 @@
             console.log(id);
             var result = confirm('Are you sure you want to delete this user?');
 
-            if(result) {
+            if (result) {
                 $.ajax({
-                url: '{{ route("user.destroy") }}',
-                method: "DELETE",
-                data: {
-                    id: id
-                },
-                success: function(response) {
-                    table.DataTable().ajax.reload();
-                }
-            })
+                    url: '{{ route("user.destroy") }}',
+                    method: "DELETE",
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        table.DataTable().ajax.reload();
+                    }
+                })
             }
         })
 
@@ -226,8 +231,6 @@
 
             $('#form-add-user input[name="name"]').val(data.name);
             $('#form-add-user input[name="email"]').val(data.email);
-            // disable input password
-            $('#form-add-user input[name="password"]').attr('disabled', true);
             var role = new Option(data.roles[0].name, data.roles[0].id, true, true);
             $('#form-add-user .role-select').append(role).trigger('change');
 
@@ -241,7 +244,6 @@
             $('#form-add-user').attr('action', '{{ route("user.store") }}');
             $('#form-add-user')[0].reset();
             $('#form-add-user .role-select').val(null).trigger('change');
-            $('#form-add-user input[name="password"]').attr('disabled', false);
         })
 
         $('.role-select').select2({

@@ -52,15 +52,12 @@ class UserController extends Controller
                 'role' => 'required',
                 'name' => 'required',
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required|min:8'
             ], [
                 'role.required' => 'The role field is required',
                 'name.required' => 'The name field is required',
                 'email.required' => 'The email field is required',
                 'email.email' => 'The email must be a valid email address',
                 'email.unique' => 'The email has already been taken',
-                'password.required' => 'The password field is required',
-                'password.min' => 'The password must be at least 8 characters'
             ]);
 
             if ($validate->fails()) {
@@ -73,7 +70,6 @@ class UserController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password)
             ]);
 
             $role = Role::findById($request->role);
