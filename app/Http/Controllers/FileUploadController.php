@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 final class FileUploadController extends Controller
@@ -63,10 +64,13 @@ final class FileUploadController extends Controller
     {
         try {
             $filePath = $request->getContent();
-
-
+            Log::info($filePath);
             if (Storage::exists($filePath)) {
                 Storage::delete($filePath);
+            }
+            $folderPath = dirname($filePath);
+            if (Storage::exists($folderPath) && count(Storage::files($folderPath)) === 0) {
+                Storage::deleteDirectory($folderPath);
             }
 
             return response('', 200);

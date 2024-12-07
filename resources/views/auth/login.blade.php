@@ -1,9 +1,11 @@
 @extends('layouts.app')
 
+@section('title', 'Login')
+
 @section('content')
 <div class="login-box">
     <div class="login-logo">
-        <a href="#"><b>Admin</b>LTE</a>
+        <a href="#">Login</a>
     </div>
 
     <div class="card">

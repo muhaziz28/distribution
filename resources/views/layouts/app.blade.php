@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Log in</title>
+    <title>@yield('title') | PT Ardhana Putra Lestari</title>
     @if (auth()->check())
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @endif
