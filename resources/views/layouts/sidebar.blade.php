@@ -98,14 +98,28 @@
                 </li>
                 @endcan
                 @can('read-material')
-                <li class="nav-item">
-                    <a href="{{ route('material.index') }}"
-                        class="nav-link {{ request()->is('material*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-users"></i>
+                <li class="nav-item {{ request()->is('material*') || request()->is('transaction*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('material*') || request()->is('material*')  ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-table"></i>
                         <p>
                             Material
+                            <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('material.index') }}" class="nav-link {{ request()->is('material*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Stok</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('transaction.index') }}" class="nav-link {{ request()->is('transaction*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Transaksi</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 @endcan
                 @can('read-bahan')

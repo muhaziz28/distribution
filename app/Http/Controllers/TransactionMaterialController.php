@@ -6,11 +6,8 @@ use App\Models\Material;
 use App\Models\MaterialPurchaseItems;
 use App\Models\MaterialPurchases;
 use Exception;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class TransactionMaterialController extends Controller
@@ -102,6 +99,7 @@ class TransactionMaterialController extends Controller
                 $material = Material::where('vendor_id', $vendorID)->where('bahan_id', $bahanID)->first();
                 if ($material) {
                     $material->qty += $qty;
+                    $material->save();
                 } else {
                     Material::create([
                         'vendor_id' => $vendorID,

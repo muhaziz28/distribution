@@ -11,6 +11,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SatuanController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransactionMaterialController;
 use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
@@ -162,5 +163,10 @@ Route::middleware('auth')->group(function () {
     Route::controller(MaterialController::class)->prefix('material')->group(function () {
         Route::get('', 'index')->name('material.index');
         Route::get('data', 'data')->name('material.data');
+    });
+
+    Route::controller(TransactionController::class)->prefix('transaction')->group(function () {
+        Route::get('', 'index')->name('transaction.index');
+        Route::get('data', 'data')->name('transaction.data');
     });
 });
