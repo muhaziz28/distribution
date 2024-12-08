@@ -39,21 +39,22 @@
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-primary btn-sm mb-3" data-toggle="modal" data-target="#modal-add-block">
-                                    <i class="fas fa-plus mr-2"></i>
-                                    Tambah Block
-                                </button>
-                            </div>
 
                             <div class="tab-content">
                                 <div class="active tab-pane" id="activity">
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-primary btn-sm mb-3" data-toggle="modal" data-target="#modal-add-block">
+                                            <i class="fas fa-plus mr-2"></i>
+                                            Tambah Block
+                                        </button>
+                                    </div>
                                     <table id="block-table" class="table table-bordered table-striped" width="100%">
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px;">No</th>
                                                 <th>Block</th>
                                                 <th style="width: 30px;">Type</th>
+                                                <th>Customer</th>
                                                 <th>Harga</th>
                                                 <th>Luas Tanah</th>
                                                 <th>Luas Bangunan</th>
@@ -66,6 +67,7 @@
                                                 <th>No</th>
                                                 <th>Block</th>
                                                 <th>Type</th>
+                                                <th>Customer</th>
                                                 <th>Harga</th>
                                                 <th>Luas Tanah</th>
                                                 <th>Luas Bangunan</th>
@@ -99,6 +101,7 @@
 </div>
 
 @include('detail-project.block-modal')
+@include('customer.modal')
 
 <div class="content-wrapper">
 

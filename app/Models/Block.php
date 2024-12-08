@@ -24,4 +24,9 @@ class Block extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }
