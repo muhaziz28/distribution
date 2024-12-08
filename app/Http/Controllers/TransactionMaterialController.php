@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Material;
 use App\Models\MaterialPurchaseItems;
 use App\Models\MaterialPurchases;
+use Exception;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class TransactionMaterialController extends Controller
 {
@@ -17,10 +20,9 @@ class TransactionMaterialController extends Controller
         $this->middleware('auth');
     }
 
-    public function index($projectID)
+    public function index()
     {
-
-        return view('transaction-materials.index', compact('projectID'));
+        return view('transaction-materials.index');
     }
 
     public function store(Request $request)
@@ -32,14 +34,13 @@ class TransactionMaterialController extends Controller
         $purchase = json_decode($purchaseJson, true);
         $belanja = json_decode($belanjaJson, true);
 
-        $validator = \Validator::make([
+        $validator = Validator::make([
             'purchase' => $purchase,
             'belanja' => $belanja,
             'file' => $filePath,
         ], [
             'purchase.vendor_id' => 'required|exists:vendors,id',
             'purchase.transaction_date' => 'required',
-            'purchase.project_id' => 'required|exists:project,id',
             'belanja' => 'required|array',
             'belanja.*.bahan_id' => 'required|exists:bahans,id',
             'belanja.*.qty' => 'required|numeric|min:1',
@@ -74,7 +75,7 @@ class TransactionMaterialController extends Controller
                 if (file_exists($tmpFilePath)) {
                     rename($tmpFilePath, $finalFilePath);
                 } else {
-                    throw new \Exception("File tidak ditemukan di direktori sementara.");
+                    throw new Exception("File tidak ditemukan di direktori sementara.");
                 }
 
                 $relativeFilePathUrl = asset('storage/' . $relativeFilePath);
@@ -82,20 +83,34 @@ class TransactionMaterialController extends Controller
 
             $materialPurchase = MaterialPurchases::create([
                 'vendor_id'         => $purchase['vendor_id'],
-                'project_id'        => $purchase['project_id'],
                 'transaction_date'  => $purchase['transaction_date'],
                 'attachment'        => $relativeFilePathUrl ?? null,
             ]);
 
             foreach ($belanja as $item) {
-                MaterialPurchaseItems::create([
+                $materialPurchaseItem = MaterialPurchaseItems::create([
                     'material_purchases_id' => $materialPurchase->id,
                     'bahan_id' => $item['bahan_id'],
                     'qty' => $item['qty'],
                     'harga_satuan' => $item['harga_satuan'],
                     'total' => $item['total'],
                 ]);
+                $vendorID = $purchase['vendor_id'];
+                $bahanID = $item['bahan_id'];
+                $qty = $item['qty'];
+
+                $material = Material::where('vendor_id', $vendorID)->where('bahan_id', $bahanID)->first();
+                if ($material) {
+                    $material->qty += $qty;
+                } else {
+                    Material::create([
+                        'vendor_id' => $vendorID,
+                        'bahan_id' => $bahanID,
+                        'qty' => $qty,
+                    ]);
+                }
             }
+
 
             DB::commit();
 

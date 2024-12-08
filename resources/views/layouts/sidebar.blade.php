@@ -97,6 +97,17 @@
                     </a>
                 </li>
                 @endcan
+                @can('read-material')
+                <li class="nav-item">
+                    <a href="{{ route('material.index') }}"
+                        class="nav-link {{ request()->is('material*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Material
+                        </p>
+                    </a>
+                </li>
+                @endcan
                 @can('read-bahan')
                 <li class="nav-header">MASTER BAHAN</li>
                 @endcan

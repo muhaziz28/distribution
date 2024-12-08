@@ -6,6 +6,7 @@ use App\Http\Controllers\BlockController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DetailProjectController;
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RoleController;
@@ -126,7 +127,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::controller(TransactionMaterialController::class)->prefix('transaction-materials')->group(function () {
-        Route::get('/{projectID}', 'index')->name('transaction-materials.index');
+        Route::get('', 'index')->name('transaction-materials.index');
         Route::post('/store', 'store')->name('transaction-materials.store');
         Route::get('/transaction-detail/{materialPurchasesID}', 'detailTransaction')->name('transaction-materials.detailTransaction');
     });
@@ -156,5 +157,10 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'store')->name('customer.store');
         Route::put('update', 'update')->name('customer.update');
         Route::delete('destroy', 'destroy')->name('customer.destroy');
+    });
+
+    Route::controller(MaterialController::class)->prefix('material')->group(function () {
+        Route::get('', 'index')->name('material.index');
+        Route::get('data', 'data')->name('material.data');
     });
 });

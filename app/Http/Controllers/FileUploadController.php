@@ -64,7 +64,6 @@ final class FileUploadController extends Controller
     {
         try {
             $filePath = $request->getContent();
-            Log::info($filePath);
             if (Storage::exists($filePath)) {
                 Storage::delete($filePath);
             }

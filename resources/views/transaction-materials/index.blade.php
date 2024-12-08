@@ -37,7 +37,6 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <input type="hidden" name="project_id" id="project_id" value="{{ $projectID }}">
                                     <div class="col-md-6">
                                         <label for="">Tanggal Transaksi</label>
                                         <input type="date" name="transaction_date" id="transaction_date" class="form-control" placeholder="Tanggal Transaksi" required>
