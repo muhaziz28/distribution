@@ -36,9 +36,11 @@
             {
                 data: null,
                 render: function(data, type, row) {
-
                     return `<div class="flex items-center justify-end space-x-2">
-                            <button class="btn btn-sm btn-info edit-block" data-id="${data.id}">
+                            <a href="${data.detail_url}" class="btn btn-sm btn-info">
+                                <i class="fas fa-eye mr-2"></i> Detail
+                            </a>
+                            <button class="btn btn-sm btn-warning edit-block" data-id="${data.id}">
                                 <i class="fas fa-pen mr-2"></i>
                                 Edit
                             </button>

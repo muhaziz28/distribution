@@ -146,6 +146,8 @@ Route::middleware('auth')->group(function () {
         Route::post('store/{id}', 'store')->name('block.store');
         Route::put('update', 'update')->name('block.update');
         Route::delete('destroy', 'destroy')->name('block.destroy');
+
+        Route::get('detail/{id}', 'detail')->name('block.detail');
     });
 
     Route::controller(CustomerController::class)->prefix('customer')->group(function () {

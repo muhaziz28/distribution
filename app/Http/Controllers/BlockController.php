@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Block;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
+
+use function PHPUnit\Framework\returnSelf;
 
 class BlockController extends Controller
 {
@@ -17,7 +20,20 @@ class BlockController extends Controller
 
     public function data($projectID)
     {
-        $result = Block::with('customer')->where("project_id", $projectID)->get();
+        $result = Block::with('customer')->where("project_id", $projectID)->get()->map(function ($result) {
+            return [
+                'id'                => $result->id,
+                'project_id'        => $result->project_id,
+                'block'             => $result->block,
+                'type'              => $result->type,
+                'harga'             => $result->harga,
+                'luas_tanah'        => $result->luas_tanah,
+                'luas_bangunan'     => $result->luas_bangunan,
+                'customer_id'       => $result->customer_id,
+                'customer'          => $result->customer,
+                'detail_url'        => route('block.detail', $result->id),
+            ];
+        });
         return DataTables::of($result)->addIndexColumn()->toJson();
     }
 
@@ -88,6 +104,16 @@ class BlockController extends Controller
                 'success' => false,
                 'message' => $e->getMessage()
             ]);
+        }
+    }
+
+    public function detail($id)
+    {
+        try {
+            $result = Block::findOrFail($id);
+            return view('block.index', compact('result'));
+        } catch (Exception $e) {
+            return redirect()->back();
         }
     }
 
