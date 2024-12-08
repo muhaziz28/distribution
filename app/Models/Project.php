@@ -18,7 +18,6 @@ class Project extends Model
         'kegiatan',
         'pekerjaan',
         'lokasi',
-        'status',
     ];
 
 

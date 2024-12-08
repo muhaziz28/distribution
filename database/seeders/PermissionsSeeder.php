@@ -53,5 +53,10 @@ class PermissionsSeeder extends Seeder
         foreach ($tukangPermission as $permission) {
             \Spatie\Permission\Models\Permission::create(['name' => $permission]);
         }
+
+        $customerPermission = ["create-customer", "read-customer", "update-customer", 'delete-customer'];
+        foreach ($customerPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
     }
 }

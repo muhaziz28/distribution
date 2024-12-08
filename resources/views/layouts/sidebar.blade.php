@@ -86,6 +86,17 @@
                     </a>
                 </li>
                 @endcan
+                @can('read-customer')
+                <li class="nav-item">
+                    <a href="{{ route('customer.index') }}"
+                        class="nav-link {{ request()->is('customer*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Customer
+                        </p>
+                    </a>
+                </li>
+                @endcan
                 @can('read-bahan')
                 <li class="nav-header">MASTER BAHAN</li>
                 @endcan

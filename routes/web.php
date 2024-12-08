@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthOtpController;
 use App\Http\Controllers\BahanController;
+use App\Http\Controllers\BlockController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DetailProjectController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\PermissionController;
@@ -16,6 +18,7 @@ use App\Http\Controllers\WorkerPaymentController;
 use App\Models\WorkerPayment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use League\CommonMark\Parser\Block\BlockContinue;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,14 +42,13 @@ Route::get('/', function () {
 // Auth::routes();
 Route::get('login', [AuthOtpController::class, 'login'])->name('login');
 Route::controller(AuthOtpController::class)->prefix("otp")->group(function () {
-    Route::post('/otp/generate', 'generate')->name('otp.generate');
-    Route::get('/otp/verification/{user_id}', 'verification')->name('otp.verification');
-    Route::post('/otp/login', 'loginWithOtp')->name('otp.getlogin');
+    Route::post('/generate', 'generate')->name('otp.generate');
+    Route::get('/verification/{user_id}', 'verification')->name('otp.verification');
+    Route::post('/login', 'loginWithOtp')->name('otp.getlogin');
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-// middleware('auth') digunakan untuk membatasi akses ke halaman ini hanya untuk user yang sudah login
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthOtpController::class, 'logout'])->name('logout');
     Route::controller(RoleController::class)->prefix('role')->group(function () {
@@ -135,9 +137,22 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'store')->name("worker-payment.store");
     });
 
-
-
     Route::post('uploads/process', [FileUploadController::class, 'process'])->name('uploads.process');
     Route::post('save', [FileUploadController::class, 'save'])->name('uploads.save');
     Route::delete('/uploads/revert', [FileUploadController::class, 'revert'])->name('uploads.revert');
+
+    Route::controller(BlockController::class)->prefix('block')->group(function () {
+        Route::get('data/{id}', 'data')->name('block.data');
+        Route::post('store/{id}', 'store')->name('block.store');
+        Route::put('update', 'update')->name('block.update');
+        Route::delete('destroy', 'destroy')->name('block.destroy');
+    });
+
+    Route::controller(CustomerController::class)->prefix('customer')->group(function () {
+        Route::get('', 'index')->name('customer.index');
+        Route::get('data', 'data')->name('customer.data');
+        Route::post('store', 'store')->name('customer.store');
+        Route::put('update', 'update')->name('customer.update');
+        Route::delete('destroy', 'destroy')->name('customer.destroy');
+    });
 });

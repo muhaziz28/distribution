@@ -17,11 +17,11 @@ class ProjectController extends Controller
         $this->middleware('auth');
     }
 
-
     public function index()
     {
         return view('project.index');
     }
+
     public function data()
     {
         if (!Gate::allows('read-project')) {
@@ -37,7 +37,6 @@ class ProjectController extends Controller
                 'kegiatan' => $project->kegiatan,
                 'pekerjaan' => $project->pekerjaan,
                 'lokasi' => $project->lokasi,
-                'status' => $project->status,
                 'detail_url' => route('project.detail', $project->id),
                 'can_update' => Gate::allows('update-project', $project),
                 'can_delete' => Gate::allows('delete-project', $project),
@@ -57,33 +56,14 @@ class ProjectController extends Controller
             ]);
         }
         try {
-            $validate = Validator::make($request->all(), [
-                'tahun_anggaran'    => 'required|string|max:255',
-                'kegiatan'          => 'required|string|max:255',
-                'pekerjaan'         => 'required|string|max:255',
-                'lokasi'            => 'required|string|max:255',
-                'status'            => 'required|string|max:255',
-            ], [
-                'tahun_anggaran.required'   => 'Tahun Anggaran wajib diisi',
-                'kegiatan.required'         => 'Kegiatan wajib diisi',
-                'pekerjaan.required'        => 'Pekerjaan wajib diisi',
-                'lokasi.required'           => 'Lokasi wajib diisi',
-                'status.required'           => 'Status wajib diisi',
-            ]);
-
-            if ($validate->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $validate->errors()->first()
-                ]);
-            }
+            $validateResponse = $this->validateRequest($request);
+            if ($validateResponse) return $validateResponse;
 
             $project = Project::create([
                 'tahun_anggaran' => $request->tahun_anggaran,
                 'kegiatan' => $request->kegiatan,
                 'pekerjaan' => $request->pekerjaan,
                 'lokasi' => $request->lokasi,
-                'status' => $request->status,
             ]);
 
 
@@ -111,33 +91,14 @@ class ProjectController extends Controller
             ]);
         }
         try {
-            $validate = Validator::make($request->all(), [
-                'tahun_anggaran'    => 'required|string|max:255',
-                'kegiatan'          => 'required|string|max:255',
-                'pekerjaan'         => 'required|string|max:255',
-                'lokasi'            => 'required|string|max:255',
-                'status'            => 'required|string|max:255',
-            ], [
-                'tahun_anggaran.required'   => 'Tahun Anggaran wajib diisi',
-                'kegiatan.required'         => 'Kegiatan wajib diisi',
-                'pekerjaan.required'        => 'Pekerjaan wajib diisi',
-                'lokasi.required'           => 'Lokasi wajib diisi',
-                'status.required'           => 'Status wajib diisi',
-            ]);
-
-            if ($validate->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $validate->errors()->first()
-                ]);
-            }
+            $validateResponse = $this->validateRequest($request);
+            if ($validateResponse) return $validateResponse;
 
             $project = Project::find($request->id);
             $project->tahun_anggaran = $request->tahun_anggaran;
             $project->kegiatan = $request->kegiatan;
             $project->pekerjaan = $request->pekerjaan;
             $project->lokasi = $request->lokasi;
-            $project->status = $request->status;
 
             $project->save();
 
@@ -158,7 +119,6 @@ class ProjectController extends Controller
             ]);
         }
     }
-
 
     public function destroy(Request $request)
     {
@@ -182,5 +142,29 @@ class ProjectController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    public function validateRequest($request)
+    {
+        $validate = Validator::make($request->all(), [
+            'tahun_anggaran'    => 'required|string|max:255',
+            'kegiatan'          => 'required|string|max:255',
+            'pekerjaan'         => 'required|string|max:255',
+            'lokasi'            => 'required|string|max:255',
+        ], [
+            'tahun_anggaran.required'   => 'Tahun Anggaran wajib diisi',
+            'kegiatan.required'         => 'Kegiatan wajib diisi',
+            'pekerjaan.required'        => 'Pekerjaan wajib diisi',
+            'lokasi.required'           => 'Lokasi wajib diisi',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validate->errors()->first()
+            ]);
+        }
+
+        return null;
     }
 }
