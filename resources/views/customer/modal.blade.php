@@ -15,7 +15,7 @@
                         <input type="text" class="form-control" id="name" name="name" placeholder="Nama Customer" required>
                     </div>
                     <div class="form-group">
-                        <label for="np_hp">np_hp</label>
+                        <label for="np_hp">Kontak</label>
                         <input type="text" class="form-control" id="np_hp" name="no_hp" placeholder="No HP" maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 15)">
                     </div>
                 </div>

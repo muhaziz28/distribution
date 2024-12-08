@@ -54,6 +54,7 @@
                                                 <th style="width: 10px;">No</th>
                                                 <th>Block</th>
                                                 <th style="width: 30px;">Type</th>
+                                                <th>Customer</th>
                                                 <th>Harga</th>
                                                 <th>Luas Tanah</th>
                                                 <th>Luas Bangunan</th>
@@ -66,6 +67,7 @@
                                                 <th>No</th>
                                                 <th>Block</th>
                                                 <th>Type</th>
+                                                <th>Customer</th>
                                                 <th>Harga</th>
                                                 <th>Luas Tanah</th>
                                                 <th>Luas Bangunan</th>
@@ -99,6 +101,7 @@
 </div>
 
 @include('detail-project.block-modal')
+@include('customer.modal')
 
 <div class="content-wrapper">
 

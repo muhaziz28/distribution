@@ -19,6 +19,20 @@
                         <input type="text" class="form-control" id="type" name="type" placeholder="Type" required>
                     </div>
                     <div class="form-group">
+                        <label for="customer_id">Customer</label>
+                        <div class="row">
+                            <div class="col-7">
+                                <select class="form-control" name="customer_id" id="customer_id"></select>
+                            </div>
+                            <div class="col-5">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-customer">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Tambah Customer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="harga">Harga</label>
                         <input type="text" class="form-control" id="harga" name="harga" placeholder="Harga" maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 15)">
                     </div>

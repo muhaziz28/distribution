@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->foreign('customer_id')
                 ->references('id')
-                ->on('project')
+                ->on('customers')
                 ->onDelete('cascade');
             $table->softDeletes();
         });

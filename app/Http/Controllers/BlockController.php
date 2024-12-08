@@ -17,7 +17,7 @@ class BlockController extends Controller
 
     public function data($projectID)
     {
-        $result = Block::where("project_id", $projectID)->get();
+        $result = Block::with('customer')->where("project_id", $projectID)->get();
         return DataTables::of($result)->addIndexColumn()->toJson();
     }
 
@@ -31,6 +31,7 @@ class BlockController extends Controller
                 'project_id'  => $projectID,
                 'block'       => $request->block,
                 'type'        => $request->type,
+                'customer_id' => $request->customer_id,
                 'harga'       => $request->harga,
                 'luas_tanah'  => $request->luas_tanah,
                 'luas_bangunan' => $request->luas_bangunan,
@@ -54,6 +55,7 @@ class BlockController extends Controller
             $block->update([
                 'block'       => $request->block,
                 'type'        => $request->type,
+                'customer_id' => $request->customer_id,
                 'harga'       => $request->harga,
                 'luas_tanah'  => $request->luas_tanah,
                 'luas_bangunan' => $request->luas_bangunan,

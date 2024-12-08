@@ -235,6 +235,7 @@
                 }
             }
         });
+
         $(document).on('click', '.restore-satuan', function(e) {
             e.preventDefault()
             var data = table.DataTable().row($(this).closest('tr')).data();
@@ -274,7 +275,6 @@
             });
 
         })
-
     })
 </script>
 @endpush
