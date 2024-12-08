@@ -27,7 +27,7 @@ class TransactionMaterialController extends Controller
     {
         $purchaseJson = $request->input('purchase');
         $belanjaJson = $request->input('belanja');
-        $filePath = $request->input('file'); // Path file dari FilePond
+        $filePath = $request->input('file');
 
         $purchase = json_decode($purchaseJson, true);
         $belanja = json_decode($belanjaJson, true);
@@ -66,7 +66,7 @@ class TransactionMaterialController extends Controller
                 $finalFilePath = storage_path('app/public/' . $relativeFilePath);
 
                 if (!file_exists(dirname($finalFilePath))) {
-                    mkdir(dirname($finalFilePath), 0777, true); // Membuat folder jika belum ada
+                    mkdir(dirname($finalFilePath), 0777, true);
                 }
 
                 $tmpFilePath = storage_path('app/' . $filePath);

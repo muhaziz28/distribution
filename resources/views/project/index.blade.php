@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title','Project')
+
 @section('content')
 <div class="content-wrapper">
 
@@ -44,8 +46,7 @@
                                         <th>Kegiatan</th>
                                         <th>Pekerjaan</th>
                                         <th>Lokasi</th>
-                                        <th>Status</th>
-                                        <th></th>
+                                        <th style="width: 250px;"></th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -56,7 +57,6 @@
                                         <th>Kegiatan</th>
                                         <th>Pekerjaan</th>
                                         <th>Lokasi</th>
-                                        <th>Status</th>
                                         <th></th>
                                     </tr>
                                 </tfoot>
@@ -70,55 +70,7 @@
 </div>
 
 @can('create-project')
-<div class="modal fade" id="modal-add-project">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('project.store') }}" method="POST" id="form-add-project">
-                @csrf
-                <div class="modal-header">
-                    <h4 class="modal-title" id="title">Add New Project</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="tahun_anggaran">Tahun Anggaran</label>
-                        <input type="number" class="form-control" id="tahun_anggaran" name="tahun_anggaran"
-                            placeholder="Tahun Anggaran.." min="1900" max="2100">
-                    </div>
-                    <div class="form-group">
-                        <label for="kegiatan">Kegiatan</label>
-                        <input type="text" class="form-control" id="kegiatan" name="kegiatan"
-                            placeholder="Kegiatan...">
-                    </div>
-                    <div class="form-group">
-                        <label for="pekerjaan">Pekerjaan</label>
-                        <input type="text" class="form-control" id="pekerjaan" name="pekerjaan"
-                            placeholder="Pekerjaan...">
-                    </div>
-                    <div class="form-group">
-                        <label for="lokasi">Lokasi</label>
-                        <input type="text" class="form-control" id="lokasi" name="lokasi"
-                            placeholder="Lokasi...">
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select name="status" id="status" class="form-control">
-                            <option value="pending">Pending</option>
-                            <option value="process">Process</option>
-                            <option value="finished">Finished</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+@include('project.modal')
 @endcan
 @endsection
 
@@ -149,55 +101,13 @@
                     data: 'lokasi',
                 },
                 {
-                    data: 'status',
-                    render: function(data, type, row) {
-                        if (data == "pending") {
-                            return `<span class="badge bg-warning">Pending</span`
-                        } else if (data == "process") {
-                            return `<span class="badge bg-info">Process</span`
-                        } else {
-                            return `<span class="badge bg-success">Finished</span`
-                        }
-                    }
-                },
-                {
                     data: null,
                     render: function(data) {
-                        if (data.status === 'pending') {
-                            return `<div class="flex items-center justify-end space-x-2">
-                                    <button class="btn btn-sm btn-success continue" data-id="${data.id}">
-                                        <i class="fas fa-play mr-2"></i> Continue
-                                    </button>
-                                    ${data.can_update ? `
-                                    <button class="btn btn-sm btn-info edit" data-id="${data.id}">
-                                    <i class="fas fa-pen mr-2"></i> Edit
-                                    </button>` : ''}
-                                    ${data.can_delete ? `
-                                    <button class="btn btn-sm btn-danger delete" data-id="${data.id}">
-                                    <i class="fas fa-trash mr-2"></i> Delete
-                                    </button>` : ''}
-                                </div>`
-                        }
-
-                        if (data.status === 'finished') {
-                            return `<div class="flex items-center justify-end space-x-2">
-                                    <a href="${data.detail_url}" class="btn btn-sm btn-default">
-                                        <i class="fas fa-eye mr-2"></i> Detail
-                                    </a>
-                                </div>`
-                        }
-
                         return `
                                 <div class="flex items-center justify-end space-2">
                                     <a href="${data.detail_url}" class="btn btn-sm btn-default">
                                         <i class="fas fa-eye mr-2"></i> Detail
                                     </a>
-                                    <button data-id="${data.id}" class="btn btn-sm btn-warning pending">
-                                        <i class="fas fa-pause mr-2"></i> Pending
-                                    </button>
-                                    <button data-id="${data.id}" class="btn btn-sm btn-success finish">
-                                        <i class="fas fa-check-circle mr-2"></i> Finish
-                                    </button>
                                     ${data.can_update ? `
                                     <button class="btn btn-sm btn-info edit" data-id="${data.id}">
                                     <i class="fas fa-pen mr-2"></i> Edit
@@ -294,7 +204,6 @@
             $('#form-add-project input[name="kegiatan"]').val(data.kegiatan);
             $('#form-add-project input[name="pekerjaan"]').val(data.pekerjaan);
             $('#form-add-project input[name="lokasi"]').val(data.lokasi);
-            $('#form-add-project select[name="status"]').val(data.status);
         });
 
         $('#modal-add-project').on('hidden.bs.modal', function() {
@@ -316,111 +225,6 @@
                 alert("Tahun yang dipilih: " + tahun);
             }
         }
-
-        $(document).on('click', '.continue', function() {
-            var id = $(this).data('id')
-            var data = table.DataTable().row($(this).closest('tr')).data();
-            console.log(data)
-            var result = confirm('Lanjutkan project ini?');
-
-            if (result) {
-                var form = new FormData();
-                form.append('id', id);
-                form.append('tahun_anggaran', data.tahun_anggaran);
-                form.append('kegiatan', data.kegiatan);
-                form.append('pekerjaan', data.pekerjaan);
-                form.append('lokasi', data.lokasi);
-                form.append('status', 'process');
-                form.append('_method', 'PUT');
-
-                $.ajax({
-                    url: "{{ route('project.update') }}",
-                    method: "POST",
-                    data: form,
-                    processData: false,
-                    dataType: 'json',
-                    contentType: false,
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success(response.message);
-                            table.DataTable().ajax.reload(null, false);
-                        } else {
-                            toastr.error(response.message);
-                        }
-                    }
-                })
-            }
-        })
-
-        $(document).on('click', '.pending', function() {
-            var id = $(this).data('id')
-            var data = table.DataTable().row($(this).closest('tr')).data();
-            console.log(data)
-            var result = confirm('Hentikan project ini?');
-
-            if (result) {
-                var form = new FormData();
-                form.append('id', id);
-                form.append('tahun_anggaran', data.tahun_anggaran);
-                form.append('kegiatan', data.kegiatan);
-                form.append('pekerjaan', data.pekerjaan);
-                form.append('lokasi', data.lokasi);
-                form.append('status', 'pending');
-                form.append('_method', 'PUT');
-
-                $.ajax({
-                    url: "{{ route('project.update') }}",
-                    method: "POST",
-                    data: form,
-                    processData: false,
-                    dataType: 'json',
-                    contentType: false,
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success(response.message);
-                            table.DataTable().ajax.reload(null, false);
-                        } else {
-                            toastr.error(response.message);
-                        }
-                    }
-                })
-            }
-        })
-
-        $(document).on('click', '.finish', function() {
-            var id = $(this).data('id')
-            var data = table.DataTable().row($(this).closest('tr')).data();
-            console.log(data)
-            var result = confirm('Tandai project ini selesai?');
-
-            if (result) {
-                var form = new FormData();
-                form.append('id', id);
-                form.append('tahun_anggaran', data.tahun_anggaran);
-                form.append('kegiatan', data.kegiatan);
-                form.append('pekerjaan', data.pekerjaan);
-                form.append('lokasi', data.lokasi);
-                form.append('status', 'finished');
-                form.append('_method', 'PUT');
-
-                $.ajax({
-                    url: "{{ route('project.update') }}",
-                    method: "POST",
-                    data: form,
-                    processData: false,
-                    dataType: 'json',
-                    contentType: false,
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success(response.message);
-                            table.DataTable().ajax.reload(null, false);
-                        } else {
-                            toastr.error(response.message);
-                        }
-                    }
-                })
-            }
-        })
     })
 </script>
 @endpush
