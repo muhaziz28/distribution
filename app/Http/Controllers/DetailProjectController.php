@@ -24,26 +24,9 @@ class DetailProjectController extends Controller
 
         $result = Project::with(['workerProjects.tukang'])->where('id', $id)->first();
 
-        if (!$result) {
-            return redirect()->route('project.index')->with('error', 'Project not found.');
-        }
+        if (!$result) return redirect()->route('project.index')->with('error', 'Project not found.');
 
-
-        $materialPurchases = MaterialPurchases::with('materialPurchaseItems')->where('project_id', $result->id)->get();
-
-        foreach ($materialPurchases as $materialPurchase) {
-            $materialPurchase->total = $materialPurchase->materialPurchaseItems->sum(function ($item) {
-                return $item->qty * $item->harga_satuan;
-            });
-        }
-
-        $total = $materialPurchases->sum('total');
-
-        $workers = Tukang::all();
-
-        $assignedWorkers = $result->workerProjects;
-
-        return view('detail-project.index', compact('result', 'materialPurchases', 'total', 'workers', 'assignedWorkers'));
+        return view('detail-project.index', compact('result'));
     }
 
     public function workerAssignmentData($projectID)
