@@ -113,6 +113,7 @@ class TransactionMaterialController extends Controller
                         'vendor_id' => $vendorID,
                         'bahan_id' => $bahanID,
                         'qty' => $qty,
+                        'material_purchase_item_id' => $materialPurchaseItem->id,
                     ]);
                 }
             }

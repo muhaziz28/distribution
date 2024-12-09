@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthOtpController;
 use App\Http\Controllers\BahanController;
 use App\Http\Controllers\BlockController;
+use App\Http\Controllers\BlockMaterialDistributionController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DetailProjectController;
 use App\Http\Controllers\DistirbutionController;
@@ -174,5 +175,9 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(DistirbutionController::class)->prefix('distribution')->group(function () {
         Route::post('', 'distribute')->name('distribution.distribute');
+    });
+
+    Route::controller(BlockMaterialDistributionController::class)->prefix('block-material')->group(function () {
+        Route::get('/{blockID}', 'data')->name('block-material.data');
     });
 });

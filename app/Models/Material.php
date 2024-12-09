@@ -14,7 +14,13 @@ class Material extends Model
         "bahan_id",
         "qty",
         "vendor_id",
+        "material_purchase_item_id"
     ];
+
+    public function materialPurchaseItem()
+    {
+        return $this->belongsTo(MaterialPurchaseItems::class, 'material_purchase_item_id');
+    }
 
     public function bahan()
     {
