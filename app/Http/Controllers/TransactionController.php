@@ -29,6 +29,18 @@ class TransactionController extends Controller
             return $purchases;
         });
 
-        return DataTables::of($result)->addIndexColumn()->toJson();
+        $data = $purchase->map(function ($item) {
+            return [
+                'id'                => $item->id,
+                'vendor_id'         => $item->vendor_id,
+                'attachment'        => $item->attachment,
+                'transaction_date'  => $item->transaction_date,
+                'total'             => $item->total,
+                'vendor'            => $item->vendor,
+                'detail_url'        => route('transaction-materials.detailTransaction', $item->id),
+            ];
+        });
+
+        return DataTables::of($data)->addIndexColumn()->toJson();
     }
 }

@@ -41,6 +41,7 @@
                                         <th>Bukti Transaksi</th>
                                         <th>Tanggal</th>
                                         <th>Total</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -51,6 +52,7 @@
                                         <th>Bukti Transaksi</th>
                                         <th>Tanggal</th>
                                         <th>Total</th>
+                                        <th></th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -86,7 +88,7 @@
                     data: 'attachment',
                     render: function(data, type, row) {
                         if (data != null || data != undefined) {
-                            return `<a href="${data}" class="btn btn-info btn-sm">Lihat FIle</a`
+                            return `<a href="${data}" class="btn btn-info btn-sm">Lihat FIle</a>`
                         }
                         return ''
                     }
@@ -96,6 +98,12 @@
                 },
                 {
                     data: 'total',
+                },
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        return `<a href="${row.detail_url}" class="btn btn-default btn-sm">Lihat FIle</a>`
+                    }
                 }
             ];
         }

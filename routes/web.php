@@ -5,6 +5,7 @@ use App\Http\Controllers\BahanController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DetailProjectController;
+use App\Http\Controllers\DistirbutionController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PermissionController;
@@ -21,6 +22,7 @@ use App\Models\WorkerPayment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use League\CommonMark\Parser\Block\BlockContinue;
+use Spatie\Permission\Contracts\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -168,5 +170,9 @@ Route::middleware('auth')->group(function () {
     Route::controller(TransactionController::class)->prefix('transaction')->group(function () {
         Route::get('', 'index')->name('transaction.index');
         Route::get('data', 'data')->name('transaction.data');
+    });
+
+    Route::controller(DistirbutionController::class)->prefix('distribution')->group(function () {
+        Route::post('', 'distribute')->name('distribution.distribute');
     });
 });

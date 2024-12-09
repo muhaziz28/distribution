@@ -64,6 +64,7 @@
 
 @can('create-bahan')
 @include('bahan.modal')
+@include('satuan.modal')
 @endcan
 
 @endsection
@@ -274,6 +275,37 @@
                 }
             });
 
+        })
+
+        $('#form-add-satuan').on('submit', function(e) {
+            e.preventDefault();
+            var form = new FormData(this)
+            $.ajax({
+                url: $(this).attr('action'),
+                method: "POST",
+                data: form,
+                processData: false,
+                dataType: 'json',
+                contentType: false,
+                beforeSend: function() {
+                    $('#form-add-satuan button[type="submit"]').attr('disabled', true);
+                    $('#form-add-satuan button[type="submit"]').html('Loading...');
+                },
+                success: function(response) {
+                    console.log(response)
+                    if (response.success) {
+                        $('#form-add-satuan')[0].reset();
+                        toastr.success(response.message);
+                        table.DataTable().ajax.reload(null, false);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                    $('#modal-add-satuan').modal('hide');
+                    $('#form-add-satuan button[type="submit"]').attr('disabled', false);
+                    $('#form-add-satuan button[type="submit"]').html('Save');
+                }
+
+            })
         })
     })
 </script>

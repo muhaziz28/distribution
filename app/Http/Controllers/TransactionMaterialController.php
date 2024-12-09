@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Material;
 use App\Models\MaterialPurchaseItems;
 use App\Models\MaterialPurchases;
+use App\Models\MaterialUpdateLog;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class TransactionMaterialController extends Controller
@@ -68,7 +71,6 @@ class TransactionMaterialController extends Controller
                 }
 
                 $tmpFilePath = storage_path('app/' . $filePath);
-
                 if (file_exists($tmpFilePath)) {
                     rename($tmpFilePath, $finalFilePath);
                 } else {
@@ -98,6 +100,12 @@ class TransactionMaterialController extends Controller
 
                 $material = Material::where('vendor_id', $vendorID)->where('bahan_id', $bahanID)->first();
                 if ($material) {
+                    MaterialUpdateLog::create([
+                        "material_id" => $material->id,
+                        "previous_qty" => $material->qty,
+                        "new_qty" => $material->qty + $qty,
+                        "updated_by" => Auth::user()->id,
+                    ]);
                     $material->qty += $qty;
                     $material->save();
                 } else {

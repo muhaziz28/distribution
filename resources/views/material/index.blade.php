@@ -24,14 +24,6 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
-                            <div class="card-tools">
-                                <a href="{{ route('transaction-materials.index') }}" class="btn btn-success btn-sm">
-                                    <i class="fas fa-plus mr-2"></i>
-                                    Tambah Pembelian Material
-                                </a>
-                            </div>
-                        </div>
                         <div class="card-body">
                             <table id="material-table" class="table table-bordered table-striped" width="100%">
                                 <thead>
@@ -40,6 +32,7 @@
                                         <th>Bahan</th>
                                         <th>Vendor</th>
                                         <th>Qty</th>
+                                        <th>Log</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -50,6 +43,7 @@
                                         <th>Bahan</th>
                                         <th>Vendor</th>
                                         <th>Qty</th>
+                                        <th>Log</th>
                                         <th></th>
                                     </tr>
                                 </tfoot>
@@ -89,7 +83,29 @@
                     data: 'qty',
                 },
                 {
+                    data: 'previous_qty',
+                    render: function(data, type, row) {
+                        if (data != null) {
+                            const result = row.new_qty > data
+                            if (result) {
+                                return `${data}  <span class="text-success">+${row.new_qty - row.previous_qty}</span>`
+                            } else {
+                                return `${data}  <span class="text-danger">-${row.new_qty - row.previous_qty}</span>`
+                            }
+                        }
+
+                        return ''
+
+                    }
+                },
+                {
                     data: null,
+                    render: function(data, row) {
+                        return `<button class="btn btn-sm btn-info edit" data-id="${data.id}">
+                                <i class="fas fa-pen mr-2"></i>
+                                Distribusikan
+                            </button>`
+                    }
                 }
             ];
         }

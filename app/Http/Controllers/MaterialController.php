@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Material;
+use App\Models\MaterialUpdateLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
@@ -24,7 +25,20 @@ class MaterialController extends Controller
     public function data(Request $request)
     {
         if (Gate::allows('read-material')) {
-            $result = Material::with('bahan.satuan', 'vendor')->get();
+            $result = Material::with(['bahan.satuan', 'vendor'])
+                ->addSelect([
+                    'previous_qty' => MaterialUpdateLog::select('previous_qty')
+                        ->whereColumn('material_update_logs.material_id', 'materials.id')
+                        ->latest()
+                        ->limit(1)
+                ])
+                ->addSelect([
+                    'new_qty' => MaterialUpdateLog::select('new_qty')
+                        ->whereColumn('material_update_logs.material_id', 'materials.id')
+                        ->latest()
+                        ->limit(1)
+                ])
+                ->get();
 
             return DataTables::of($result)->addIndexColumn()->toJson();
         } else {

@@ -16,7 +16,14 @@
                     </div>
                     <div class="form-group">
                         <label for="satuan_id">Satuan</label>
-                        <select class="form-control" name="satuan_id" id="satuan_id"></select>
+                        <div class="row">
+                            <div class="col-7">
+                                <select class="form-control" name="satuan_id" id="satuan_id"></select>
+                            </div>
+                            <div class="col-5">
+                                <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#modal-add-satuan">Tambah Satuan </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

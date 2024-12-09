@@ -25,4 +25,9 @@ class Material extends Model
     {
         return $this->belongsTo(Vendor::class);
     }
+
+    public function materialLog()
+    {
+        return $this->hasMany(MaterialUpdateLog::class)->latest()->first();
+    }
 }
