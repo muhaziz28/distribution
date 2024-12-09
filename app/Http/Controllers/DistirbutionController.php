@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlockMaterialDistribution;
+use App\Models\Material;
+use App\Models\MaterialUpdateLog;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -33,8 +36,20 @@ class DistirbutionController extends Controller
             $blockMaterial->block_id = $request->block_id;
             $blockMaterial->material_id = $request->material_id;
             $blockMaterial->distributed_qty = $request->distributed_qty;
-            $blockMaterial->distributed_date = now();
+            $blockMaterial->distribution_date = now();
             $blockMaterial->save();
+
+            $material = Material::find($request->material_id);
+
+            $materialLog = new MaterialUpdateLog();
+            $materialLog->material_id = $request->material_id;
+            $materialLog->previous_qty = $material->qty;
+            $materialLog->new_qty = $material->qty - $request->distributed_qty;
+            $materialLog->updated_by = Auth::user()->id;
+            $materialLog->save();
+
+            $material->qty = $materialLog->new_qty;
+            $material->save();
             DB::commit();
 
             return response()->json([
