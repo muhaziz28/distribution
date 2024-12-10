@@ -105,7 +105,7 @@
                 {
                     data: null,
                     render: function(data, type, row) {
-                        return `<a href="${row.detail_url}" class="btn btn-default btn-sm">Lihat FIle</a>`
+                        return `<a href="${row.detail_url}" class="btn btn-info btn-sm">Detail Transaksi</a>`
                     }
                 }
             ];

@@ -88,9 +88,9 @@
                         if (data != null) {
                             const result = row.new_qty > data
                             if (result) {
-                                return `${data}  <span class="text-success">+${row.new_qty - row.previous_qty}</span>`
+                                return `Stok awal: ${data} <span class="badge badge-success">+${row.new_qty - row.previous_qty}</span>`
                             } else {
-                                return `${data}  <span class="text-danger">${row.new_qty - row.previous_qty}</span>`
+                                return `Stok awal: ${data} <span class="badge badge-danger">${row.new_qty - row.previous_qty}</span>`
                             }
                         }
 

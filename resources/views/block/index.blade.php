@@ -38,12 +38,24 @@
 
                             <div class="tab-content">
                                 <div class="active tab-pane" id="activity">
+                                    <div class="row ">
+                                        <div class="col-4">
+                                            <div class="form-group filter">
+                                                <label for="data">Tanggal</label>
+                                                <input type="text" class="form-control datepicker" id="date" name="date" placeholder="Pilih tanggal">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+
+                                        </div>
+                                    </div>
                                     <table id="material-table" class="table table-bordered table-striped" width="100%">
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px;">No</th>
                                                 <th>Bahan</th>
                                                 <th>Qty</th>
+                                                <th>Retur</th>
                                                 <th>Tanggal</th>
                                                 <th>Harga Satuan</th>
                                                 <th>Total</th>
@@ -56,6 +68,7 @@
                                                 <th>No</th>
                                                 <th>Bahan</th>
                                                 <th>Qty</th>
+                                                <th>Retur</th>
                                                 <th>Tanggal</th>
                                                 <th>Harga Satuan</th>
                                                 <th>Total</th>
@@ -116,6 +129,15 @@
                     }
                 },
                 {
+                    data: 'returned_qty',
+                    render: function(data, type, row) {
+                        if (data != null) {
+                            return `<span class="badge badge-warning">${data} ${row.material.bahan.satuan.satuan}</span>`
+                        }
+                        return ''
+                    }
+                },
+                {
                     data: 'distribution_date',
                     render: function(data) {
                         const date = new Date(data)
@@ -145,12 +167,19 @@
                 }
             ];
         }
-
         var table = $('#material-table');
         var config = {
             processing: true,
             serverSide: true,
-            ajax: "{{ route('block-material.data', $result->id) }}",
+            // ajax: "{{ route('block-material.data', $result->id) }}",
+            ajax: {
+                url: "{{ route('block-material.data', $result->id) }}",
+                type: "GET",
+                data: function(d) {
+                    d.date = $('.datepicker').val();
+                    d.vendor = $('#vendor').val();
+                }
+            },
             paging: true,
             ordering: true,
             info: false,
@@ -161,6 +190,10 @@
         };
 
         initializeDataTable(table, config);
+
+        $('#date, #vendor').on('change', function() {
+            table.DataTable().ajax.reload();
+        });
 
         function formatRupiah(angka) {
             return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -227,6 +260,8 @@
             $('#form-return input[name="id"]').remove();
             $('#form-return')[0].reset();
         })
+
+
     })
 </script>
 @endpush
