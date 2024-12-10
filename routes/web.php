@@ -11,6 +11,7 @@ use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ReturnController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\TransactionController;
@@ -180,4 +181,6 @@ Route::middleware('auth')->group(function () {
     Route::controller(BlockMaterialDistributionController::class)->prefix('block-material')->group(function () {
         Route::get('/{blockID}', 'data')->name('block-material.data');
     });
+
+    Route::post('/{id}', [ReturnController::class, 'return'])->name('return');
 });

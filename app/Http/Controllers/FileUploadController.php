@@ -13,9 +13,6 @@ final class FileUploadController extends Controller
 {
     public function process(Request $request): string
     {
-        // We don't know the name of the file input, so we need to grab
-        // all the files from the request and grab the first file.
-        /** @var UploadedFile[] $files */
         $files = $request->allFiles();
 
         if (empty($files)) {
@@ -31,8 +28,9 @@ final class FileUploadController extends Controller
             ? $request->file($requestKey)[0]
             : $request->file($requestKey);
 
-        return $file->store(
-            path: 'tmp/' . now()->timestamp . '-' . Str::random(20)
+        return $file->storeAs(
+            path: 'tmp',
+            name: now()->timestamp . '-' . Str::random(20) . '.' . $file->getClientOriginalExtension()
         );
     }
 

@@ -98,6 +98,9 @@
                 },
                 {
                     data: 'total',
+                    render: function(data, row) {
+                        return formatRupiah(data)
+                    }
                 },
                 {
                     data: null,
@@ -123,6 +126,10 @@
         };
 
         initializeDataTable(table, config);
+
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
     })
 </script>
 @endpush

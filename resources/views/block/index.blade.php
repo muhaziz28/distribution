@@ -86,6 +86,7 @@
         </div><!-- /.container-fluid -->
     </section>
 </div>
+@include('block.retur-modal')
 @endsection
 
 @push('scripts')
@@ -164,6 +165,68 @@
         function formatRupiah(angka) {
             return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
+
+        $('#form-return').on('submit', function(e) {
+            e.preventDefault();
+            var form = new FormData(this)
+            console.log(this.id)
+            $.ajax({
+                url: $(this).attr('action'),
+                method: "POST",
+                data: form,
+                processData: false,
+                dataType: 'json',
+                contentType: false,
+                beforeSend: function() {
+                    $('#form-return button[type="submit"]').attr('disabled', true);
+                    $('#form-return button[type="submit"]').html('Loading...');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#modal-return').modal('hide');
+                        $('#form-return')[0].reset();
+                        toastr.success(response.message);
+                        table.DataTable().ajax.reload(null, false);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                    $('#form-return button[type="submit"]').attr('disabled', false);
+                    $('#form-return button[type="submit"]').html('Save');
+                }
+
+            })
+        })
+
+        $(document).on('click', '.edit', function(e) {
+            e.preventDefault()
+            var data = table.DataTable().row($(this).closest('tr')).data();
+            console.log(data.id)
+            var url = '{{ route("return", ":id") }}'.replace(':id', data.id || 0);
+            $('#form-return').attr('action', url);
+            $('#modal-return').modal('show');
+            $('#form-return').append('<input type="hidden" name="id" value="' + data.id + '">');
+            $('#item').val(data.material.bahan.nama_bahan);
+            $('#returned_qty').attr('max', data.material.qty);
+            $('#max_qty').text('Max Qty: ' + data.material.qty);
+            $('#returned_qty').val('');
+        })
+
+        $('#returned_qty').on('input', function() {
+            var max = $(this).attr('max');
+            var value = parseFloat($(this).val());
+
+            if (value > max) {
+                $(this).val(max);
+            }
+        });
+
+        $('#modal-return').on('hidden.bs.modal', function() {
+            $('#form-return').attr('action', '')
+            $('#modal-return').find('#title').text('Tambah Customer');
+            $('#form-return input[name="_method"]').remove();
+            $('#form-return input[name="id"]').remove();
+            $('#form-return')[0].reset();
+        })
     })
 </script>
 @endpush
