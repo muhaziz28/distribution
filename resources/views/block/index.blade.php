@@ -233,14 +233,14 @@
         $(document).on('click', '.edit', function(e) {
             e.preventDefault()
             var data = table.DataTable().row($(this).closest('tr')).data();
-            console.log(data.id)
+            console.log(data)
             var url = '{{ route("return", ":id") }}'.replace(':id', data.id || 0);
             $('#form-return').attr('action', url);
             $('#modal-return').modal('show');
             $('#form-return').append('<input type="hidden" name="id" value="' + data.id + '">');
             $('#item').val(data.material.bahan.nama_bahan);
-            $('#returned_qty').attr('max', data.material.qty);
-            $('#max_qty').text('Max Qty: ' + data.material.qty);
+            $('#returned_qty').attr('max', data.distributed_qty);
+            $('#max_qty').text('Max Qty: ' + data.distributed_qty);
             $('#returned_qty').val('');
         })
 
