@@ -236,8 +236,9 @@
                     {
                         data: null,
                         render: function(data, row) {
-                            return `<button class="btn btn-sm btn-warning edit" data-id="${data.id}">
-                        <i class="fas fa-pen mr-2"></i>Return</button>`;
+                            return ` <button class="btn btn-sm btn-danger delete" data-id="${data.id}">
+                               <i class="fas fa-trash mr-2"></i> Delete
+                            </button>`;
                         }
                     }
                 ];
@@ -324,18 +325,18 @@
             $(document).on('submit', '#form-add-tukang', function(e) {
                 e.preventDefault();
 
-                const formData = $(this).serialize(); // Serialize form data
+                const formData = $(this).serialize();
 
                 $.ajax({
-                    url: $(this).attr('action'), // Pastikan form action diisi dengan URL yang benar
+                    url: $(this).attr('action'),
                     method: 'POST',
                     data: formData,
                     success: function(response) {
                         if (response.success) {
                             toastr.success(response.message);
-                            $('#form-add-tukang')[0].reset(); // Reset form
-                            $('#modal-add-worker').modal('hide'); // Hide modal
-                            table2.DataTable().ajax.reload(null, false); // Reload DataTable
+                            $('#form-add-tukang')[0].reset();
+                            $('#modal-add-worker').modal('hide');
+                            table2.DataTable().ajax.reload(null, false);
                         } else {
                             toastr.error(response.message);
                         }
@@ -346,6 +347,27 @@
                     }
                 });
             });
+
+            // Delete Tukang
+            $(document).on('click', '.delete', function() {
+                var id = $(this).data('id')
+                console.log(id);
+                var result = confirm('Are you sure you want to delete this worker?');
+
+                if (result) {
+                    $.ajax({
+                        url: "{{ route('block-tukang.destroy', $result->id) }}",
+                        method: "DELETE",
+                        data: {
+                            id: id
+                        },
+                        success: function(response) {
+                            toastr.success(response.message);
+                            table.DataTable().ajax.reload();
+                        }
+                    })
+                }
+            })
 
 
             $('#returned_qty').on('input', function() {

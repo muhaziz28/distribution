@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Gate;
 
 class BlockTukangDistributionController extends Controller
 {
@@ -63,6 +64,25 @@ class BlockTukangDistributionController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function destroy(Request $request)
+    {
+        try {
+            $data = WorkerAssigments::find($request->id);
+
+            $data->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Tukang has been deleted'
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
             ], 500);
         }
     }

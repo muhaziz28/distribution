@@ -187,8 +187,10 @@ Route::middleware('auth')->group(function () {
     Route::controller(BlockTukangDistributionController::class)->prefix('block-tukang')->group(function () {
         Route::get('/{blockTukangId}', 'data')->name('block-tukang.data');
         Route::post('/{blockID}', 'store')->name('block-tukang.store');
+        Route::delete('destroy', 'destroy')->name('block-tukang.destroy');
     });
 
+    
+
     Route::post('/{id}', [ReturnController::class, 'return'])->name('return');
-    // Route::post('/{idBlock}', [ReturnController::class, 'tambahTukangBlock'])->name('tambahTukangBlock.store');
 });
