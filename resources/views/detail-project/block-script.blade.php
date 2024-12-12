@@ -39,7 +39,7 @@
                     return `<div class="flex items-center justify-end space-x-2">
                             <a href="${data.detail_url}" class="btn btn-sm btn-info">
                                 <i class="fas fa-eye mr-2"></i> Detail
-                            </a>
+                            </a>&nbsp;
                             <button class="btn btn-sm btn-warning edit-block" data-id="${data.id}">
                                 <i class="fas fa-pen mr-2"></i>
                                 Edit
@@ -154,7 +154,7 @@
 
         $('#modal-add-block').modal('show')
         $('#modal-add-block').find('#title').text('Edit Block')
-        $('#form-add-block').attr('action', '{{ route("block.update") }}')
+        $('#form-add-block').attr('action', '{{ route('block.update') }}')
         $('#form-add-block').append('<input type="hidden" name="_method" value="PUT">')
         $('#form-add-block').append('<input type="hidden" name="id" value="' + data.id + '">')
         $('#block').val(data.block)

@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthOtpController;
 use App\Http\Controllers\BahanController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\BlockMaterialDistributionController;
+use App\Http\Controllers\BlockTukangDistributionController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DetailProjectController;
 use App\Http\Controllers\DistirbutionController;
@@ -104,6 +105,7 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'store')->name('tukang.store');
         Route::put('update', 'update')->name('tukang.update');
         Route::delete('destroy', 'destroy')->name('tukang.destroy');
+        Route::get('worker', 'dataForWorker')->name('tukang.dataForWorker');
     });
 
 
@@ -182,5 +184,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/{blockID}', 'data')->name('block-material.data');
     });
 
+    Route::controller(BlockTukangDistributionController::class)->prefix('block-tukang')->group(function () {
+        Route::get('/{blockTukangId}', 'data')->name('block-tukang.data');
+        Route::post('/{blockID}', 'store')->name('block-tukang.store');
+    });
+
     Route::post('/{id}', [ReturnController::class, 'return'])->name('return');
+    // Route::post('/{idBlock}', [ReturnController::class, 'tambahTukangBlock'])->name('tambahTukangBlock.store');
 });

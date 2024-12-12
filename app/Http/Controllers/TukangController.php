@@ -33,6 +33,13 @@ class TukangController extends Controller
         return DataTables::of($tukangs)->addIndexColumn()->toJson();
     }
 
+    public function dataForWorker()
+    {
+        $tukangs = Tukang::doesntHave('workerAssignments')->get();
+
+        return DataTables::of($tukangs)->addIndexColumn()->toJson();
+    }
+
 
     public function store(Request $request)
     {

@@ -21,7 +21,6 @@ class DetailProjectController extends Controller
 
     public function index($id)
     {
-
         $result = Project::with(['workerProjects.tukang'])->where('id', $id)->first();
 
         if (!$result) return redirect()->route('project.index')->with('error', 'Project not found.');

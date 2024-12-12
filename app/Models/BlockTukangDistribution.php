@@ -6,27 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BlockMaterialDistribution extends Model
+class BlockTukangDistribution extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
         "block_id",
-        "material_id",
-        "distributed_qty",
-        "distribution_date",
-        "returned_qty",
-        "returned_date",
+        "worker_id",
+        "join_date",
     ];
 
     public function block()
     {
         return $this->belongsTo(Block::class);
-    }
-
-    public function material()
-    {
-        return $this->belongsTo(Material::class);
     }
 
     public function tukang()

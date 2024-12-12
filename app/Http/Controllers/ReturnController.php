@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlockMaterialDistribution;
+use App\Models\BlockTukangDistribution;
 use App\Models\Material;
 use App\Models\MaterialUpdateLog;
 use Exception;
@@ -24,9 +25,9 @@ class ReturnController extends Controller
             $validate = $this->validateRequest($request);
             if ($validate) return $validate;
 
-            $blockMaterial = BlockMaterialDistribution::find($id);
+            $blockTukang = BlockMaterialDistribution::find($id);
 
-            $result = $blockMaterial->distributed_qty - $request->returned_qty;
+            $result = $blockTukang->distributed_qty - $request->returned_qty;
             if ($result < 0) {
                 return response()->json([
                     'success' => false,
@@ -35,14 +36,54 @@ class ReturnController extends Controller
             }
 
             DB::beginTransaction();
-            $blockMaterial->returned_qty = $request->returned_qty;
-            $blockMaterial->returned_date = now();
-            $blockMaterial->distributed_qty = $result;
-            $blockMaterial->save();
+            $blockTukang->returned_qty = $request->returned_qty;
+            $blockTukang->returned_date = now();
+            $blockTukang->distributed_qty = $result;
+            $blockTukang->save();
 
-            $material = Material::find($blockMaterial->material_id);
+            $material = Material::find($blockTukang->material_id);
             MaterialUpdateLog::create([
-                'material_id' => $blockMaterial->material_id,
+                'material_id' => $blockTukang->material_id,
+                'previous_qty' => $material->qty,
+                'new_qty' => $material->qty + $request->returned_qty,
+                'updated_by' => Auth::user()->id,
+            ]);
+
+            $material->qty = $material->qty + $request->returned_qty;
+            $material->save();
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Barang berhasil dikembalikan'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function tambahTukangBlock(Request $request, $idBlock)
+    {
+        try {
+            $validate = $this->validateRequest($request);
+            if ($validate) return $validate;
+
+            $blockTukang = BlockTukangDistribution::find($idBlock);
+
+            $result = $blockTukang->block_id;
+
+            DB::beginTransaction();
+            $blockTukang->block_id = $request->block_id;
+            $blockTukang->returned_date = now();
+            $blockTukang->distributed_qty = $result;
+            $blockTukang->save();
+
+            $material = Material::find($blockTukang->material_id);
+            MaterialUpdateLog::create([
+                'material_id' => $blockTukang->material_id,
                 'previous_qty' => $material->qty,
                 'new_qty' => $material->qty + $request->returned_qty,
                 'updated_by' => Auth::user()->id,

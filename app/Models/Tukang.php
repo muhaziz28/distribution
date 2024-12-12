@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\BlockMaterialDistributionController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,8 +21,13 @@ class Tukang extends Model
     ];
 
 
-    public function roles()
+    public function blockTukang()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(BlockMaterialDistribution::class);
+    }
+
+    public function workerAssignments()
+    {
+        return $this->hasMany(WorkerAssigments::class);
     }
 }

@@ -31,11 +31,16 @@ class Block extends Model
 
     public function project()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function workerAssignments()
+    {
+        return $this->hasMany(WorkerAssigments::class);
     }
 }

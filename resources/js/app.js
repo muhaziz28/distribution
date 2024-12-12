@@ -18,7 +18,6 @@ if (inputElement) {
 }
 
 
-
 $('.btn_process').on('click', function (e) {
     e.preventDefault();
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlockMaterialDistribution;
+use App\Models\Tukang;
+use App\Models\WorkerAssigments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
