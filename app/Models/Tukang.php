@@ -30,4 +30,9 @@ class Tukang extends Model
     {
         return $this->hasMany(WorkerAssigments::class);
     }
+
+    public function workerAttendances()
+    {
+        return $this->hasMany(WorkerAttendances::class);
+    }
 }

@@ -79,7 +79,7 @@
                                             </tfoot>
                                         </table>
                                     </div>
-                                    <!-- /.tab-pane -->
+                                    <!-- /.tab-pane tukang -->
                                     <div class="tab-pane" id="timeline">
                                         {{-- Tukang --}}
                                         <button type="button" class="btn btn-success btn-sm my-3" data-toggle="modal"
@@ -111,10 +111,68 @@
                                         @include('block.worker-modal')
                                         {{-- Tukang --}}
                                     </div>
-                                    <!-- /.tab-pane -->
+                                    <!-- /.tab-pane tukang -->
 
                                     <div class="tab-pane" id="settings">
-                                        sad
+                                        {{-- <button type="button" class="btn btn-success btn-sm my-3">
+                                            <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
+                                            Add Absensi
+                                        </button> --}}
+                                        <h4> Menampilkan data tabel activiti</h4>
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-check">
+                                                    <label class="form-check-label" for="flexCheckDefault">
+                                                        Aktivitas
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <p>Data Aktivitas
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label>Pilih Tukang</label>
+                                                <table id="tukangstable" class="table table-bordered table-striped"
+                                                    width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 10px;">
+                                                                <input type="checkbox" id="selectAll">
+                                                            </th>
+                                                            <th style="width: 10px;">No</th>
+                                                            <th>Nama Tukang</th>
+                                                            <th>Nomor Hp</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th>
+                                                                <input type="checkbox" id="selectAllFooter">
+                                                            </th>
+                                                            <th>No</th>
+                                                            <th>Nama Tukang</th>
+                                                            <th>Nomor Hp</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label for="dropdown">Absen tukang</label>
+
+
+                                            </div>
+                                        </div>
+
+
+
                                     </div>
                                     <!-- /.tab-pane -->
                                 </div>
@@ -129,6 +187,7 @@
             </div><!-- /.container-fluid -->
         </section>
     </div>
+
     @include('block.retur-modal')
 
 @endsection
@@ -244,7 +303,7 @@
                 ];
             }
 
-            // Tukang
+            // Tukang2
             var table2 = $('#tukang-table');
             var config2 = {
                 processing: true,
@@ -267,6 +326,97 @@
             };
 
             initializeDataTable(table2, config2);
+
+            // Tukang3
+            function defineColumns3() {
+                return [{
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return `<input type="checkbox" class="rowCheckbox" data-id="${row.id}">`;
+                        },
+                        orderable: false,
+                    },
+                    {
+                        data: 'DT_RowIndex',
+                    },
+                    {
+                        data: 'nama_tukang',
+                    },
+                    {
+                        data: 'no_hp',
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
+                                <div class="action-buttons" style="display: none;" id="action-${row.id}">
+                                    <select name="durasi_kerja" id="durasi_kerja" class="form-control">
+                                        <option value="5" >5 </option>
+                                        <option value="4.5">4.5&nbsp;</option>
+                                        <option value="0">0&nbsp;</option>
+                                    </select>
+                                </div>
+                                 `;
+                        },
+                        orderable: false,
+                    },
+                ];
+            }
+
+
+
+            // Tukang3
+            var table3 = $('#tukangstable');
+            var config3 = {
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('block-attendances.data', $result->id) }}",
+                    type: "GET",
+                    data: function(d) {
+                        d.date = $('.datepicker').val();
+                        d.vendor = $('#vendor').val();
+                    }
+                },
+                paging: true,
+                ordering: true,
+                info: false,
+                searching: true,
+                lengthChange: true,
+                lengthMenu: [10, 25, 50, 100],
+                columns: defineColumns3()
+            };
+
+            initializeDataTable(table3, config3);
+
+            // Checkbok
+            $(document).ready(function() {
+                // Handle row checkbox changes
+                $('#tukangstable').on('change', '.rowCheckbox', function() {
+                    const rowId = $(this).data('id');
+                    const actionContainer = $(`#action-${rowId}`);
+
+                    if ($(this).is(':checked')) {
+                        actionContainer.show(); // Show action buttons when checked
+                    } else {
+                        actionContainer.hide(); // Hide action buttons when unchecked
+                    }
+                });
+
+                // Select/Deselect all checkboxes
+                $('#selectAll').on('change', function() {
+                    const isChecked = $(this).is(':checked');
+                    $('.rowCheckbox').prop('checked', isChecked).trigger('change');
+                });
+            });
+
+
+
+
+
+
+
+
 
 
 
@@ -320,7 +470,6 @@
                 $('#returned_qty').val('');
             })
 
-
             // Tambah tukang
             $(document).on('submit', '#form-add-tukang', function(e) {
                 e.preventDefault();
@@ -369,7 +518,6 @@
                 }
             })
 
-
             $('#returned_qty').on('input', function() {
                 var max = $(this).attr('max');
                 var value = parseFloat($(this).val());
@@ -408,6 +556,32 @@
                         };
                     }
                 }
+            });
+
+            $('#tukang_id').select2({
+                ajax: {
+                    url: "{{ route('tukang.dataForWorker') }}",
+                    dataType: 'json',
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.data.map(function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.nama_tukang,
+                                    nomor_hp: item.nomor_hp,
+                                };
+                            })
+                        };
+                    }
+                }
+            }).on('select2:select', function(e) {
+                const data = e.params.data;
+                addTukangToTable(data);
             });
 
 

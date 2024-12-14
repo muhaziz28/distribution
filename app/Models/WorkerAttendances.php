@@ -6,25 +6,30 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Activities extends Model
+class WorkerAttendances extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        "is_block_activity",
-        "activity_name",
-        "date",
-
+        "tukang_id",
+        "activity_id",
+        "durasi_kerja",
+        "upah",
+        "pinjaman",
     ];
 
-    // Relasi ke block
     public function block()
     {
         return $this->belongsTo(Block::class);
     }
 
-    public function workerAttendances()
+    public function tukang()
     {
-        return $this->hasMany(WorkerAttendances::class);
+        return $this->belongsTo(Tukang::class);
+    }
+
+    public function activity()
+    {
+        return $this->belongsTo(Activities::class);
     }
 }
