@@ -45,4 +45,9 @@ class Project extends Model
     {
         return $this->hasMany(WorkerAttendances::class);
     }
+
+    public function block()
+    {
+        return $this->hasMany(Block::class, "project_id", 'id');
+    }
 }

@@ -43,4 +43,9 @@ class Block extends Model
     {
         return $this->hasMany(WorkerAssigments::class);
     }
+
+    public function blockMaterialDistribution()
+    {
+        return $this->hasMany(BlockMaterialDistribution::class);
+    }
 }
