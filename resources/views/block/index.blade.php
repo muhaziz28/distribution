@@ -36,7 +36,8 @@
                                     <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Absensi</a>
                                     </li>
                                 </ul>
-                            </div><!-- /.card-header -->
+                            </div>
+                            <!-- /.card-header -->
                             <div class="card-body">
                                 {{-- Material --}}
                                 <div class="tab-content">
@@ -80,14 +81,13 @@
                                         </table>
                                     </div>
                                     <!-- /.tab-pane tukang -->
+                                    {{-- Tukang --}}
                                     <div class="tab-pane" id="timeline">
-                                        {{-- Tukang --}}
                                         <button type="button" class="btn btn-success btn-sm my-3" data-toggle="modal"
                                             data-target="#modal-add-worker">
                                             <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
                                             Add New Worker
                                         </button>
-
                                         <table id="tukang-table" class="table table-bordered table-striped" width="100%">
                                             <thead>
                                                 <tr>
@@ -107,34 +107,41 @@
                                                 </tr>
                                             </tfoot>
                                         </table>
-
                                         @include('block.worker-modal')
-                                        {{-- Tukang --}}
                                     </div>
+                                    {{-- Tukang --}}
                                     <!-- /.tab-pane tukang -->
 
+                                    {{-- Activity --}}
                                     <div class="tab-pane" id="settings">
-                                        {{-- <button type="button" class="btn btn-success btn-sm my-3">
-                                            <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
-                                            Add Absensi
-                                        </button> --}}
-                                        <h4> Menampilkan data tabel activiti</h4>
-
                                         <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="form-check">
-                                                    <label class="form-check-label" for="flexCheckDefault">
-                                                        Aktivitas
-                                                    </label>
-                                                </div>
+                                            <div class="col-lg">
+                                                <label>Activity</label>
+                                                <table id="tableActivity" class="table table-bordered" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Activity</th>
+                                                            <th>Date</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Activity</th>
+                                                            <th>Date</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
                                             </div>
-                                            <div class="col-lg-6">
-                                                <p>Data Aktivitas
-                                            </div>
+
                                         </div>
                                         <hr>
                                         <div class="row">
-                                            <div class="col-lg-6">
+                                            <div class="col-lg">
                                                 <label>Pilih Tukang</label>
                                                 <table id="tukangstable" class="table table-bordered table-striped"
                                                     width="100%">
@@ -162,22 +169,17 @@
                                                         </tr>
                                                     </tfoot>
                                                 </table>
-
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <label for="dropdown">Absen tukang</label>
-
-
                                             </div>
                                         </div>
 
-
-
                                     </div>
+                                    {{-- Activity --}}
+
                                     <!-- /.tab-pane -->
                                 </div>
                                 <!-- /.tab-content -->
-                            </div><!-- /.card-body -->
+                            </div>
+                            <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
                     </div>
@@ -349,21 +351,21 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                                <div class="action-buttons" style="display: none;" id="action-${row.id}">
-                                    <select name="durasi_kerja" id="durasi_kerja" class="form-control">
-                                        <option value="5" >5 </option>
-                                        <option value="4.5">4.5&nbsp;</option>
-                                        <option value="0">0&nbsp;</option>
-                                    </select>
-                                </div>
+                                    <form action="" method="POST" id="">
+                                        @csrf
+                                        <div class="action-buttons" style="display: none;" id="action-${row.id}">
+                                            <select name="durasi_kerja" id="durasi_kerja" class="form-control">&nbsp;
+                                                <option value="1">1 </option>
+                                                <option value="0.5">0.5</option>
+                                            </select>
+                                        </div>
+                                    </form>
                                  `;
                         },
                         orderable: false,
                     },
                 ];
             }
-
-
 
             // Tukang3
             var table3 = $('#tukangstable');
@@ -386,8 +388,59 @@
                 lengthMenu: [10, 25, 50, 100],
                 columns: defineColumns3()
             };
-
             initializeDataTable(table3, config3);
+
+            // Activity
+            function defineColumns4() {
+                return [{
+                        data: 'DT_RowIndex',
+                    },
+                    {
+                        data: 'activity_name',
+                    },
+                    {
+                        data: 'date',
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            const url = "{{ route('activity.detailActivity', ':id') }}".replace(':id', row
+                                .id);
+
+                            return `
+                                <a href="${url}" class="btn btn-warning btn-sm mr-3"><i class="fas fa-eye mr-2"></i>Detail </a>
+                             
+                                <button class="btn btn-sm btn-danger deleteActivity" data-id="${data.id}">
+                                    <i class="fas fa-trash mr-2"></i> Delete </button>
+                                 `;
+                        },
+                        orderable: false,
+                    },
+                ];
+            }
+
+            // Activity
+            var table4 = $('#tableActivity');
+            var config4 = {
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('activity.data', $result->id) }}",
+                    type: "GET",
+                    data: function(d) {
+                        d.date = $('.datepicker').val();
+                        d.vendor = $('#vendor').val();
+                    }
+                },
+                paging: true,
+                ordering: true,
+                info: false,
+                searching: true,
+                lengthChange: true,
+                lengthMenu: [10, 25, 50, 100],
+                columns: defineColumns4()
+            };
+            initializeDataTable(table4, config4);
 
             // Checkbok
             $(document).ready(function() {
@@ -409,14 +462,6 @@
                     $('.rowCheckbox').prop('checked', isChecked).trigger('change');
                 });
             });
-
-
-
-
-
-
-
-
 
 
 
@@ -453,7 +498,7 @@
                     }
 
                 })
-            })
+            });
 
             $(document).on('click', '.edit', function(e) {
                 e.preventDefault()
@@ -468,7 +513,7 @@
                 $('#returned_qty').attr('max', data.distributed_qty);
                 $('#max_qty').text('Max Qty: ' + data.distributed_qty);
                 $('#returned_qty').val('');
-            })
+            });
 
             // Tambah tukang
             $(document).on('submit', '#form-add-tukang', function(e) {
@@ -516,7 +561,28 @@
                         }
                     })
                 }
-            })
+            });
+
+            // Delete Activity
+            $(document).on('click', '.deleteActivity', function() {
+                var id = $(this).data('id')
+                console.log(id);
+                var result = confirm('Are you sure you want to delete this activity?');
+
+                if (result) {
+                    $.ajax({
+                        url: "{{ route('activity.destroy', $result->id) }}",
+                        method: "DELETE",
+                        data: {
+                            id: id
+                        },
+                        success: function(response) {
+                            toastr.success(response.message);
+                            table.DataTable().ajax.reload();
+                        }
+                    })
+                }
+            });
 
             $('#returned_qty').on('input', function() {
                 var max = $(this).attr('max');
@@ -533,7 +599,7 @@
                 $('#form-return input[name="_method"]').remove();
                 $('#form-return input[name="id"]').remove();
                 $('#form-return')[0].reset();
-            })
+            });
 
 
             $('#worker_id').select2({
@@ -583,6 +649,7 @@
                 const data = e.params.data;
                 addTukangToTable(data);
             });
+
 
 
         })

@@ -13,10 +13,17 @@ return new class extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('block_id');
             $table->integer('is_block_activity')->nullable();
             $table->string('activity_name')->nullable();
             $table->date('date');
             $table->timestamps();
+
+            // Join Tabel Worker/Tukang
+            $table->foreign('block_id')
+                ->references('id')
+                ->on('blocks')
+                ->onDelete('cascade');
         });
     }
 

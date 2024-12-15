@@ -16,7 +16,7 @@ class BlockAttendancesDistributionController extends Controller
 
     public function data(Request $request, $blockID)
     {
-        $query = WorkerAttendances::with(['block', 'tukang', 'activity'])
+        $query = WorkerAttendances::with(['tukang', 'activity'])
             ->where('tukang_id', $blockID)
             ->get();
         return DataTables::of($query)
@@ -27,10 +27,7 @@ class BlockAttendancesDistributionController extends Controller
             ->addColumn('no_hp', function ($row) {
                 return $row->tukang ? $row->tukang->no_hp : '-';
             })
-            ->addColumn('action', function ($row) {
-                return '<button class="btn btn-sm btn-warning edit" data-id="' . $row->id . '">
-                        <i class="fas fa-pen mr-2"></i>Return</button>';
-            })
+
             ->rawColumns(['action'])
             ->make(true);
     }

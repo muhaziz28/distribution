@@ -18,10 +18,6 @@ class WorkerAttendances extends Model
         "pinjaman",
     ];
 
-    public function block()
-    {
-        return $this->belongsTo(Block::class);
-    }
 
     public function tukang()
     {
