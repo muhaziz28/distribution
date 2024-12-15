@@ -51,7 +51,7 @@
                                                 <td>{{ $item->activity->activity_name }}</td>
                                                 <td>{{ $item->durasi_kerja }} Jam</td>
                                                 <td>Rp. {{ number_format($item->upah, 0, ',', '.') }}</td>
-                                                <td>{{ $item->pinjaman }}</td>
+                                                <td>Rp. {{ number_format($item->pinjaman, 0, ',', '.') }}</td>
                                                 <td> </td>
                                             </tr>
                                         @endforeach
