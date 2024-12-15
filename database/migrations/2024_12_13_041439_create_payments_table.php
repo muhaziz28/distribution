@@ -20,7 +20,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->enum("payment_type", ["dp", "installment", "item_payment"]);
             $table->date("payment_date");
-            $table->integer("total");
+            $table->bigInteger("total");
             $table->string("note")->nullable();
             $table->string("attachment")->nullable();
             $table->softDeletes();

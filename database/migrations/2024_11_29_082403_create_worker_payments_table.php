@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date("transaction_date");
             $table->integer("week");
-            $table->integer('total');
+            $table->bigInteger('total');
             $table->string("attachment")->nullable();
             $table->unsignedBigInteger('project_id');
             $table->foreign('project_id')

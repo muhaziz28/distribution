@@ -24,8 +24,8 @@
                     ->on('bahans')
                     ->onDelete('cascade');
                 $table->integer("qty");
-                $table->integer("harga_satuan");
-                $table->integer("total");
+                $table->bigInteger("harga_satuan");
+                $table->bigInteger("total");
                 $table->timestamps();
             });
         }

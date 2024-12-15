@@ -51,11 +51,11 @@ class TukangController extends Controller
         }
         try {
             $validate = Validator::make($request->all(), [
-                'nama_tukang' => 'required|string|max:255',
-                'no_hp' => 'required|max_digits:12',
+                'nama_tukang'   => 'required|string|max:255',
+                'no_hp'         => 'nullable|max_digits:15',
             ], [
-                'name.required' => 'The nama tukang field is required',
-                'no_hp.required' => 'The nomor hp field is required',
+                'name.required'     => 'Nama tukang wajib diisi',
+                'no_hp.max_digits'  => 'Nomor Hp tidak valid',
             ]);
 
             if ($validate->fails()) {
@@ -96,12 +96,10 @@ class TukangController extends Controller
         }
         try {
             $validate = Validator::make($request->all(), [
-                'nama_tukang' => 'required',
-                'no_hp' => 'required',
-                'is_active' => 'required',
+                'nama_tukang'       => 'required',
+                'is_active'         => 'required',
             ], [
-                'name.required' => 'The nama tukang field is required',
-                'no_hp.required' => 'The nomor hp field is required',
+                'name.required'     => 'Nama tukang wajib diisi',
                 'is_active.required' => 'The is active field is required',
             ]);
 
@@ -118,8 +116,6 @@ class TukangController extends Controller
             $tukang->is_active = $request->is_active;
 
             $tukang->save();
-
-
 
             return response()->json([
                 'success' => true,

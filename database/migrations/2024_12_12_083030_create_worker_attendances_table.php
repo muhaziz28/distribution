@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('worker_id');
             $table->unsignedBigInteger('activity_id');
             $table->double('durasi_kerja');
-            $table->integer('upah');
+            $table->bigInteger('upah');
             $table->integer('pinjaman')->nullable();
 
             // Join Tabel Worker/Tukang
