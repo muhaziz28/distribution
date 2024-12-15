@@ -25,11 +25,9 @@ class BlockTukangDistributionController extends Controller
         $query = WorkerAssigments::with(['block', 'tukang'])
             ->where('block_id', $blockTukangId)
             ->get();
+
         return DataTables::of($query)
             ->addIndexColumn()
-            ->addColumn('nama_tukang', function ($row) {
-                return $row->tukang ? $row->tukang->nama_tukang : '-';
-            })
             ->addColumn('action', function ($row) {
                 return '<button class="btn btn-sm btn-warning edit" data-id="' . $row->id . '">
                         <i class="fas fa-pen mr-2"></i>Return</button>';
@@ -51,7 +49,7 @@ class BlockTukangDistributionController extends Controller
 
             $workerAssign = new WorkerAssigments();
             $workerAssign->block_id = $blockID;
-            $workerAssign->tukang_id = $request->worker_id;
+            $workerAssign->worker_id = $request->worker_id;
             $workerAssign->join_date = $request->join_date;
 
             $workerAssign->save();

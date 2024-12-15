@@ -12,7 +12,7 @@ class WorkerAssigments extends Model
 
     protected $fillable = [
         "block_id",
-        "tukang_id",
+        "worker_id",
         "join_date",
     ];
 
@@ -23,6 +23,6 @@ class WorkerAssigments extends Model
 
     public function tukang()
     {
-        return $this->belongsTo(Tukang::class);
+        return $this->belongsTo(Tukang::class, "worker_id", "id");
     }
 }
