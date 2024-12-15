@@ -18,9 +18,9 @@ class BlockController extends Controller
         $this->middleware('auth');
     }
 
-    public function data($projectID)
+    public function data(Request $request, $projectID)
     {
-        $result = Block::with('customer')->where("project_id", $projectID)->get()->map(function ($result) {
+        $result = Block::search($request->search)->with('customer')->where("project_id", $projectID)->get()->map(function ($result) {
             return [
                 'id'                => $result->id,
                 'project_id'        => $result->project_id,

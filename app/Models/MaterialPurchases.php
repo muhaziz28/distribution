@@ -11,16 +11,10 @@ class MaterialPurchases extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        "project_id",
         "vendor_id",
         "transaction_date",
         "attachment",
     ];
-
-    public function project()
-    {
-        return $this->belongsTo(Project::class)->withTrashed();
-    }
 
     public function vendor()
     {

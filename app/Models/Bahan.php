@@ -15,6 +15,11 @@ class Bahan extends Model
         "satuan_id"
     ];
 
+    public function materialPurchaseItems()
+    {
+        return $this->hasMany(MaterialPurchaseItems::class, 'bahan_id');
+    }
+
     public function satuan()
     {
         return $this->belongsTo(Satuan::class)->withTrashed();

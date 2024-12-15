@@ -58,5 +58,10 @@ class PermissionsSeeder extends Seeder
         foreach ($customerPermission as $permission) {
             \Spatie\Permission\Models\Permission::create(['name' => $permission]);
         }
+
+        $materialPermission = ["read-material"];
+        foreach ($materialPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
     }
 }

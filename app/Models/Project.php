@@ -35,4 +35,14 @@ class Project extends Model
     {
         return $this->hasMany(Tukang::class, 'project_id');
     }
+
+    public function workerAssigments()
+    {
+        return $this->hasMany(WorkerAssigments::class);
+    }
+
+    public function workerAttendaces()
+    {
+        return $this->hasMany(WorkerAttendances::class);
+    }
 }

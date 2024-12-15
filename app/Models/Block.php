@@ -20,13 +20,27 @@ class Block extends Model
         "customer_id",
     ];
 
+    public function scopeSearch($query, $search)
+    {
+        if (!empty($search) && is_string($search)) {
+            return $query->where('block', 'like', '%' . $search . '%');
+        }
+
+        return $query;
+    }
+
     public function project()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function workerAssignments()
+    {
+        return $this->hasMany(WorkerAssigments::class);
     }
 }

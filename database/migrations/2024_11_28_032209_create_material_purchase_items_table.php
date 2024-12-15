@@ -25,6 +25,7 @@
                     ->onDelete('cascade');
                 $table->integer("qty");
                 $table->integer("harga_satuan");
+                $table->integer("total");
                 $table->timestamps();
             });
         }

@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css?v=3.2.0') }}">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
     @vite('resources/js/app.js')
 </head>
@@ -58,8 +60,36 @@
     <script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+    <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
 
     <script>
+        $(".datepicker").daterangepicker({
+            // singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 1901,
+            maxYear: parseInt(moment().format('YYYY'), 10),
+            autoApply: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        })
+
+        $(".singlepicker").daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 1901,
+            maxYear: parseInt(moment().format('YYYY'), 10),
+            autoApply: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        })
+
         function initializeDataTable(table, config) {
             table.DataTable(config);
         }

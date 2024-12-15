@@ -10,7 +10,7 @@
                     <h1 class="m-0">Bahan</h1>
 
                     <div class="justify-end">
-                        <a href="{{ route('project.detail', $result->project_id) }}" class="btn btn-default btn-sm">
+                        <a href="{{ route('transaction.index') }}" class="btn btn-default btn-sm">
                             <i class="fas fa-arrow-left mr-2"></i>
                             Kembali
                         </a>

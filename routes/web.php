@@ -1,24 +1,34 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AuthOtpController;
 use App\Http\Controllers\BahanController;
+use App\Http\Controllers\BlockActivityDistributionController;
+use App\Http\Controllers\BlockAttendancesDistributionController;
 use App\Http\Controllers\BlockController;
+use App\Http\Controllers\BlockMaterialDistributionController;
+use App\Http\Controllers\BlockTukangDistributionController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DetailProjectController;
+use App\Http\Controllers\DistirbutionController;
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ReturnController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SatuanController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransactionMaterialController;
 use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\WorkerPaymentController;
-use App\Models\WorkerPayment;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use League\CommonMark\Parser\Block\BlockContinue;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +108,7 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'store')->name('tukang.store');
         Route::put('update', 'update')->name('tukang.update');
         Route::delete('destroy', 'destroy')->name('tukang.destroy');
+        Route::get('worker', 'dataForWorker')->name('tukang.dataForWorker');
     });
 
 
@@ -126,7 +137,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::controller(TransactionMaterialController::class)->prefix('transaction-materials')->group(function () {
-        Route::get('/{projectID}', 'index')->name('transaction-materials.index');
+        Route::get('', 'index')->name('transaction-materials.index');
         Route::post('/store', 'store')->name('transaction-materials.store');
         Route::get('/transaction-detail/{materialPurchasesID}', 'detailTransaction')->name('transaction-materials.detailTransaction');
     });
@@ -156,5 +167,53 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'store')->name('customer.store');
         Route::put('update', 'update')->name('customer.update');
         Route::delete('destroy', 'destroy')->name('customer.destroy');
+    });
+
+    Route::controller(MaterialController::class)->prefix('material')->group(function () {
+        Route::get('', 'index')->name('material.index');
+        Route::get('data', 'data')->name('material.data');
+    });
+
+    Route::controller(TransactionController::class)->prefix('transaction')->group(function () {
+        Route::get('', 'index')->name('transaction.index');
+        Route::get('data', 'data')->name('transaction.data');
+    });
+
+    Route::controller(DistirbutionController::class)->prefix('distribution')->group(function () {
+        Route::post('', 'distribute')->name('distribution.distribute');
+    });
+
+    Route::controller(BlockMaterialDistributionController::class)->prefix('block-material')->group(function () {
+        Route::get('/{blockID}', 'data')->name('block-material.data');
+    });
+
+    Route::controller(BlockTukangDistributionController::class)->prefix('block-tukang')->group(function () {
+        Route::get('/{blockTukangId}', 'data')->name('block-tukang.data');
+        Route::post('/{blockID}', 'store')->name('block-tukang.store');
+        Route::delete('destroy', 'destroy')->name('block-tukang.destroy');
+    });
+
+    Route::controller(BlockAttendancesDistributionController::class)->prefix('block-attendances')->group(function () {
+        Route::get('/{blockID}', 'data')->name('block-attendances.data');
+    });
+
+    Route::controller(ActivityController::class)->prefix('activity')->group(function () {
+        Route::get('/data/{blockID}', 'data')->name('activity.data');
+        Route::get('/detailActivity/{id}', 'detailActivity')->name('activity.detailActivity');
+        Route::delete('destroy', 'destroy')->name('activity.destroy');
+    });
+
+
+
+    Route::post('/{id}', [ReturnController::class, 'return'])->name('return');
+
+    Route::controller(PaymentController::class)->prefix("payment")->group(function () {
+        Route::get('/{blockID}', 'data')->name('payment.data');
+        Route::post('/{blockID}', 'store')->name('payment.store');
+        Route::delete('destroy', 'destroy')->name('payment.destroy');
+
+        // Route::post("additional-items", 'additionalItemStore')->name("payment.additionalItemStore");
+        Route::post("payment/additional-items", 'additionalItemStore')->name("payment.additionalItemStore");
+        Route::get('additional-items/{blockID}', 'additionalItem')->name("payment.additionalItem");
     });
 });

@@ -29,6 +29,7 @@ class AuthOtpController extends Controller
         }
 
         $verificationCode = $this->generateOtp($request->email);
+        // return $verificationCode;
         if (!$verificationCode) {
             return redirect()->back()->with('error', 'Gagal menghasilkan kode OTP. Silakan coba lagi.');
         }

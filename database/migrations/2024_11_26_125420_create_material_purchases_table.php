@@ -13,20 +13,12 @@ return new class extends Migration
     {
         Schema::create('material_purchases', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('project_id');
-            $table->foreign('project_id')
-                ->references('id')
-                ->on('project')
-                ->onDelete('cascade');
-
             $table->unsignedBigInteger('vendor_id');
             $table->foreign('vendor_id')
                 ->references('id')
                 ->on('vendors')
                 ->onDelete('cascade');
-
             $table->string("attachment")->nullable();
-
             $table->softDeletes();
             $table->timestamps();
         });
