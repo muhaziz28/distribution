@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AuthOtpController;
 use App\Http\Controllers\BahanController;
+use App\Http\Controllers\BlockActivityDistributionController;
+use App\Http\Controllers\BlockAttendancesDistributionController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\BlockMaterialDistributionController;
 use App\Http\Controllers\BlockTukangDistributionController;
@@ -187,7 +190,20 @@ Route::middleware('auth')->group(function () {
     Route::controller(BlockTukangDistributionController::class)->prefix('block-tukang')->group(function () {
         Route::get('/{blockTukangId}', 'data')->name('block-tukang.data');
         Route::post('/{blockID}', 'store')->name('block-tukang.store');
+        Route::delete('destroy', 'destroy')->name('block-tukang.destroy');
     });
+
+    Route::controller(BlockAttendancesDistributionController::class)->prefix('block-attendances')->group(function () {
+        Route::get('/{blockID}', 'data')->name('block-attendances.data');
+    });
+
+    Route::controller(ActivityController::class)->prefix('activity')->group(function () {
+        Route::get('/data/{blockID}', 'data')->name('activity.data');
+        Route::get('/detailActivity/{id}', 'detailActivity')->name('activity.detailActivity');
+        Route::delete('destroy', 'destroy')->name('activity.destroy');
+    });
+
+
 
     Route::post('/{id}', [ReturnController::class, 'return'])->name('return');
 
