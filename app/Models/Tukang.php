@@ -28,6 +28,6 @@ class Tukang extends Model
 
     public function workerAssignments()
     {
-        return $this->hasMany(WorkerAssigments::class);
+        return $this->hasMany(WorkerAssigments::class, 'worker_id', 'id');
     }
 }

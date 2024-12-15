@@ -21,7 +21,7 @@
                     if (data != null) {
                         return data.name
                     }
-                    return ''
+                    return '<span class="badge badge-warning">Customer belum ditambahkan</span>'
                 }
             },
             {
@@ -154,7 +154,7 @@
 
         $('#modal-add-block').modal('show')
         $('#modal-add-block').find('#title').text('Edit Block')
-        $('#form-add-block').attr('action', '{{ route('block.update') }}')
+        $('#form-add-block').attr('action', '{{ route("block.update") }}')
         $('#form-add-block').append('<input type="hidden" name="_method" value="PUT">')
         $('#form-add-block').append('<input type="hidden" name="id" value="' + data.id + '">')
         $('#block').val(data.block)

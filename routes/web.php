@@ -10,6 +10,7 @@ use App\Http\Controllers\DetailProjectController;
 use App\Http\Controllers\DistirbutionController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReturnController;
@@ -21,11 +22,10 @@ use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\WorkerPaymentController;
-use App\Models\WorkerPayment;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use League\CommonMark\Parser\Block\BlockContinue;
-use Spatie\Permission\Contracts\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -190,5 +190,14 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::post('/{id}', [ReturnController::class, 'return'])->name('return');
-    // Route::post('/{idBlock}', [ReturnController::class, 'tambahTukangBlock'])->name('tambahTukangBlock.store');
+
+    Route::controller(PaymentController::class)->prefix("payment")->group(function () {
+        Route::get('/{blockID}', 'data')->name('payment.data');
+        Route::post('/{blockID}', 'store')->name('payment.store');
+        Route::delete('destroy', 'destroy')->name('payment.destroy');
+
+        // Route::post("additional-items", 'additionalItemStore')->name("payment.additionalItemStore");
+        Route::post("payment/additional-items", 'additionalItemStore')->name("payment.additionalItemStore");
+        Route::get('additional-items/{blockID}', 'additionalItem')->name("payment.additionalItem");
+    });
 });

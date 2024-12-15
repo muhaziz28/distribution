@@ -60,7 +60,7 @@
                         class="nav-link {{ request()->is('project*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-building"></i>
                         <p>
-                            Project
+                            Kegiatan
                         </p>
                     </a>
                 </li>
