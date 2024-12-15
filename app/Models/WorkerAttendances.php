@@ -11,7 +11,7 @@ class WorkerAttendances extends Model
     use HasFactory;
 
     protected $fillable = [
-        "tukang_id",
+        "worker_id",
         "activity_id",
         "durasi_kerja",
         "upah",
@@ -21,11 +21,11 @@ class WorkerAttendances extends Model
 
     public function tukang()
     {
-        return $this->belongsTo(Tukang::class);
+        return $this->belongsTo(Tukang::class, 'worker_id');
     }
 
     public function activity()
     {
-        return $this->belongsTo(Activities::class);
+        return $this->belongsTo(Activities::class, 'activity_id');
     }
 }

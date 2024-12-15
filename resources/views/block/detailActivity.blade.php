@@ -47,10 +47,11 @@
                                         @foreach ($data as $index => $item)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
-                                                <td>{{ $item->id->block }}</td>
-                                                <td>{{ $item->activity_name }}</td>
-                                                <td>{{ $item->activity_name }}</td>
-                                                <td>{{ $item->activity_name }}</td>
+                                                <td>{{ $item->tukang->nama_tukang }}</td>
+                                                <td>{{ $item->activity->activity_name }}</td>
+                                                <td>{{ $item->durasi_kerja }} Jam</td>
+                                                <td>Rp. {{ number_format($item->upah, 0, ',', '.') }}</td>
+                                                <td>{{ $item->pinjaman }}</td>
                                                 <td> </td>
                                             </tr>
                                         @endforeach
