@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_vendor');
             $table->longText("alamat")->nullable();
-            $table->string("kontak", 15);
+            $table->string("kontak", 15)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

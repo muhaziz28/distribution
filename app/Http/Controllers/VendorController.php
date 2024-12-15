@@ -123,10 +123,9 @@ class VendorController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'nama_vendor' => 'required',
-            'kontak'      => 'required|max_digits:15',
+            'kontak'      => 'nullable|max_digits:15',
         ], [
             'nama_vendor.required' => 'Nama vendor wajib diisi',
-            'kontak.required'      => 'Kontak vendor wajib diisi',
             'kontak.max_digits'    => 'Kontak tidak boleh lebih dari 15 karakter',
         ]);
 

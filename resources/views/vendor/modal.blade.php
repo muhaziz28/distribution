@@ -11,8 +11,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="nama_vendor">Nama Vendor</label>
-                        <input type="text" class="form-control" id="nama_vendor" name="nama_vendor" placeholder="Nama Vendor">
+                        <label for="nama_vendor">Nama Vendor *</label>
+                        <input type="text" class="form-control" id="nama_vendor" name="nama_vendor" placeholder="Nama Vendor" required>
                     </div>
                     <div class="form-group">
                         <label for="kontak">Kontak</label>
