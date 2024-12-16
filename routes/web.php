@@ -195,14 +195,18 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(BlockAttendancesDistributionController::class)->prefix('block-attendances')->group(function () {
         Route::get('/{blockID}', 'data')->name('block-attendances.data');
+
+        // Halaman tambah
+        Route::get('attendances-items/{blockID}', 'addtendancesItem')->name("block-attendances.addtendancesItem");
+        Route::post("store", 'store')->name("block-attendances.store");
     });
 
     Route::controller(ActivityController::class)->prefix('activity')->group(function () {
         Route::get('/data/{blockID}', 'data')->name('activity.data');
         Route::get('/detailActivity/{id}', 'detailActivity')->name('activity.detailActivity');
         Route::delete('destroy', 'destroy')->name('activity.destroy');
+        Route::post('/activityTambah/{blockID}', 'store')->name('activity.store');
     });
-
 
 
     Route::post('/{id}', [ReturnController::class, 'return'])->name('return');

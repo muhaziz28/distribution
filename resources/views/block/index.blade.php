@@ -117,8 +117,13 @@
                                     </div>
                                     <!-- Tukang -->
 
-                                    {{-- Activity --}}
+                                    {{-- Absensi --}}
                                     <div class="tab-pane" id="absensi">
+                                        <a href="{{ route('block-attendances.addtendancesItem', $result->id) }}"
+                                            class="btn btn-success btn-sm mb-3">
+                                            <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
+                                            Add Absensi
+                                        </a>
                                         <table id="activity-table" class="table table-bordered table-striped"
                                             width="100%">
                                             <thead>
@@ -140,8 +145,8 @@
                                             </tfoot>
                                         </table>
                                     </div>
-                                    {{-- Activity --}}
 
+                                    {{-- Absensi --}}
 
                                     {{-- Payment --}}
                                     <div class="tab-pane" id="payment">
@@ -408,6 +413,13 @@
                     {
                         data: 'total',
                         name: 'total',
+                        render: function(data, type, row) {
+                            return new Intl.NumberFormat('id-ID', {
+                                style: 'decimal',
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0,
+                            }).format(data);
+                        },
                     },
                     {
                         data: null,
@@ -547,6 +559,7 @@
                     }
                 });
             });
+
 
             // Delete Tukang
             $(document).on('click', '.delete', function() {

@@ -15,6 +15,7 @@ class Activities extends Model
         "is_block_activity",
         "activity_name",
         "date",
+        "total",
 
     ];
 

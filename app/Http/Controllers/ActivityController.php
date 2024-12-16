@@ -22,6 +22,7 @@ class ActivityController extends Controller
         $query = Activities::with(['block', 'workerAttendances'])
             ->where('block_id', $blockID)
             ->get();
+        // $query->map(e = );
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('block', function ($row) {
@@ -29,6 +30,43 @@ class ActivityController extends Controller
             })
             ->rawColumns(['action'])
             ->make(true);
+    }
+
+
+    public function store(Request $request, $blockID)
+    {
+
+
+        try {
+            // Tabel activity
+            $activity = Activities::create([
+                'block_id' => $blockID,
+                'is_block_activity' => $blockID,
+                'activity_name' => $blockID,
+                // 'date' => $validated['date'],
+                'total' => $blockID,
+            ]);
+
+            // for ($i = 0; $i < $validated['total']; $i++) {
+            //     WorkerAttendances::create([
+            //         'worker_id' => null,
+            //         'activity_id' => $activity->id,
+            //         'durasi_kerja' => 0,
+            //         'upah' => 0,
+            //         'pinjaman' => 0,
+            //     ]);
+            // }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil ditambahkan!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
 
