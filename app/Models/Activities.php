@@ -18,7 +18,7 @@ class Activities extends Model
 
     ];
 
-    // Relasi ke block
+    // Relasi ke block 
     public function block()
     {
         return $this->belongsTo(Block::class);

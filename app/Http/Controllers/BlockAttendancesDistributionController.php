@@ -17,15 +17,15 @@ class BlockAttendancesDistributionController extends Controller
     public function data(Request $request, $blockID)
     {
         $query = WorkerAttendances::with(['tukang', 'activity'])
-            ->where('tukang_id', $blockID)
+            ->where('worker_id', $blockID)
             ->get();
         return DataTables::of($query)
             ->addIndexColumn()
-            ->addColumn('nama_tukang', function ($row) {
-                return $row->tukang ? $row->tukang->nama_tukang : '-';
+            ->addColumn('date', function ($row) {
+                return $row->activity ? $row->activity->date : '-';
             })
-            ->addColumn('no_hp', function ($row) {
-                return $row->tukang ? $row->tukang->no_hp : '-';
+            ->addColumn('total', function ($row) {
+                return $row->durasi_kerja * $row->upah;
             })
 
             ->rawColumns(['action'])

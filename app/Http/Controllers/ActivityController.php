@@ -34,9 +34,12 @@ class ActivityController extends Controller
 
     public function detailActivity($id)
     {
-
+        // $data = WorkerAttendances::with('activity', 'tukang')
+        //     ->where('activity_id', $id)
+        //     ->get();
+        // return $data;
         try {
-            $data = WorkerAttendances::with('activity')
+            $data = WorkerAttendances::with('activity', 'tukang')
                 ->where('activity_id', $id)
                 ->get();
 
