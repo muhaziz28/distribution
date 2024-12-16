@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', "Satuan")
+
 @section('content')
 <div class="content-wrapper">
 
@@ -26,7 +28,8 @@
                             <h3 class="card-title"></h3>
                             @can('create-satuan')
                             <div class="card-tools">
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add-satuan">
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#modal-add-satuan">
                                     <i class="fas fa-plus mr-2"></i>
                                     Tambah Satuan Baru
                                 </button>
