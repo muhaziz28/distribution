@@ -90,30 +90,4 @@ class BlockAttendancesDistributionController extends Controller
             ], 500);
         }
     }
-
-
-    // Fungsi tambah
-    // public function attendancesItemStore(Request $request, $blockID)
-    // {
-    //     $validated = $request->validate([
-    //         'activity_id' => 'required|exists:activities,id',
-    //         'worker_id' => 'required|array',
-    //         'worker_id.*' => 'exists:workers,id',
-    //         'durasi_kerja' => 'required|numeric',
-    //         'upah' => 'required|numeric',
-    //         'pinjaman' => 'nullable|numeric',
-    //     ]);
-
-    //     foreach ($validated['worker_id'] as $workerId) {
-    //         WorkerAttendances::create([
-    //             'worker_id' => 2,
-    //             'activity_id' => $validated['activity_id'],
-    //             'durasi_kerja' => $validated['durasi_kerja'],
-    //             'upah' => $validated['upah'],
-    //             'pinjaman' => $validated['pinjaman'] ?? 0,
-    //         ]);
-    //     }
-
-    //     return redirect()->back()->with('success', 'Data absensi berhasil ditambahkan!');
-    // }
 }
