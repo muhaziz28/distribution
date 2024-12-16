@@ -42,11 +42,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    // redirect ke halaman login jika belum login
     if (!Auth::check()) {
         return redirect('/login');
     }
-    return view('/home');
+    return redirect()->route('home');
 });
 
 // Auth::routes();

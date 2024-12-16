@@ -6,9 +6,7 @@ use App\Models\Activities;
 use App\Models\WorkerAttendances;
 use Illuminate\Http\Request;
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
-use Illuminate\Support\Facades\Gate;
 
 class ActivityController extends Controller
 {
@@ -22,7 +20,7 @@ class ActivityController extends Controller
         $query = Activities::with(['block', 'workerAttendances'])
             ->where('block_id', $blockID)
             ->get();
-        // $query->map(e = );
+
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('block', function ($row) {
@@ -35,10 +33,7 @@ class ActivityController extends Controller
 
     public function store(Request $request, $blockID)
     {
-
-
         try {
-            // Tabel activity
             $activity = Activities::create([
                 'block_id' => $blockID,
                 'is_block_activity' => $blockID,
@@ -69,13 +64,8 @@ class ActivityController extends Controller
         }
     }
 
-
     public function detailActivity($id)
     {
-        // $data = WorkerAttendances::with('activity', 'tukang')
-        //     ->where('activity_id', $id)
-        //     ->get();
-        // return $data;
         try {
             $data = WorkerAttendances::with('activity', 'tukang')
                 ->where('activity_id', $id)
@@ -83,7 +73,6 @@ class ActivityController extends Controller
 
             return view('block.detailActivity', compact('data', 'id'));
         } catch (Exception $e) {
-            // return redirect()->back();
             return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
