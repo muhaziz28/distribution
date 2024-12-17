@@ -21,7 +21,7 @@ class WorkerAttendances extends Model
 
     public function tukang()
     {
-        return $this->belongsTo(Tukang::class, 'worker_id');
+        return $this->belongsTo(Tukang::class, 'worker_id')->withTrashed();
     }
 
     public function activity()

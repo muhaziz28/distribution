@@ -203,7 +203,7 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(ActivityController::class)->prefix('activity')->group(function () {
         Route::get('/data/{blockID}', 'data')->name('activity.data');
-        Route::get('/detailActivity/{id}', 'detailActivity')->name('activity.detailActivity');
+        Route::get('/detailActivity/{blockID}', 'detailActivity')->name('activity.detailActivity');
         Route::delete('destroy', 'destroy')->name('activity.destroy');
         Route::post('/activityTambah/{blockID}', 'store')->name('activity.store');
     });

@@ -54,11 +54,25 @@ class ActivityController extends Controller
         }
     }
 
-    public function detailActivity($id)
+    public function detailActivity($date)
     {
         try {
-            $data = Activities::with('workerAttendances')->find($id);
-            return view('block.detailActivity', compact('data', 'id'));
+            $data = Activities::with('workerAttendances.tukang')->where('date', $date)->get();
+
+            $total = [
+                'upah' => 0,
+                'pinjaman' => 0,
+                'total_bersih' => 0
+            ];
+
+            foreach ($data as $activity) {
+                foreach ($activity->workerAttendances as $worker) {
+                    $total['upah'] += $worker->upah;
+                    $total['pinjaman'] += $worker->pinjaman;
+                    $total['total_bersih'] += ($worker->durasi_kerja * $worker->upah) - $worker->pinjaman;
+                }
+            }
+            return view('block.detail-activity', compact('data', 'total'));
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }

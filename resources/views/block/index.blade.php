@@ -421,11 +421,11 @@
                 {
                     data: null,
                     render: function(data, type, row) {
-                        const url = "{{ route('activity.detailActivity', ':id') }}".replace(':id', row.id)
+                        const url = "{{ route('activity.detailActivity', ':date') }}".replace(':date', data.date)
                         console.log(url)
                         return `
                                 <div class="btn-group">
-                                <a href="${url}" class="btn btn-default"><i class="fas fa-eye mr-2"></i>Detail </a>
+                                <a href="${url}" target="_blank" class="btn btn-default"><i class="fas fa-eye mr-2"></i>Detail </a>
                                 <button class="btn  btn-danger deleteActivity" data-id="${data.id}">
                                     <i class="fas fa-trash mr-2"></i> Delete 
                                 </button>
@@ -527,13 +527,15 @@
         });
 
         // Tambah tukang
-        $(document).on('submit', '#form-add-worker', function(e) {
+        // $(document).on('submit', '#form-add-worker', function(e) {
+        $(".save-worker").on('click', function(e) {
             e.preventDefault();
 
-            const formData = $(this).serialize();
+            const form = $("#form-add-worker");
+            const formData = form.serialize();
 
             $.ajax({
-                url: $(this).attr('action'),
+                url: form.attr('action'),
                 method: 'POST',
                 data: formData,
                 success: function(response) {
@@ -548,12 +550,57 @@
                     }
                 },
                 error: function(xhr) {
-                    console.error(xhr.responseText);
-                    alert('Error while adding Tukang');
+                    console.error(xhr.responseText)
+                    let response = xhr.responseJSON
+
+                    if (response && response.errors) {
+                        $.each(response.errors, function(field, messages) {
+                            messages.forEach(function(message) {
+                                toastr.error(message)
+                            });
+                        });
+                    } else {
+                        toastr.error('Terjadi kesalahan. Silakan coba lagi.')
+                    }
                 }
             });
         });
 
+        $(".save-next").on('click', function(e) {
+            e.preventDefault();
+
+            const form = $("#form-add-worker");
+            const formData = form.serialize();
+
+            $.ajax({
+                url: form.attr('action'),
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        $('#worker_id').val(null).trigger('change');
+                        table2.DataTable().ajax.reload(null, false);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText)
+                    let response = xhr.responseJSON
+
+                    if (response && response.errors) {
+                        $.each(response.errors, function(field, messages) {
+                            messages.forEach(function(message) {
+                                toastr.error(message)
+                            });
+                        });
+                    } else {
+                        toastr.error('Terjadi kesalahan. Silakan coba lagi.')
+                    }
+                }
+            });
+        });
 
         // Delete Tukang
         $(document).on('click', '.delete', function() {
@@ -591,7 +638,7 @@
                     },
                     success: function(response) {
                         toastr.success(response.message);
-                        table.DataTable().ajax.reload();
+                        table4.DataTable().ajax.reload();
                     }
                 })
             }
@@ -698,6 +745,30 @@
                     $('#form-add-tukang button[type="submit"]').html('Submit');
                 }
             });
+        });
+
+        $(document).on('click', '.delete-worker', function() {
+            var id = $(this).data('id')
+            console.log(id);
+            var result = confirm('hapus pekerja dari blok ini?');
+
+            if (result) {
+                $.ajax({
+                    url: "{{ route('block-tukang.destroy', $result->id) }}",
+                    method: "DELETE",
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            table2.DataTable().ajax.reload(null, false);
+                        } else {
+                            toastr.success(response.message);
+                        }
+                    }
+                })
+            }
         });
     })
 </script>

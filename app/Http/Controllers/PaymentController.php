@@ -22,7 +22,16 @@ class PaymentController extends Controller
 
     public function data($blockID)
     {
-        $data = Payment::where("block_id", $blockID)->get();
+        $query = Payment::where("block_id", $blockID)->get();
+        $data = $query->map(function ($payment) {
+            return [
+                'id' => $payment->id,
+                'payment_date' => $payment->payment_date,
+                'payment_type' => $payment->payment_type,
+                'total'        => $payment->total,
+                'attachment'   => $payment->attachment != null ? url(asset('storage/' . $payment->attachment)) : null,
+            ];
+        });
 
         return DataTables::of($data)->addIndexColumn()->toJson();
     }
@@ -126,7 +135,7 @@ class PaymentController extends Controller
             'payment_date'              => 'required',
             'items'                     => 'required|array',
             'items.*.item_name'         => 'required',
-            'items.*.item_description'   => 'required',
+            'items.*.item_description'  => 'nullable',
             'items.*.total'             => 'required|numeric|min:0',
             'file' => 'nullable|string',
         ]);
@@ -204,12 +213,9 @@ class PaymentController extends Controller
     {
         try {
             $payment = Payment::find($request->id);
-            Log::info(Storage::disk('public')->exists($payment->attachment));
             if (Storage::disk('public')->exists($payment->attachment)) {
                 Storage::disk('public')->delete($payment->attachment);
             }
-
-
             $payment->delete();
 
             return response()->json([

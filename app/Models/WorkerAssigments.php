@@ -23,6 +23,6 @@ class WorkerAssigments extends Model
 
     public function tukang()
     {
-        return $this->belongsTo(Tukang::class, "worker_id", "id");
+        return $this->belongsTo(Tukang::class, "worker_id", "id")->withTrashed();
     }
 }

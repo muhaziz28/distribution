@@ -6,6 +6,7 @@ use App\Models\Block;
 use Illuminate\Http\Request;
 use App\Models\WorkerAssigments;
 use Exception;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
 class BlockTukangDistributionController extends Controller
@@ -40,6 +41,20 @@ class BlockTukangDistributionController extends Controller
                     'success' => false,
                     'message' => "Block tidak ditemukan"
                 ], 404);
+            }
+
+            $validate = Validator::make($request->all(), [
+                'worker_id' => 'required',
+                'join_date' => 'required'
+            ], [
+                'worker_id.required' => 'Pekerja tidak boleh kosong',
+                'join_date.required' => 'Tanggal berkerja tidak boleh kosong'
+            ]);
+            if ($validate->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $validate->errors()->first()
+                ]);
             }
 
             $workerAssign = new WorkerAssigments();

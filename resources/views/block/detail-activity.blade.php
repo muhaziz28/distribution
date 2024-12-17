@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', "Detail Aktifitas")
+
 @section('content')
 <div class="content-wrapper">
 
@@ -7,10 +9,6 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6 row">
-                    <a href="{{ route('block.detail', $id) }}" class="btn btn-default btn-sm mr-3">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Kembali
-                    </a>
                 </div>
 
             </div>
@@ -36,45 +34,41 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 10px;">No</th>
-                                        <th>Tukang</th>
-                                        <th>Activity</th>
-                                        <th>Durasi kerja</th>
+                                        <th>Nama</th>
+                                        <th>Absen</th>
                                         <th>Upah</th>
                                         <th>Pinjaman</th>
                                         <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data->workerAttendances as $index => $item)
+                                    @foreach ($data as $index => $item)
+                                    <tr class="table-secondary">
+                                        <td colspan="7"><strong>Activity: {{ $item->is_block_activity == 1 ? "Block" : $item->activity_name }}</strong></td>
+                                    </tr>
+
+                                    @foreach ($item->workerAttendances as $worker)
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $item->tukang->nama_tukang }}</td>
-                                        <td>{{ $item->activity->activity_name }}</td>
-                                        <td>{{ $item->durasi_kerja }} Jam</td>
-                                        <td>Rp. {{ number_format($item->upah, 0, ',', '.') }}</td>
-                                        <td>Rp. {{ number_format($item->pinjaman, 0, ',', '.') }}</td>
-                                        <td>
-                                            @php
-                                            $total = ($item->durasi_kerja * $item->upah) - $item->pinjaman;
-                                            @endphp
-                                            Rp. {{ number_format($total, 0, ',', '.') }}
-                                        </td>
+                                        <td>{{ $loop->parent->iteration }}.{{ $loop->iteration }}</td>
+                                        <td>{{ $worker->tukang->nama_tukang }}</td>
+                                        <td>{{ $worker->durasi_kerja }}</td>
+                                        <td>Rp {{ number_format($worker->upah, 0, ',', '.') }}</td>
+                                        <td>Rp {{ number_format($worker->pinjaman, 0, ',', '.') }}</td>
+                                        <td>Rp {{ number_format(($worker->durasi_kerja * $worker->upah) - $worker->pinjaman, 0, ',', '.') }}</td>
                                     </tr>
                                     @endforeach
-
+                                    @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th style="width: 10px;">No</th>
-                                        <th>Tukang</th>
-                                        <th>Activity</th>
-                                        <th>Durasi kerja</th>
-                                        <th>Upah</th>
-                                        <th>Pinjaman</th>
-                                        <th>Total</th>
+                                        <th colspan="3">Total</th>
+                                        <th>Rp {{ number_format($total['upah'], 0, ',', '.') }}</th>
+                                        <th>Rp {{ number_format($total['pinjaman'], 0, ',', '.') }}</th>
+                                        <th>Rp {{ number_format($total['total_bersih'], 0, ',', '.') }}</th>
                                     </tr>
                                 </tfoot>
                             </table>
+
                         </div>
                     </div>
                 </div>

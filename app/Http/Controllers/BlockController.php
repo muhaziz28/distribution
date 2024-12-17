@@ -107,9 +107,10 @@ class BlockController extends Controller
     public function detail($id)
     {
         try {
-            $result = Block::findOrFail($id);
+            $result = Block::find($id);
             return view('block.index', compact('result'));
         } catch (Exception $e) {
+            dd($e);
             return redirect()->back();
         }
     }

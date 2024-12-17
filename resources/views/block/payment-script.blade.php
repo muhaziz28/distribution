@@ -40,7 +40,11 @@
                     data: 'attachment',
                     render: function(data, type, row) {
                         if (data != null) {
-                            return `<span class="badge badge-warning">Ada</span>`
+                            console.log(row)
+                            return `<a href="${data}" class="btn btn-default">
+                            <i class="fa fa-link mr-2"></i>
+                            Lihat
+                            </a>`
                         }
                         return ''
                     }
@@ -48,7 +52,7 @@
                 {
                     data: null,
                     render: function(data, row) {
-                        return `<button class="btn btn-sm btn-danger delete" data-id="${data.id}">
+                        return `<button class="btn btn-sm btn-danger delete-payment" data-id="${data.id}">
                                 <i class="fas fa-trash mr-2"></i>
                                 Delete
                             </button>`
@@ -77,20 +81,13 @@
             lengthMenu: [10, 25, 50, 100],
             footerCallback: function(row, data, start, end, display) {
                 let total = data.reduce((sum, item) => sum + item.total, 0);
-                let formattedTotal = new Intl.NumberFormat('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR'
-                }).format(total);
+                let formattedTotal = formatRupiah(total)
                 $('#total_keseluruhan').text(`Total Keseluruhan: ${formattedTotal}`);
             },
             columns: defineColumnsPayment()
         };
 
         initializeDataTable(tablePayment, configPayment);
-
-        function formatRupiah(angka) {
-            return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        }
 
         $('#form-add-payment-history').on('submit', function(e) {
             e.preventDefault();
@@ -158,7 +155,7 @@
             });
         });
 
-        $(document).on('click', '.delete', function() {
+        $(document).on('click', '.delete-payment', function() {
             var id = $(this).data('id')
             console.log(id);
             var result = confirm('Apakah anda ingin menghapus data pembayaran ini?');

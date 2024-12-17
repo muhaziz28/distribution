@@ -7,6 +7,7 @@ use App\Models\Block;
 use App\Models\BlockAttedancesDistribution;
 use App\Models\WorkerAssigments;
 use App\Models\WorkerAttendances;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,16 +27,21 @@ class BlockAttendancesDistributionController extends Controller
             ->where('block_id', $blockID)
             ->get();
 
-        $data = $query->map(function ($activity) {
+        $data = $query->groupBy('date')->map(function ($activities, $date) {
             return [
-                'id'               => $activity->id,
-                'block_id'         => $activity->block_id,
-                'is_block_activity' => $activity->is_block_activity,
-                'activity_name'    => $activity->activity_name,
-                'date'             => $activity->date,
-                'total'            => $activity->total,
+                'date'  => $date,
+                'total' => $activities->sum('total'),
+                'activities' => $activities->map(function ($activity) {
+                    return [
+                        'id'                => $activity->id,
+                        'block_id'          => $activity->block_id,
+                        'is_block_activity' => $activity->is_block_activity,
+                        'activity_name'     => $activity->activity_name,
+                        'total'             => $activity->total,
+                    ];
+                })->values()
             ];
-        });
+        })->values();
 
         return DataTables::of($data)
             ->addIndexColumn()
@@ -46,11 +52,22 @@ class BlockAttendancesDistributionController extends Controller
     // Halaman tambah
     public function addtendancesItem($blockID)
     {
-        $workerAttendances = WorkerAssigments::with(['tukang'])
+        $workerAssigments = WorkerAssigments::with(['tukang'])
             ->where('block_id', $blockID)
             ->get();
 
-        return view('block.attendances-item', compact('workerAttendances', 'blockID'));
+        $today = Carbon::today();
+
+        $presentWorker = WorkerAttendances::whereDate('created_at', $today)
+            ->whereIn('worker_id', $workerAssigments->pluck('worker_id'))
+            ->pluck('worker_id')
+            ->toArray();
+
+        $workerNotPresentToday = $workerAssigments->filter(function ($item) use ($presentWorker) {
+            return !in_array($item->worker_id, $presentWorker);
+        });
+
+        return view('block.attendances-item', compact('workerNotPresentToday', 'blockID'));
     }
 
     public function store(Request $request)
@@ -61,32 +78,46 @@ class BlockAttendancesDistributionController extends Controller
             $workers = $request->input('workers', []);
 
             DB::beginTransaction();
-            $activityData = new Activities();
-            $activityData->block_id = $blockID;
-            $activityData->is_block_activity = isset($activity['is_block_activity']) ? $activity['is_block_activity'] : 0;
-            $activityData->activity_name = $activity['activity_name'] ?? '';
-            $activityData->date = \Carbon\Carbon::now()->format('Y-m-d');
-            $activityData->total = 0;
-            $activityData->save();
 
-            $total = 0;
+            $todayDate = \Carbon\Carbon::now()->format('Y-m-d');
+
+            $activityData = Activities::where('block_id', $blockID)
+                ->whereDate('date', $todayDate)
+                ->first();
+
+            if (!$activityData) {
+                $activityData = new Activities();
+                $activityData->block_id = $blockID;
+                $activityData->is_block_activity = $activity['is_block_activity'] ?? 0;
+                $activityData->activity_name = $activity['activity_name'] ?? '';
+                $activityData->date = $todayDate;
+                $activityData->save();
+            }
+
             foreach ($workers as $worker) {
                 if (isset($worker['worker_id']) && isset($worker['is_checked']) && isset($worker['durasi_kerja']) && isset($worker['upah'])) {
-                    $workerData = new WorkerAttendances();
-                    $workerData->activity_id = $activityData->id;
-                    $workerData->worker_id = $worker['worker_id'];
-                    $workerData->durasi_kerja = $worker['durasi_kerja'];
-                    $workerData->upah = $worker['upah'];
-                    $workerData->pinjaman = $worker['pinjaman'] ?? null;
-                    $workerData->save();
+                    $existingAttendance = WorkerAttendances::where('activity_id', $activityData->id)
+                        ->where('worker_id', $worker['worker_id'])
+                        ->first();
+
+                    if (!$existingAttendance) {
+                        $workerData = new WorkerAttendances();
+                        $workerData->activity_id = $activityData->id;
+                        $workerData->worker_id = $worker['worker_id'];
+                        $workerData->durasi_kerja = $worker['durasi_kerja'];
+                        $workerData->upah = $worker['upah'];
+                        $workerData->pinjaman = $worker['pinjaman'] ?? null;
+                        $workerData->save();
+                    }
                 }
             }
+
             DB::commit();
             return response()->json([
                 'success' => true,
                 'message' => "Data berhasil disimpan"
             ], 201);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 'success' => false,

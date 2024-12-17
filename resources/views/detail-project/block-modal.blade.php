@@ -25,8 +25,7 @@
                                 <select class="form-control" name="customer_id" id="customer_id"></select>
                             </div>
                             <div class="col-5">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-customer">
-                                    <i class="fas fa-plus mr-2"></i>
+                                <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#modal-add-customer">
                                     Tambah Customer
                                 </button>
                             </div>

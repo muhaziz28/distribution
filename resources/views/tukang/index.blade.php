@@ -91,14 +91,14 @@
                 {
                     data: null,
                     render: function(data, type, row) {
-                        return `<div class="flex items-center justify-end space-x-2">
+                        return `<div class="btn-group">
                         @can('update-tukang')
-                            <button class="btn btn-sm btn-info edit" data-id="${data.id}">
+                            <button class="btn btn-warning edit" data-id="${data.id}">
                             <i class="fas fa-pen mr-2"></i>
                             Edit</button>
                         @endcan
                         @can('delete-tukang')
-                            <button class="btn btn-sm btn-danger delete" data-id="${data.id}"><i class="fas fa-trash mr-2"></i> Delete</button>
+                            <button class="btn btn-danger delete" data-id="${data.id}"><i class="fas fa-trash mr-2"></i> Delete</button>
                         @endcan
                         </div>`;
                     }
