@@ -64,9 +64,6 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
-    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
-    <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
-
     <script>
         $(".datepicker").daterangepicker({
             // singleDatePicker: true,

@@ -50,7 +50,7 @@
                                         <div class="col-4">
                                             <div class="form-group filter">
                                                 <label for="data">Tanggal</label>
-                                                <input type="text" class="form-control datepicker" id="date"
+                                                <input type="text" class="form-control datepicker material-filter" id="date"
                                                     name="date" placeholder="Pilih tanggal">
                                             </div>
                                         </div>
@@ -124,6 +124,17 @@
                                         <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
                                         Tambah Absensi
                                     </a>
+
+                                    <div class="row ">
+                                        <div class="col-4">
+                                            <div class="form-group filter">
+                                                <label for="data">Tanggal</label>
+                                                <input type="text" class="form-control datepicker absensi-filter" id="date"
+                                                    name="date" placeholder="Pilih tanggal">
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <table id="activity-table" class="table table-bordered table-striped"
                                         width="100%">
                                         <thead>
@@ -151,16 +162,17 @@
                                 {{-- Payment --}}
                                 <div class="tab-pane" id="payment">
                                     <div class="row">
-                                        <button type="button" class="btn btn-success  mb-3 mr-3"
-                                            data-toggle="modal" data-target="#modal-add-payment-history">
-                                            <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
-                                            Tambah Pembayaran Baru
-                                        </button>
-                                        <a href="{{ route('payment.additionalItem', $result->id) }}"
-                                            class="btn btn-info  mb-3">
-                                            <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
-                                            Tambah Pembayaran Item Tambahan
-                                        </a>
+                                        <div class="col"><button type="button" class="btn btn-success  mb-3 mr-3"
+                                                data-toggle="modal" data-target="#modal-add-payment-history">
+                                                <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
+                                                Tambah Pembayaran Baru
+                                            </button>
+                                            <a href="{{ route('payment.additionalItem', $result->id) }}"
+                                                class="btn btn-info  mb-3">
+                                                <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
+                                                Tambah Pembayaran Item Tambahan
+                                            </a>
+                                        </div>
                                     </div>
                                     <table id="payment-table" class="table table-bordered table-striped" width="100%">
                                         <thead>
@@ -446,7 +458,8 @@
                 url: "{{ route('block-attendances.data', $result->id) }}",
                 type: "GET",
                 data: function(d) {
-                    d.date = $('.datepicker').val();
+                    let dateRange = $('.absensi-filter').val();
+                    d.date = dateRange;
                 }
             },
             paging: true,
@@ -458,6 +471,36 @@
             columns: defineColumns4()
         };
         initializeDataTable(table4, config4);
+
+        $(".absensi-filter").daterangepicker({
+            showDropdowns: true,
+            minYear: 1901,
+            maxYear: parseInt(moment().format('YYYY'), 10),
+            autoApply: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        }).on('apply.daterangepicker', function(ev, picker) {
+            var startDate = picker.startDate.format('YYYY-MM-DD')
+            var endDate = picker.endDate.format('YYYY-MM-DD')
+
+            table4.DataTable().ajax.reload();
+        });
+
+        $(".material-filter").daterangepicker({
+            showDropdowns: true,
+            minYear: 1901,
+            maxYear: parseInt(moment().format('YYYY'), 10),
+            autoApply: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        }).on('apply.daterangepicker', function(ev, picker) {
+            var startDate = picker.startDate.format('YYYY-MM-DD')
+            var endDate = picker.endDate.format('YYYY-MM-DD')
+
+            table.DataTable().ajax.reload();
+        });
 
         // Checkbok
         $(document).ready(function() {

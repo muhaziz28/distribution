@@ -23,11 +23,40 @@ class BlockAttendancesDistributionController extends Controller
 
     public function data(Request $request, $blockID)
     {
-        $query = Activities::with("workerAttendances")
-            ->where('block_id', $blockID)
-            ->get();
+        $query = Activities::with("workerAttendances")->where('block_id', $blockID);
 
-        $data = $query->groupBy('date')->map(function ($activities, $date) {
+        Log::info($request->date);
+        if ($request->has('date') && !empty($request->date)) {
+            $dates = explode(' - ', $request->date);
+
+            if (count($dates) === 2) {
+                $startDate = trim($dates[0]);
+                $endDate = trim($dates[1]);
+
+                try {
+                    // Pastikan menggunakan format yang benar
+                    $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startDate)->startOfDay();
+                    $endDate = \Carbon\Carbon::createFromFormat('d/m/Y', $endDate)->endOfDay();
+
+                    // Log tanggal setelah konversi
+                    Log::info("Tanggal setelah konversi: Start - {$startDate}, End - {$endDate}");
+
+                    // Cek apakah tanggal awal lebih besar dari tanggal akhir
+                    if ($startDate > $endDate) {
+                        return response()->json(['message' => 'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'], 422);
+                    }
+
+                    // Terapkan filter tanggal
+                    $query->whereBetween('date', [$startDate, $endDate]);
+                } catch (\Exception $e) {
+                    return response()->json(['message' => 'Format tanggal tidak valid.'], 422);
+                }
+            }
+        }
+
+        $activities = $query->get();
+
+        $data = $activities->groupBy('date')->map(function ($activities, $date) {
             return [
                 'date'  => $date,
                 'total' => $activities->sum('total'),
@@ -48,6 +77,7 @@ class BlockAttendancesDistributionController extends Controller
             ->rawColumns(['action'])
             ->make(true);
     }
+
 
     // Halaman tambah
     public function addtendancesItem($blockID)
