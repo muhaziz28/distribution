@@ -42,16 +42,6 @@ class ActivityController extends Controller
                 'total' => $blockID,
             ]);
 
-            // for ($i = 0; $i < $validated['total']; $i++) {
-            //     WorkerAttendances::create([
-            //         'worker_id' => null,
-            //         'activity_id' => $activity->id,
-            //         'durasi_kerja' => 0,
-            //         'upah' => 0,
-            //         'pinjaman' => 0,
-            //     ]);
-            // }
-
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil ditambahkan!',
@@ -67,10 +57,7 @@ class ActivityController extends Controller
     public function detailActivity($id)
     {
         try {
-            $data = WorkerAttendances::with('activity', 'tukang')
-                ->where('activity_id', $id)
-                ->get();
-
+            $data = Activities::with('workerAttendances')->find($id);
             return view('block.detailActivity', compact('data', 'id'));
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan.');

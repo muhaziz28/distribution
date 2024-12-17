@@ -15,8 +15,6 @@ class Activities extends Model
         "is_block_activity",
         "activity_name",
         "date",
-        "total",
-
     ];
 
     // Relasi ke block 
@@ -27,6 +25,16 @@ class Activities extends Model
 
     public function workerAttendances()
     {
-        return $this->hasMany(WorkerAttendances::class);
+        return $this->hasMany(WorkerAttendances::class, "activity_id", "id");
+    }
+
+    public function getTotalAttribute()
+    {
+        $worker =  $this->workerAttendances;
+        $total = $this->workerAttendances->sum(function ($worker) {
+            return ($worker->durasi_kerja * $worker->upah) - $worker->pinjaman;
+        });
+
+        return $total;
     }
 }

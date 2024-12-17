@@ -75,6 +75,9 @@ class SatuanController extends Controller
     {
         if (Gate::allows('update-satuan')) {
             try {
+                $validate = $this->validateRequest($request);
+                if ($validate) return $validate;
+
                 $satuan = Satuan::findOrFail($request->id);
 
                 $isDuplicate = Satuan::checkDuplicate($request->satuan, $satuan->id)->exists();

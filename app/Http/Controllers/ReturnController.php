@@ -43,50 +43,11 @@ class ReturnController extends Controller
 
             $material = Material::find($blockTukang->material_id);
             MaterialUpdateLog::create([
-                'material_id' => $blockTukang->material_id,
+                'material_id'  => $blockTukang->material_id,
                 'previous_qty' => $material->qty,
-                'new_qty' => $material->qty + $request->returned_qty,
-                'updated_by' => Auth::user()->id,
-            ]);
-
-            $material->qty = $material->qty + $request->returned_qty;
-            $material->save();
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Barang berhasil dikembalikan'
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ]);
-        }
-    }
-
-    public function tambahTukangBlock(Request $request, $idBlock)
-    {
-        try {
-            $validate = $this->validateRequest($request);
-            if ($validate) return $validate;
-
-            $blockTukang = BlockTukangDistribution::find($idBlock);
-
-            $result = $blockTukang->block_id;
-
-            DB::beginTransaction();
-            $blockTukang->block_id = $request->block_id;
-            $blockTukang->returned_date = now();
-            $blockTukang->distributed_qty = $result;
-            $blockTukang->save();
-
-            $material = Material::find($blockTukang->material_id);
-            MaterialUpdateLog::create([
-                'material_id' => $blockTukang->material_id,
-                'previous_qty' => $material->qty,
-                'new_qty' => $material->qty + $request->returned_qty,
-                'updated_by' => Auth::user()->id,
+                'new_qty'      => $material->qty + $request->returned_qty,
+                'updated_by'   => Auth::user()->id,
+                "note"         => "Retur"
             ]);
 
             $material->qty = $material->qty + $request->returned_qty;

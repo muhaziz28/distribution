@@ -85,13 +85,20 @@
                 {
                     data: 'previous_qty',
                     render: function(data, type, row) {
+                        const logUrl = "{{ route('log.data', ':id') }}".replace(':id', row.id)
                         if (data != null) {
                             const result = row.new_qty > data
+                            let message
                             if (result) {
-                                return `Stok awal: ${data} <span class="badge badge-success">+${row.new_qty - row.previous_qty}</span>`
+                                message = `Stok awal: ${data} <span class="badge badge-success">+${row.new_qty - row.previous_qty}</span>`
                             } else {
-                                return `Stok awal: ${data} <span class="badge badge-danger">${row.new_qty - row.previous_qty}</span>`
+                                message = `Stok awal: ${data} <span class="badge badge-danger">${row.new_qty - row.previous_qty}</span>`
                             }
+
+                            return message + ' ' + `<a href="${logUrl}" target="_blank" class="btn btn-default btn-sm">
+                            <i class="fa fa-history"></i>
+                            History
+                            </a>`
                         }
 
                         return ''

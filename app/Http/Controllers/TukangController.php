@@ -50,27 +50,13 @@ class TukangController extends Controller
             ]);
         }
         try {
-            $validate = Validator::make($request->all(), [
-                'nama_tukang'   => 'required|string|max:255',
-                'no_hp'         => 'nullable|max_digits:15',
-            ], [
-                'name.required'     => 'Nama tukang wajib diisi',
-                'no_hp.max_digits'  => 'Nomor Hp tidak valid',
-            ]);
-
-            if ($validate->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $validate->errors()->first()
-                ]);
-            }
+            $validate = $this->validateRequest($request);
+            if ($validate) return $validate;
 
             $tukang = Tukang::create([
                 'nama_tukang' => $request->nama_tukang,
                 'no_hp' => $request->no_hp,
-                'is_active' => false,
             ]);
-
 
             return response()->json([
                 'success' => true,
@@ -85,7 +71,6 @@ class TukangController extends Controller
         }
     }
 
-
     public function update(Request $request)
     {
         if (!Gate::allows('update-tukang')) {
@@ -95,26 +80,12 @@ class TukangController extends Controller
             ]);
         }
         try {
-            $validate = Validator::make($request->all(), [
-                'nama_tukang'       => 'required',
-                'is_active'         => 'required',
-            ], [
-                'name.required'     => 'Nama tukang wajib diisi',
-                'is_active.required' => 'The is active field is required',
-            ]);
-
-            if ($validate->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $validate->errors()->first()
-                ]);
-            }
+            $validate = $this->validateRequest($request);
+            if ($validate) return $validate;
 
             $tukang = Tukang::find($request->id);
             $tukang->nama_tukang = $request->nama_tukang;
             $tukang->no_hp = $request->no_hp;
-            $tukang->is_active = $request->is_active;
-
             $tukang->save();
 
             return response()->json([
@@ -150,7 +121,7 @@ class TukangController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'User ' . $tukang->nama_tukang . ' has been deleted'
+                'message' => 'Tukang ' . $tukang->nama_tukang . ' berhasil dihapus'
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -158,5 +129,25 @@ class TukangController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    public function validateRequest($request)
+    {
+        $validate = Validator::make($request->all(), [
+            'nama_tukang'   => 'required|string|max:255',
+            'no_hp'         => 'nullable|max_digits:15',
+        ], [
+            'name.required'     => 'Nama tukang wajib diisi',
+            'no_hp.max_digits'  => 'Nomor Hp tidak valid',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validate->errors()->first()
+            ]);
+        }
+
+        return null;
     }
 }

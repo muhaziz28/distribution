@@ -24,20 +24,16 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title"></h3>
+                        <div class="card-body">
                             @can('create-satuan')
                             <div class="card-tools">
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                <button type="button" class="btn btn-success mb-3" data-toggle="modal"
                                     data-target="#modal-add-satuan">
-                                    <i class="fas fa-plus mr-2"></i>
-                                    Tambah Satuan Baru
+                                    <i class="fas fa-plus-circle mr-2"></i>
+                                    Tambah Satuan
                                 </button>
                             </div>
                             @endcan
-                        </div>
-
-                        <div class="card-body">
                             <table id="satuan-table" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                     <tr>
@@ -89,23 +85,20 @@
                 {
                     data: null,
                     render: function(data, type, row) {
-
-                        return `<div class="flex items-center justify-end space-x-2">
+                        return `<div class="btn-group">
                             @can('update-satuan')
-                            <button class="btn btn-sm btn-info edit" data-id="${data.id}">
+                            <button class="btn btn-warning edit" data-id="${data.id}">
                                 <i class="fas fa-pen mr-2"></i>
                                 Edit
                             </button>
                             @endcan
                             @can('delete-satuan')
-                            <button class="btn btn-sm btn-danger delete" data-id="${data.id}">
+                            <button class="btn btn-danger delete" data-id="${data.id}">
                                 <i class="fas fa-trash mr-2"></i>
                                 Delete
                             </button>
                             @endcan
                         </div>`;
-
-
                     }
                 }
             ];
@@ -130,6 +123,7 @@
         $('#form-add-satuan').on('submit', function(e) {
             e.preventDefault();
             var form = new FormData(this)
+
             $.ajax({
                 url: $(this).attr('action'),
                 method: "POST",
@@ -145,16 +139,29 @@
                     console.log(response)
                     if (response.success) {
                         $('#form-add-satuan')[0].reset();
+                        $('#modal-add-satuan').modal('hide');
                         toastr.success(response.message);
                         table.DataTable().ajax.reload(null, false);
                     } else {
                         toastr.error(response.message);
                     }
-                    $('#modal-add-satuan').modal('hide');
                     $('#form-add-satuan button[type="submit"]').attr('disabled', false);
                     $('#form-add-satuan button[type="submit"]').html('Save');
-                }
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText)
+                    let response = xhr.responseJSON
 
+                    if (response && response.errors) {
+                        $.each(response.errors, function(field, messages) {
+                            messages.forEach(function(message) {
+                                toastr.error(message)
+                            });
+                        });
+                    } else {
+                        toastr.error('Terjadi kesalahan. Silakan coba lagi.')
+                    }
+                }
             })
         })
 
@@ -192,7 +199,7 @@
         })
 
         $('#modal-add-satuan').on('hidden.bs.modal', function() {
-            $('#modal-add-satuan').find('#title').text('Tambah Satuan Baru');
+            $('#modal-add-satuan').find('#title').text('Tambah Satuan');
             $('#form-add-satuan input[name="_method"]').remove();
             $('#form-add-satuan input[name="id"]').remove();
             $('#form-add-satuan').attr('action', '{{ route("satuan.store") }}');

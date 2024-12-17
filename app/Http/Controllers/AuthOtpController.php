@@ -24,12 +24,9 @@ class AuthOtpController extends Controller
             'email.exists'   => 'Alamat email tidak terdaftar di sistem kami.'
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+        if ($validator->fails()) return redirect()->back()->withErrors($validator)->withInput();
 
         $verificationCode = $this->generateOtp($request->email);
-        // return $verificationCode;
         if (!$verificationCode) {
             return redirect()->back()->with('error', 'Gagal menghasilkan kode OTP. Silakan coba lagi.');
         }

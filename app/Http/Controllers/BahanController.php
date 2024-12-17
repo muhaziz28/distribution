@@ -71,6 +71,9 @@ class BahanController extends Controller
     {
         if (Gate::allows('update-bahan')) {
             try {
+                $validate = $this->validateRequest($request);
+                if ($validate) return $validate;
+
                 $bahan = Bahan::findOrFail($request->id);
 
                 $isDuplicate = Bahan::checkDuplicate($request->nama_bahan, $bahan->id)->exists();

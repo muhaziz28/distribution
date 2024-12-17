@@ -37,7 +37,6 @@ class DetailProjectController extends Controller
 
     public function materialPurchasesData()
     {
-
         $result = MaterialPurchases::all();
         return DataTables::of($result)->addIndexColumn()->toJson();
     }
@@ -51,7 +50,6 @@ class DetailProjectController extends Controller
             ]);
         }
 
-        // Validasi
         $validate = Validator::make($request->all(), [
             'worker_id' => 'required|array',
             'worker_id.*' => 'exists:tukang,id',

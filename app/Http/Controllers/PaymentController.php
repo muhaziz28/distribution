@@ -80,7 +80,7 @@ class PaymentController extends Controller
                     throw new Exception("File tidak ditemukan di direktori sementara.");
                 }
 
-                $relativeFilePathUrl = 'storage/' . $relativeFilePath;
+                $relativeFilePathUrl =  $relativeFilePath;
             }
 
             Payment::create([
@@ -158,7 +158,7 @@ class PaymentController extends Controller
                     throw new Exception("File tidak ditemukan di direktori sementara.");
                 }
 
-                $relativeFilePathUrl = 'storage/' . $relativeFilePath;
+                $relativeFilePathUrl = $relativeFilePath;
             }
 
             $total = 0;
@@ -204,9 +204,11 @@ class PaymentController extends Controller
     {
         try {
             $payment = Payment::find($request->id);
-            if ($payment->attachment) {
-                $delete = Storage::delete($payment->attachment);
+            Log::info(Storage::disk('public')->exists($payment->attachment));
+            if (Storage::disk('public')->exists($payment->attachment)) {
+                Storage::disk('public')->delete($payment->attachment);
             }
+
 
             $payment->delete();
 

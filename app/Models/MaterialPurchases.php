@@ -25,4 +25,9 @@ class MaterialPurchases extends Model
     {
         return $this->hasMany(MaterialPurchaseItems::class);
     }
+
+    public function getTotalAttribute()
+    {
+        return $this->materialPurchaseItems->sum('total');
+    }
 }

@@ -2,10 +2,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             {{-- {{ route('block-tukang.store', $blockTukangId) }} --}}
-            <form action="{{ route('block-tukang.store', $result->id) }}" method="POST" id="form-add-tukang">
+            <form action="{{ route('block-tukang.store', $result->id) }}" method="POST" id="form-add-worker">
                 @csrf
                 <div class="modal-header">
-                    <h4 class="modal-title" id="title">Add Tukang</h4>
+                    <h4 class="modal-title" id="title">Tambah Pekerja</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -13,11 +13,21 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="worker_id">Tukang</label>
-                        <select class="form-control" name="worker_id" id="worker_id"></select>
+                        <div class="row">
+                            <div class="col-7">
+                                <select class="form-control" name="worker_id" id="worker_id"></select>
+                            </div>
+                            <div class="col-5">
+                                <button type="button" class="btn btn-info w-100" data-toggle="modal" data-target="#modal-add-tukang">
+                                    <i class="fa fa-plus-circle mr-2"></i>
+                                    Tambah Tukang
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="join_date">Tanggal Bergabung</label>
-                        <input type="date" class="form-control" name="join_date" id="join_date" required />
+                        <input type="text" class="form-control singlepicker" name="join_date" id="join_date" required />
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

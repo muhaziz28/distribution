@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('activities', function (Blueprint $table) {
-            $table->integer("total");
-            $table->softDeletes();
+        Schema::table('material_update_logs', function (Blueprint $table) {
+            $table->string("note")->nullable();
         });
     }
 
@@ -22,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('activities', function (Blueprint $table) {
+        Schema::table('material_update_logs', function (Blueprint $table) {
             //
         });
     }

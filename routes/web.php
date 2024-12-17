@@ -12,6 +12,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DetailProjectController;
 use App\Http\Controllers\DistirbutionController;
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionController;
@@ -218,5 +219,9 @@ Route::middleware('auth')->group(function () {
         // Route::post("additional-items", 'additionalItemStore')->name("payment.additionalItemStore");
         Route::post("payment/additional-items", 'additionalItemStore')->name("payment.additionalItemStore");
         Route::get('additional-items/{blockID}', 'additionalItem')->name("payment.additionalItem");
+    });
+
+    Route::controller(LogController::class)->prefix("log")->group(function () {
+        Route::get('/{materialID}', 'index')->name("log.data");
     });
 });

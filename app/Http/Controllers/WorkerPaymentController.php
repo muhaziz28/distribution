@@ -70,7 +70,7 @@ class WorkerPaymentController extends Controller
                     throw new \Exception("File tidak ditemukan di direktori sementara.");
                 }
 
-                $relativeFilePathUrl = asset('storage/' . $relativeFilePath);
+                $relativeFilePathUrl = $relativeFilePath;
             }
 
             $result = new WorkerPayment();

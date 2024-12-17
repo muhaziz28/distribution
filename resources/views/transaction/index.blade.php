@@ -24,15 +24,13 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-body">
                             <div class="card-tools">
-                                <a href="{{ route('transaction-materials.index') }}" class="btn btn-success btn-sm">
-                                    <i class="fas fa-plus mr-2"></i>
+                                <a href="{{ route('transaction-materials.index') }}" class="btn btn-success btn-sm mb-3">
+                                    <i class="fas fa-plus-circle mr-2"></i>
                                     Tambah Pembelian Material
                                 </a>
                             </div>
-                        </div>
-                        <div class="card-body">
                             <table id="transaction-table" class="table table-bordered table-striped" width="100%">
                                 <thead>
                                     <tr>
@@ -88,7 +86,8 @@
                     data: 'attachment',
                     render: function(data, type, row) {
                         if (data != null || data != undefined) {
-                            return `<a href="${data}" class="btn btn-info btn-sm">Lihat FIle</a>`
+                            return `<a href="${data}" target="_blank" class="btn btn-default btn-sm">
+                            <i class="fa fa-link mr-2"></i>Lihat FIle</a>`
                         }
                         return ''
                     }
@@ -105,7 +104,9 @@
                 {
                     data: null,
                     render: function(data, type, row) {
-                        return `<a href="${row.detail_url}" class="btn btn-info btn-sm">Detail Transaksi</a>`
+                        return `<a href="${row.detail_url}" class="btn btn-default btn-sm">
+                        Detail Transaksi
+                        </a>`
                     }
                 }
             ];
@@ -126,10 +127,6 @@
         };
 
         initializeDataTable(table, config);
-
-        function formatRupiah(angka) {
-            return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        }
     })
 </script>
 @endpush

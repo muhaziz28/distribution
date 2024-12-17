@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
-use function PHPUnit\Framework\returnSelf;
-
 class BlockController extends Controller
 {
     public function __construct()
@@ -59,7 +57,6 @@ class BlockController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
-
 
     public function update(Request $request)
     {

@@ -33,7 +33,7 @@
                 @can('read-project')
                 <li class="nav-item">
                     <a href="{{ route('project.index') }}"
-                        class="nav-link {{ request()->is('project*') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('project*') || request()->is('detail-project*')|| request()->is('block*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-building"></i>
                         <p>
                             Kegiatan

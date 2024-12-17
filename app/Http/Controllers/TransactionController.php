@@ -21,23 +21,16 @@ class TransactionController extends Controller
     public function data()
     {
         $purchase = MaterialPurchases::with('materialPurchaseItems', 'vendor')->get();
-        $result = $purchase->map(function ($purchases) {
-            $total = $purchases->materialPurchaseItems->sum('total');
 
-            $purchases->total = $total;
-            unset($purchases->materialPurchaseItems);
-            return $purchases;
-        });
-
-        $data = $purchase->map(function ($item) {
+        $data = $purchase->map(function ($purchase) {
             return [
-                'id'                => $item->id,
-                'vendor_id'         => $item->vendor_id,
-                'attachment'        => $item->attachment,
-                'transaction_date'  => $item->transaction_date,
-                'total'             => $item->total,
-                'vendor'            => $item->vendor,
-                'detail_url'        => route('transaction-materials.detailTransaction', $item->id),
+                'id'                => $purchase->id,
+                'vendor_id'         => $purchase->vendor_id,
+                'attachment'        => $purchase->attachment,
+                'transaction_date'  => $purchase->transaction_date,
+                'total'             => $purchase->total,
+                'vendor'            => $purchase->vendor,
+                'detail_url'        => route('transaction-materials.detailTransaction', $purchase->id),
             ];
         });
 

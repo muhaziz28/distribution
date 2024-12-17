@@ -22,17 +22,23 @@ class BlockAttendancesDistributionController extends Controller
 
     public function data(Request $request, $blockID)
     {
-        $query = WorkerAttendances::with(['tukang', 'activity'])
-            ->where('worker_id', $blockID)
+        $query = Activities::with("workerAttendances")
+            ->where('block_id', $blockID)
             ->get();
-        return DataTables::of($query)
+
+        $data = $query->map(function ($activity) {
+            return [
+                'id'               => $activity->id,
+                'block_id'         => $activity->block_id,
+                'is_block_activity' => $activity->is_block_activity,
+                'activity_name'    => $activity->activity_name,
+                'date'             => $activity->date,
+                'total'            => $activity->total,
+            ];
+        });
+
+        return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('date', function ($row) {
-                return $row->activity ? $row->activity->date : '-';
-            })
-            ->addColumn('total', function ($row) {
-                return $row->durasi_kerja * $row->upah - $row->pinjaman;
-            })
             ->rawColumns(['action'])
             ->make(true);
     }
@@ -42,9 +48,6 @@ class BlockAttendancesDistributionController extends Controller
     {
         $workerAttendances = WorkerAssigments::with(['tukang'])
             ->where('block_id', $blockID)
-            // ->whereHas('activity', function ($query) use ($blockID) {
-            //     $query->where('block_id', $blockID);
-            // })
             ->get();
 
         return view('block.attendances-item', compact('workerAttendances', 'blockID'));
@@ -54,7 +57,7 @@ class BlockAttendancesDistributionController extends Controller
     {
         try {
             $blockID = $request->input('blockID');
-            $activity = $request->input('activiy', []);
+            $activity = $request->input('activity', []);
             $workers = $request->input('workers', []);
 
             DB::beginTransaction();
@@ -66,6 +69,7 @@ class BlockAttendancesDistributionController extends Controller
             $activityData->total = 0;
             $activityData->save();
 
+            $total = 0;
             foreach ($workers as $worker) {
                 if (isset($worker['worker_id']) && isset($worker['is_checked']) && isset($worker['durasi_kerja']) && isset($worker['upah'])) {
                     $workerData = new WorkerAttendances();

@@ -17,7 +17,6 @@ class Tukang extends Model
     protected $fillable = [
         'nama_tukang',
         'no_hp',
-        'is_active',
     ];
 
 

@@ -4,14 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Block;
 use Illuminate\Http\Request;
-use App\Models\BlockTukangDistribution;
-use App\Models\Tukang;
 use App\Models\WorkerAssigments;
-use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
-use Illuminate\Support\Facades\Gate;
 
 class BlockTukangDistributionController extends Controller
 {
@@ -50,7 +45,7 @@ class BlockTukangDistributionController extends Controller
             $workerAssign = new WorkerAssigments();
             $workerAssign->block_id = $blockID;
             $workerAssign->worker_id = $request->worker_id;
-            $workerAssign->join_date = $request->join_date;
+            $workerAssign->join_date = \Carbon\Carbon::createFromFormat('d/m/Y', $request->join_date)->format('Y-m-d');
 
             $workerAssign->save();
 
@@ -75,7 +70,7 @@ class BlockTukangDistributionController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Data Tukang has been deleted'
+                'message' => 'Tukang berhasil dihapus'
             ], 201);
         } catch (\Exception $e) {
             return response()->json([

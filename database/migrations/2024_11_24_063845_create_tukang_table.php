@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nama_tukang');
             $table->string('no_hp')->nullable();
-            $table->boolean('is_active')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

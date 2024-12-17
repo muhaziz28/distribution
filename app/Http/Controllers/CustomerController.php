@@ -60,7 +60,6 @@ class CustomerController extends Controller
         }
     }
 
-
     public function update(Request $request)
     {
         if (Gate::allows('update-customer')) {

@@ -14,10 +14,16 @@ class MaterialUpdateLog extends Model
         "previous_qty",
         "new_qty",
         "updated_by",
+        "note",
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, "udpated_by");
+    }
+
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
     }
 }

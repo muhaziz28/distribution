@@ -26,10 +26,10 @@
                             <h3 class="card-title">Tukang</h3>
                             <div class="card-tools">
                                 @can('create-tukang')
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
                                     data-target="#modal-add-tukang">
                                     <i class="fas fa-plus mr-2"></i>
-                                    Add New Tukang
+                                    Tambah Tukang
                                 </button>
                                 @endcan
                             </div>
@@ -42,7 +42,6 @@
                                         <th style="width: 10px;">No</th>
                                         <th>Nama tukang</th>
                                         <th>No Hp</th>
-                                        <th>Active</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -52,7 +51,6 @@
                                         <th>No</th>
                                         <th>Nama tukang</th>
                                         <th>No Hp</th>
-                                        <th>Active</th>
                                         <th></th>
                                     </tr>
                                 </tfoot>
@@ -66,36 +64,7 @@
 </div>
 
 @can('create-tukang')
-<div class="modal fade" id="modal-add-tukang">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('tukang.store') }}" method="POST" id="form-add-tukang">
-                @csrf
-                <div class="modal-header">
-                    <h4 class="modal-title" id="title">Add New Tukang</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="nama_tukang">Nama Tukang</label>
-                        <input type="text" class="form-control" id="nama_tukang" name="nama_tukang"
-                            placeholder="Nama tukang..">
-                    </div>
-                    <div class="form-group">
-                        <label for="no_hp">Nomor Hp</label>
-                        <input type="number" class="form-control" id="no_hp" name="no_hp" placeholder="Nomor Hp">
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+@include('tukang.modal')
 @endcan
 @endsection
 
@@ -118,12 +87,6 @@
                 },
                 {
                     data: 'no_hp',
-                },
-                {
-                    data: 'is_active',
-                    render: function(data, type, row) {
-                        return data == 1 ? 'Active' : 'Not Active';
-                    }
                 },
                 {
                     data: null,
@@ -162,12 +125,13 @@
 
         $('#form-add-tukang').on('submit', function(e) {
             e.preventDefault();
-
-
             var noHp = $('#no_hp').val();
-            if (noHp.length > 14 || !/^\d+$/.test(noHp)) {
-                toastr.error('Nomor HP tidak boleh lebih dari 14 digit.');
-                return;
+
+            if (noHp != "") {
+                if (noHp.length > 14 || !/^\d+$/.test(noHp)) {
+                    toastr.error('Nomor HP tidak boleh lebih dari 14 digit.');
+                    return;
+                }
             }
 
             var form = new FormData(this);
@@ -230,27 +194,12 @@
 
             $('#form-add-tukang input[name="nama_tukang"]').val(data.nama_tukang);
             $('#form-add-tukang input[name="no_hp"]').val(data.no_hp);
-
-
-            if (!$('#form-add-tukang #is_active').length) {
-                $('#form-add-tukang .modal-body').append(`
-                        <div class="form-group">
-                            <label for="is_active">Is Active</label>
-                            <select class="form-control" name="is_active" id="is_active" style="width: 100%;">
-                                <option value="1" ${data.is_active == 1 ? 'selected' : ''}>Active</option>
-                                <option value="0" ${data.is_active == 0 ? 'selected' : ''}>Not Active</option>
-                            </select>
-                        </div>
-                    `);
-            }
         });
 
         $('#modal-add-tukang').on('hidden.bs.modal', function() {
             $('#modal-add-tukang').find('#title').text('Add Tukang');
             $('#form-add-tukang input[name="_method"]').remove();
-            $('#form-add-tukang input[name="id"]').remove();
-            $('#form-add-tukang #is_active').closest('.form-group')
-                .remove();
+            $('#form-add-tukang input[name="id"]').remove()
             $('#form-add-tukang').attr('action', "{{ route('tukang.store') }}");
             $('#form-add-tukang')[0].reset();
         });

@@ -36,4 +36,9 @@ class Material extends Model
     {
         return $this->hasMany(MaterialUpdateLog::class)->latest()->first();
     }
+
+    public function materialLogs()
+    {
+        return $this->hasMany(MaterialUpdateLog::class);
+    }
 }

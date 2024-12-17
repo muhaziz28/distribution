@@ -77,7 +77,7 @@ class TransactionMaterialController extends Controller
                     throw new Exception("File tidak ditemukan di direktori sementara.");
                 }
 
-                $relativeFilePathUrl = asset('storage/' . $relativeFilePath);
+                $relativeFilePathUrl = $relativeFilePath;
             }
 
             $materialPurchase = MaterialPurchases::create([
@@ -101,19 +101,28 @@ class TransactionMaterialController extends Controller
                 $material = Material::where('vendor_id', $vendorID)->where('bahan_id', $bahanID)->first();
                 if ($material) {
                     MaterialUpdateLog::create([
-                        "material_id" => $material->id,
-                        "previous_qty" => $material->qty,
-                        "new_qty" => $material->qty + $qty,
-                        "updated_by" => Auth::user()->id,
+                        "material_id"   => $material->id,
+                        "previous_qty"  => $material->qty,
+                        "new_qty"       => $material->qty + $qty,
+                        "updated_by"    => Auth::user()->id,
+                        "note"          => "Pembelian material"
                     ]);
                     $material->qty += $qty;
                     $material->save();
                 } else {
-                    Material::create([
+                    $material = Material::create([
                         'vendor_id' => $vendorID,
                         'bahan_id' => $bahanID,
                         'qty' => $qty,
                         'material_purchase_item_id' => $materialPurchaseItem->id,
+                    ]);
+
+                    MaterialUpdateLog::create([
+                        "material_id"   => $material->id,
+                        "previous_qty"  => 0,
+                        "new_qty"       => $material->qty,
+                        "updated_by"    => Auth::user()->id,
+                        "note"          => "Pembelian material"
                     ]);
                 }
             }
