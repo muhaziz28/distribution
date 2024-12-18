@@ -31,9 +31,9 @@ class AuthOtpController extends Controller
             return redirect()->back()->with('error', 'Gagal menghasilkan kode OTP. Silakan coba lagi.');
         }
 
-        Mail::to($request->email)->send(new OTPMail($verificationCode->otp));
+        // Mail::to($request->email)->send(new OTPMail($verificationCode->otp));
 
-        $message = "Kode OTP berhasil dikirim ke email anda";
+        $message = "Kode OTP berhasil dikirim ke email anda " . $verificationCode->otp;
 
         return redirect()->route('otp.verification', ['user_id' => $verificationCode->user_id])->with('success',  $message);
     }

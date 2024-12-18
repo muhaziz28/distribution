@@ -65,17 +65,6 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
     <script>
-        $(".datepicker").daterangepicker({
-            // singleDatePicker: true,
-            showDropdowns: true,
-            minYear: 1901,
-            maxYear: parseInt(moment().format('YYYY'), 10),
-            autoApply: true,
-            locale: {
-                format: 'DD/MM/YYYY'
-            }
-        })
-
         $(".singlepicker").daterangepicker({
             singleDatePicker: true,
             showDropdowns: true,

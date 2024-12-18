@@ -23,9 +23,8 @@ class BlockAttendancesDistributionController extends Controller
 
     public function data(Request $request, $blockID)
     {
-        $query = Activities::with("workerAttendances")->where('block_id', $blockID);
+        $query = Activities::with("workerAttendances")->orderBy('date', 'desc')->where('block_id', $blockID);
 
-        Log::info($request->date);
         if ($request->has('date') && !empty($request->date)) {
             $dates = explode(' - ', $request->date);
 
@@ -34,22 +33,21 @@ class BlockAttendancesDistributionController extends Controller
                 $endDate = trim($dates[1]);
 
                 try {
-                    // Pastikan menggunakan format yang benar
                     $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startDate)->startOfDay();
                     $endDate = \Carbon\Carbon::createFromFormat('d/m/Y', $endDate)->endOfDay();
-
-                    // Log tanggal setelah konversi
-                    Log::info("Tanggal setelah konversi: Start - {$startDate}, End - {$endDate}");
-
-                    // Cek apakah tanggal awal lebih besar dari tanggal akhir
                     if ($startDate > $endDate) {
-                        return response()->json(['message' => 'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'], 422);
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Tanggal awal tidak boleh lebih besar dari tanggal akhir.'
+                        ], 422);
                     }
 
-                    // Terapkan filter tanggal
                     $query->whereBetween('date', [$startDate, $endDate]);
                 } catch (\Exception $e) {
-                    return response()->json(['message' => 'Format tanggal tidak valid.'], 422);
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Format tanggal tidak valid.'
+                    ], 422);
                 }
             }
         }
@@ -113,6 +111,7 @@ class BlockAttendancesDistributionController extends Controller
 
             $activityData = Activities::where('block_id', $blockID)
                 ->whereDate('date', $todayDate)
+                ->where('is_block_activity', $activity['is_block_activity'])
                 ->first();
 
             if (!$activityData) {
@@ -149,6 +148,7 @@ class BlockAttendancesDistributionController extends Controller
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::info($e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()

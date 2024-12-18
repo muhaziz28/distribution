@@ -125,15 +125,21 @@
                                         Tambah Absensi
                                     </a>
 
-                                    <div class="row ">
+                                    <div class="row align-items-end">
                                         <div class="col-4">
                                             <div class="form-group filter">
-                                                <label for="data">Tanggal</label>
-                                                <input type="text" class="form-control datepicker absensi-filter" id="date"
-                                                    name="date" placeholder="Pilih tanggal">
+                                                <label for="date">Tanggal</label>
+                                                <input type="text" class="form-control absensi-filter" id="date" name="date" placeholder="Pilih tanggal" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label for="date"></label>
+                                                <button class="btn btn-success btn-block detail-absensi"><i class="fa fa-file-pdf mr-2"></i>Lihat</button>
                                             </div>
                                         </div>
                                     </div>
+
 
                                     <table id="activity-table" class="table table-bordered table-striped"
                                         width="100%">
@@ -472,19 +478,34 @@
         };
         initializeDataTable(table4, config4);
 
+        const exportAbsensi = $('.detail-absensi')
+        exportAbsensi.hide()
+
         $(".absensi-filter").daterangepicker({
             showDropdowns: true,
             minYear: 1901,
             maxYear: parseInt(moment().format('YYYY'), 10),
             autoApply: true,
+            autoUpdateInput: false,
             locale: {
-                format: 'DD/MM/YYYY'
+                format: 'DD/MM/YYYY',
+                cancelLabel: 'Clear'
             }
         }).on('apply.daterangepicker', function(ev, picker) {
-            var startDate = picker.startDate.format('YYYY-MM-DD')
-            var endDate = picker.endDate.format('YYYY-MM-DD')
-
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+            exportAbsensi.show();
             table4.DataTable().ajax.reload();
+        })
+
+        exportAbsensi.on('click', function() {
+            const dateRange = $(".absensi-filter").val()
+            const startDate = dateRange.split(' - ')[0]
+            const endDate = dateRange.split(' - ')[1]
+
+            const baseUrl = `{{ route('detail-absensi.index') }}`;
+
+            const url = `${baseUrl}?startDate=${startDate}&endDate=${endDate}`;
+            window.location.href = url;
         });
 
         $(".material-filter").daterangepicker({

@@ -80,7 +80,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <input type="checkbox" name="worker_ids[]" id="worker_ids[]"
-                                                value="{{ $attendance->id }}" class="worker-checkbox">
+                                                value="{{ $attendance->tukang->id }}" class="worker-checkbox">
                                         </td>
                                         <td>{{ $attendance->tukang->nama_tukang ?? '-' }}</td>
                                         <form action="" id="attendance-form">
@@ -231,8 +231,6 @@
             pageData.workers.push(rowData);
         });
 
-        // Debugging: Tampilkan data di console
-        console.log(pageData);
         $.ajax({
             url: "{{ route('block-attendances.store') }}",
             method: 'POST',
@@ -243,7 +241,7 @@
             },
             success: function(response) {
                 toastr.success('Data berhasil disimpan!');
-                // window.location.href
+                window.location.href = "{{ route('block.detail', $blockID) }}"
             },
             error: function(error) {
                 toastr.error('Terjadi kesalahan saat mengirim data.');

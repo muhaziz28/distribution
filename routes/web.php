@@ -9,6 +9,7 @@ use App\Http\Controllers\BlockController;
 use App\Http\Controllers\BlockMaterialDistributionController;
 use App\Http\Controllers\BlockTukangDistributionController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DetailAbsensiController;
 use App\Http\Controllers\DetailProjectController;
 use App\Http\Controllers\DistirbutionController;
 use App\Http\Controllers\FileUploadController;
@@ -223,5 +224,9 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(LogController::class)->prefix("log")->group(function () {
         Route::get('/{materialID}', 'index')->name("log.data");
+    });
+
+    Route::controller(DetailAbsensiController::class)->prefix('detail-absensi')->group(function () {
+        Route::get('', 'index')->name('detail-absensi.index');
     });
 });
