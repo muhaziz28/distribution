@@ -5,7 +5,6 @@ use App\Http\Controllers\AuthOtpController;
 use App\Http\Controllers\BahanController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\BlockMaterialDistributionController;
-use App\Http\Controllers\BlockTukangDistributionController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DetailAbsensiController;
 use App\Http\Controllers\DetailProjectController;
@@ -191,12 +190,6 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'store')->name('activity.store');
         Route::delete('destroy', 'destroy')->name('activity.destroy');
         Route::put('update', 'update')->name('activity.update');
-    });
-
-    Route::controller(BlockTukangDistributionController::class)->prefix('block-tukang')->group(function () {
-        Route::get('/{blockTukangId}', 'data')->name('block-tukang.data');
-        Route::post('/{blockID}', 'store')->name('block-tukang.store');
-        Route::delete('destroy', 'destroy')->name('block-tukang.destroy');
     });
 
     Route::post('/{id}', [ReturnController::class, 'return'])->name('return');
