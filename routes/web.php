@@ -23,6 +23,7 @@ use App\Http\Controllers\TransactionMaterialController;
 use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\WorkerGroupController;
 use App\Http\Controllers\WorkerPaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -208,7 +209,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/{materialID}', 'index')->name("log.data");
     });
 
+    Route::controller(WorkerGroupController::class)->prefix("worker-group")->group(function () {
+        Route::get('/data/{activityID}', 'data')->name('worker-group.data');
+        Route::post('store', 'store')->name('worker-group.store');
+        Route::delete('destroy', 'destroy')->name('worker-group.destroy');
+    });
+
     Route::controller(DetailAbsensiController::class)->prefix('detail-absensi')->group(function () {
-        Route::get('', 'index')->name('detail-absensi.index');
+        Route::get('/{activityID}', 'index')->name('detail-absensi.index');
     });
 });

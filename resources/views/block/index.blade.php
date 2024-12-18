@@ -293,10 +293,6 @@
             const startDate = dateRange.split(' - ')[0]
             const endDate = dateRange.split(' - ')[1]
 
-            const baseUrl = `{{ route('detail-absensi.index') }}`;
-
-            const url = `${baseUrl}?startDate=${startDate}&endDate=${endDate}`;
-            window.location.href = url;
         });
 
         $(".material-filter").daterangepicker({

@@ -25,9 +25,13 @@
                 {
                     data: null,
                     render: function(data, type, row) {
-
+                        const url = "{{ route('detail-absensi.index', ':id') }}".replace(':id', row.id)
                         return `<div class="btn-group">
-                            <button class="btn btn-sm btn-info edit-activity" data-id="${data.id}">
+                         <a href="${url}" class="btn btn-sm btn-info" data-id="${data.id}">
+                                <i class="fas fa-table mr-2"></i>
+                                Absensi
+                            </a>   
+                        <button class="btn btn-sm btn-warning edit-activity" data-id="${data.id}">
                                 <i class="fas fa-pen mr-2"></i>
                                 Edit
                             </button>
