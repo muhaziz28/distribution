@@ -119,34 +119,19 @@
 
                                 {{-- Absensi --}}
                                 <div class="tab-pane" id="absensi">
-                                    <a href="{{ route('block-attendances.addtendancesItem', $result->id) }}"
-                                        class="btn btn-success mb-3">
+                                    <button type="button"
+                                        class="btn btn-success mb-3" data-toggle="modal"
+                                        data-target="#modal-add-activity">
                                         <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
-                                        Tambah Absensi
-                                    </a>
-
-                                    <div class="row align-items-end">
-                                        <div class="col-4">
-                                            <div class="form-group filter">
-                                                <label for="date">Tanggal</label>
-                                                <input type="text" class="form-control absensi-filter" id="date" name="date" placeholder="Pilih tanggal" autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="col-2">
-                                            <div class="form-group">
-                                                <label for="date"></label>
-                                                <button class="btn btn-success btn-block detail-absensi"><i class="fa fa-file-pdf mr-2"></i>Lihat</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                        Tambah Pekerjaan
+                                    </button>
 
                                     <table id="activity-table" class="table table-bordered table-striped"
                                         width="100%">
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px;">No</th>
-                                                <th>Tanggal</th>
+                                                <th>Pekerjaan</th>
                                                 <th>Total</th>
                                                 <th></th>
                                             </tr>
@@ -155,7 +140,7 @@
                                         <tfoot>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Tanggal</th>
+                                                <th>Pekerjaan</th>
                                                 <th>Total</th>
                                                 <th></th>
                                             </tr>
@@ -223,10 +208,12 @@
 @include('tukang.modal')
 @include('block.retur-modal')
 @include('block.payment-model')
+@include('block.activity-modal')
 @endsection
 
 @push('scripts')
 @include('block.payment-script')
+@include('block.activity-script')
 <script>
     $.ajaxSetup({
         headers: {
@@ -357,126 +344,6 @@
         };
 
         initializeDataTable(table2, config2);
-
-        // Tukang3
-        function defineColumns3() {
-            return [{
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return `<input type="checkbox" class="rowCheckbox" data-id="${row.id}">`;
-                    },
-                    orderable: false,
-                },
-                {
-                    data: 'DT_RowIndex',
-                },
-                {
-                    data: 'tukang',
-                },
-                {
-                    data: 'no_hp',
-                },
-                {
-                    data: null,
-                    render: function(data, type, row) {
-                        return `
-                                    <form action="" method="POST" id="">
-                                        @csrf
-                                        <div class="action-buttons" style="display: none;" id="action-${row.id}">
-                                            <select name="durasi_kerja" id="durasi_kerja" class="form-control">&nbsp;
-                                                <option value="1">1 </option>
-                                                <option value="0.5">0.5</option>
-                                            </select>
-                                        </div>
-                                    </form>
-                                 `;
-                    },
-                    orderable: false,
-                },
-            ];
-        }
-
-        // Tukang3
-        var table3 = $('#tukangstable');
-        var config3 = {
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('block-attendances.data', $result->id) }}",
-                type: "GET",
-                data: function(d) {
-                    d.date = $('.datepicker').val();
-                    d.vendor = $('#vendor').val();
-                }
-            },
-            paging: true,
-            ordering: true,
-            info: false,
-            searching: true,
-            lengthChange: true,
-            lengthMenu: [10, 25, 50, 100],
-            columns: defineColumns3()
-        };
-        initializeDataTable(table3, config3);
-
-        // Activity
-        function defineColumns4() {
-            return [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                },
-                {
-                    data: 'date',
-                    name: 'date',
-                },
-                {
-                    data: 'total',
-                    name: 'total',
-                    render: function(data, type, row) {
-                        return formatRupiah(data)
-                    },
-                },
-                {
-                    data: null,
-                    render: function(data, type, row) {
-                        const url = "{{ route('activity.detailActivity', ':date') }}".replace(':date', data.date)
-                        console.log(url)
-                        return `
-                                <div class="btn-group">
-                                <a href="${url}" target="_blank" class="btn btn-default"><i class="fas fa-eye mr-2"></i>Detail </a>
-                                <button class="btn  btn-danger deleteActivity" data-id="${data.id}">
-                                    <i class="fas fa-trash mr-2"></i> Delete 
-                                </button>
-                                </div>
-                                 `;
-                    },
-                    orderable: false,
-                },
-            ];
-        }
-
-        // Activity
-        var table4 = $('#activity-table');
-        var config4 = {
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('block-attendances.data', $result->id) }}",
-                type: "GET",
-                data: function(d) {
-                    let dateRange = $('.absensi-filter').val();
-                    d.date = dateRange;
-                }
-            },
-            paging: true,
-            ordering: true,
-            info: false,
-            searching: true,
-            lengthChange: true,
-            lengthMenu: [10, 25, 50, 100],
-            columns: defineColumns4()
-        };
-        initializeDataTable(table4, config4);
 
         const exportAbsensi = $('.detail-absensi')
         exportAbsensi.hide()
@@ -682,27 +549,6 @@
                     success: function(response) {
                         toastr.success(response.message);
                         table.DataTable().ajax.reload();
-                    }
-                })
-            }
-        });
-
-        // Delete Activity
-        $(document).on('click', '.deleteActivity', function() {
-            var id = $(this).data('id')
-            console.log(id);
-            var result = confirm('Are you sure you want to delete this activity?');
-
-            if (result) {
-                $.ajax({
-                    url: "{{ route('activity.destroy', $result->id) }}",
-                    method: "DELETE",
-                    data: {
-                        id: id
-                    },
-                    success: function(response) {
-                        toastr.success(response.message);
-                        table4.DataTable().ajax.reload();
                     }
                 })
             }

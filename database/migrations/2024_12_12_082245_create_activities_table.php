@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('block_id');
             $table->integer('is_block_activity')->nullable();
             $table->string('activity_name')->nullable();
-            $table->date('date');
+            $table->softDeletes();
             $table->timestamps();
 
             // Join Tabel Worker/Tukang

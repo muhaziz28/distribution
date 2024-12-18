@@ -8,13 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Activities extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         "block_id",
         "is_block_activity",
         "activity_name",
-        "date",
     ];
 
     // Relasi ke block 
@@ -23,18 +22,6 @@ class Activities extends Model
         return $this->belongsTo(Block::class);
     }
 
-    public function workerAttendances()
-    {
-        return $this->hasMany(WorkerAttendances::class, "activity_id", "id");
-    }
+    // public function getTotalAttribute()
 
-    public function getTotalAttribute()
-    {
-        $worker =  $this->workerAttendances;
-        $total = $this->workerAttendances->sum(function ($worker) {
-            return ($worker->durasi_kerja * $worker->upah) - $worker->pinjaman;
-        });
-
-        return $total;
-    }
 }
