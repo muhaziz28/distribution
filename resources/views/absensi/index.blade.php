@@ -32,26 +32,59 @@
                             <div class="card-tools">
                                 <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#modal-add-worker">
                                     <i class="fas fa-plus-circle mr-2"></i>
-                                    Tambah Pekerja
+                                    Absensi
                                 </button>
                             </div>
 
-                            <table id="worker-table" class="table table-bordered table-striped" width="100%">
+                            <div class="table-responsive">
+                                <table id="worker-table" class="table table-bordered table-striped" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10px;">No</th>
+                                            <th>Nama Pekerja</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Pekerja</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="card-tools">
+                                <a href="{{ route('detail-absensi.tambahAbsensi', $activityID) }}" class="btn btn-success mb-3">
+                                    <i class="fas fa-plus-circle mr-2"></i>
+                                    Tambah Absensi
+                                </a>
+                            </div>
+
+                            <table id="absensi-table" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th style="width: 10px;">No</th>
-                                        <th>Nama Pekerja</th>
-                                        <th></th>
+                                        <th>#</th>
+                                        <th>Worker</th>
+                                        @foreach($dates as $date)
+                                        <th>{{ \Carbon\Carbon::parse($date)->format('d') }}</th>
+                                        @endforeach
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama Pekerja</th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
+                                <tbody>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -106,6 +139,52 @@
         };
 
         initializeDataTable(tableWorker, configWorker);
+
+        var tableAbsensi = $('#absensi-table');
+
+        function defineColumnsAbsensi(dates) {
+            let columns = [{
+                    data: 'DT_RowIndex',
+                },
+                {
+                    data: 'tukang.nama_tukang',
+                },
+            ];
+
+            dates.forEach(function(date) {
+                columns.push({
+                    data: 'worker_attendances',
+                    render: function(data, type, row) {
+                        console.log('Worker Attendances:', data);
+                        console.log('Date:', date);
+
+                        let attendance = data.find(item => item.tanggal === date);
+                        return attendance ? attendance.durasi_kerja : '-';
+                    },
+                    orderable: false,
+                });
+            });
+
+            return columns;
+        }
+
+        let dates = @json($dates)
+
+
+        let configAbsensi = {
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('absensi.data', $activity->id) }}",
+            paging: true,
+            ordering: true,
+            info: false,
+            searching: true,
+            lengthChange: true,
+            lengthMenu: [10, 25, 50, 100],
+            columns: defineColumnsAbsensi(dates), // Tambahkan kolom dinamis berdasarkan tanggal
+        };
+        initializeDataTable(tableAbsensi, configAbsensi)
+
 
         $('#worker_id').select2({
             ajax: {

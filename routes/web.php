@@ -23,8 +23,10 @@ use App\Http\Controllers\TransactionMaterialController;
 use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\WorkerAttendaceController;
 use App\Http\Controllers\WorkerGroupController;
 use App\Http\Controllers\WorkerPaymentController;
+use App\Models\WorkerAttendaces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -217,5 +219,12 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(DetailAbsensiController::class)->prefix('detail-absensi')->group(function () {
         Route::get('/{activityID}', 'index')->name('detail-absensi.index');
+        Route::get('getDates', 'getDates')->name('detail-absensi.getDates');
+        Route::get('add/{activityID}', 'tambahAbsensi')->name("detail-absensi.tambahAbsensi");
+        Route::post('store', 'store')->name("detail-absensi.store");
+    });
+
+    Route::controller(WorkerAttendaceController::class)->prefix('absensi')->group(function () {
+        Route::get('/{activityID}', 'data')->name('absensi.data');
     });
 });

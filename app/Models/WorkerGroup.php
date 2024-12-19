@@ -19,4 +19,9 @@ class WorkerGroup extends Model
     {
         return $this->belongsTo(Tukang::class, 'tukang_id', 'id');
     }
+
+    public function workerAttendances()
+    {
+        return $this->hasMany(WorkerAttendaces::class, "worker_group_id");
+    }
 }
