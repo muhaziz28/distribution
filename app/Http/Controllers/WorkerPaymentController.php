@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activities;
 use App\Models\WorkerPayment;
 use Exception;
 use Illuminate\Http\File;
@@ -17,12 +18,28 @@ class WorkerPaymentController extends Controller
         $this->middleware("auth");
     }
 
-    public function data($projectID)
+    public function data($blockID)
     {
-        $result = WorkerPayment::with('project')->where("project_id", $projectID)->get();
+        $data = WorkerPayment::where("block_id", $blockID)->get();
 
-        return DataTables::of($result)->addIndexColumn()->toJson();
+        return DataTables::of($data)->addIndexColumn()->toJson();
     }
+
+    public function add($blockID)
+    {
+        $startOfWeek = now()->startOfWeek();
+        $endOfWeek = now()->endOfWeek();
+        $activity = Activities::with([
+            'workerGroups.tukang',
+            'workerGroups.workerAttendances' => function ($query) use ($startOfWeek, $endOfWeek) {
+                $query->whereBetween('tanggal', [$startOfWeek, $endOfWeek]);
+            },
+        ])->get();
+
+        return view('worker-payment.index', compact('activity'));
+    }
+
+    // here
 
     public function destroy(Request $request)
     {

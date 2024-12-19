@@ -30,12 +30,10 @@
                     <div class="card">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link active" href="#material"
-                                        data-toggle="tab">Material</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#absensi" data-toggle="tab">Absensi</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="#payment" data-toggle="tab">Payment</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link active" href="#material" data-toggle="tab">Material</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#absensi" data-toggle="tab">Absensi</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#worker-payment" data-toggle="tab">Pembayaran Pekerja</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#payment" data-toggle="tab">Payment</a></li>
                             </ul>
                         </div>
                         <!-- /.card-header -->
@@ -115,8 +113,39 @@
                                         </tfoot>
                                     </table>
                                 </div>
-
                                 {{-- Absensi --}}
+
+                                {{-- Pembayaran Pekerja --}}
+                                <div class="tab-pane" id="worker-payment">
+                                    <a href="{{ route('worker-payment.add', $result->id) }}" class="btn btn-success mb-3">
+                                        <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
+                                        Tambah Pembayaran
+                                    </a>
+
+                                    <table id="worker-table" class="table table-bordered table-striped"
+                                        width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10px;">No</th>
+                                                <th>Minggu</th>
+                                                <th>Tanggal Pembayaran</th>
+                                                <th>Bukti Pembayaran</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Minggu</th>
+                                                <th>Tanggal Pembayaran</th>
+                                                <th>Bukti Pembayaran</th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                {{-- Pembayaran Pekerja --}}
 
                                 {{-- Payment --}}
                                 <div class="tab-pane" id="payment">
@@ -182,6 +211,7 @@
 @push('scripts')
 @include('block.payment-script')
 @include('block.activity-script')
+@include('block.worker-payment-script')
 <script>
     $.ajaxSetup({
         headers: {

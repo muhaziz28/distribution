@@ -144,7 +144,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::controller(WorkerPaymentController::class)->prefix("worker-payment")->group(function () {
-        Route::get('/{projectID}', 'data')->name("worker-payment.data");
+        Route::get('add/{blockID}', 'add')->name("worker-payment.add");
+        Route::get('data/{blockID}', 'data')->name("worker-payment.data");
         Route::delete('destroy', 'destroy')->name("worker-payment.destroy");
         Route::post('store', 'store')->name("worker-payment.store");
     });

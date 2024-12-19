@@ -22,6 +22,8 @@ class Activities extends Model
         return $this->belongsTo(Block::class);
     }
 
-    // public function getTotalAttribute()
-
+    public function workerGroups()
+    {
+        return $this->hasMany(WorkerGroup::class, 'activity_id');
+    }
 }
