@@ -27,5 +27,41 @@ class PermissionsSeeder extends Seeder
         foreach ($listPermissions as $permission) {
             \Spatie\Permission\Models\Permission::create(['name' => $permission]);
         }
+
+        // list custom permission
+        $bahanPermission = ["create-bahan", "read-bahan", "update-bahan", 'delete-bahan'];
+        foreach ($bahanPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
+
+        $satuanPermission = ["create-satuan", "read-satuan", "update-satuan", 'delete-satuan'];
+        foreach ($satuanPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
+
+        $tukangPermission = ["create-tukang", "read-tukang", "update-tukang", 'delete-tukang'];
+        foreach ($tukangPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
+
+        $tukangPermission = ["create-vendor", "read-vendor", "update-vendor", 'delete-vendor'];
+        foreach ($tukangPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
+
+        $tukangPermission = ["create-project", "read-project", "update-project", 'delete-project'];
+        foreach ($tukangPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
+
+        $customerPermission = ["create-customer", "read-customer", "update-customer", 'delete-customer'];
+        foreach ($customerPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
+
+        $materialPermission = ["read-material"];
+        foreach ($materialPermission as $permission) {
+            \Spatie\Permission\Models\Permission::create(['name' => $permission]);
+        }
     }
 }

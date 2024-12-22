@@ -159,7 +159,7 @@
                         $('#modal-add-permission').modal('hide');
                         $('#form-add-permission')[0].reset();
                         toastr.success(response.message);
-                        table.DataTable().ajax.reload();
+                        table.DataTable().ajax.reload(null, false);
                     } else {
                         toastr.error(response.message);
                     }
@@ -175,17 +175,17 @@
             console.log(id);
             var result = confirm('Are you sure you want to delete this permission?');
 
-            if(result) {
+            if (result) {
                 $.ajax({
-                url: '{{ route("permission.destroy") }}',
-                method: "DELETE",
-                data: {
-                    id: id
-                },
-                success: function(response) {
-                    table.DataTable().ajax.reload();
-                }
-            })
+                    url: '{{ route("permission.destroy") }}',
+                    method: "DELETE",
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        table.DataTable().ajax.reload(null, false);
+                    }
+                })
             }
         })
 

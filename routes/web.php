@@ -1,9 +1,35 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\AuthOtpController;
+use App\Http\Controllers\BahanController;
+use App\Http\Controllers\BlockController;
+use App\Http\Controllers\BlockMaterialDistributionController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DetailAbsensiController;
+use App\Http\Controllers\DetailProjectController;
+use App\Http\Controllers\DistirbutionController;
+use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\LogController;
+use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ReturnController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SatuanController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TransactionMaterialController;
+use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VendorController;
+use App\Http\Controllers\WorkerAttendaceController;
+use App\Http\Controllers\WorkerGroupController;
+use App\Http\Controllers\WorkerPaymentController;
+use App\Models\WorkerAttendaces;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,19 +44,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    // redirect ke halaman login jika belum login
     if (!Auth::check()) {
         return redirect('/login');
     }
-    return view('/home');
+    return redirect()->route('home');
 });
 
-Auth::routes();
+// Auth::routes();
+Route::get('login', [AuthOtpController::class, 'login'])->name('login');
+Route::controller(AuthOtpController::class)->prefix("otp")->group(function () {
+    Route::post('/generate', 'generate')->name('otp.generate');
+    Route::get('/verification/{user_id}', 'verification')->name('otp.verification');
+    Route::post('/login', 'loginWithOtp')->name('otp.getlogin');
+});
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-// middleware('auth') digunakan untuk membatasi akses ke halaman ini hanya untuk user yang sudah login
 Route::middleware('auth')->group(function () {
+    Route::post('logout', [AuthOtpController::class, 'logout'])->name('logout');
     Route::controller(RoleController::class)->prefix('role')->group(function () {
         Route::get('', 'index')->name('role.index');
         Route::get('data', 'data')->name('role.data');
@@ -53,5 +84,148 @@ Route::middleware('auth')->group(function () {
         Route::post('store', 'store')->name('user.store');
         Route::put('update', 'update')->name('user.update');
         Route::delete('destroy', 'destroy')->name('user.destroy');
+    });
+
+    Route::controller(BahanController::class)->prefix('bahan')->group(function () {
+        Route::get('', 'index')->name('bahan.index');
+        Route::get('data', 'data')->name('bahan.data');
+        Route::post('store', 'store')->name('bahan.store');
+        Route::put('update', 'update')->name('bahan.update');
+        Route::delete('destroy', 'destroy')->name('bahan.destroy');
+    });
+
+    Route::controller(SatuanController::class)->prefix('satuan')->group(function () {
+        Route::get('', 'index')->name('satuan.index');
+        Route::get('data', 'data')->name('satuan.data');
+        Route::post('store', 'store')->name('satuan.store');
+        Route::put('update', 'update')->name('satuan.update');
+        Route::delete('destroy', 'destroy')->name('satuan.destroy');
+        Route::post('restore', 'restore')->name('satuan.restore');
+    });
+
+    Route::controller(TukangController::class)->prefix('tukang')->group(function () {
+        Route::get('', 'index')->name('tukang.index');
+        Route::get('data', 'data')->name('tukang.data');
+        Route::post('store', 'store')->name('tukang.store');
+        Route::put('update', 'update')->name('tukang.update');
+        Route::delete('destroy', 'destroy')->name('tukang.destroy');
+        Route::get('worker', 'dataForWorker')->name('tukang.dataForWorker');
+    });
+
+
+    Route::controller(ProjectController::class)->prefix('project')->group(function () {
+        Route::get('', 'index')->name('project.index');
+        Route::get('data', 'data')->name('project.data');
+        Route::post('store', 'store')->name('project.store');
+        Route::put('update', 'update')->name('project.update');
+        Route::delete('destroy', 'destroy')->name('project.destroy');
+    });
+
+    Route::controller(VendorController::class)->prefix('vendor')->group(function () {
+        Route::get('', 'index')->name('vendor.index');
+        Route::get('data', 'data')->name('vendor.data');
+        Route::post('store', 'store')->name('vendor.store');
+        Route::put('update', 'update')->name('vendor.update');
+        Route::delete('destroy', 'destroy')->name('vendor.destroy');
+    });
+
+    Route::controller(DetailProjectController::class)->prefix('detail-project')->group(function () {
+        Route::get('/{id}', 'index')->name('project.detail');
+        Route::get('/material-purchases-data/{id}', 'materialPurchasesData')->name('project.materialPurchasesData');
+        Route::get('/worker-assignment-data/{id}', 'workerAssignmentData')->name('project.workerAssignmentData');
+        Route::post('addDetail/{id}', 'addDetail')->name('project.addDetail');
+        Route::delete('hapusDetail', 'hapusDetail')->name('project.hapusDetail');
+    });
+
+    Route::controller(TransactionMaterialController::class)->prefix('transaction-materials')->group(function () {
+        Route::get('', 'index')->name('transaction-materials.index');
+        Route::post('/store', 'store')->name('transaction-materials.store');
+        Route::get('/transaction-detail/{materialPurchasesID}', 'detailTransaction')->name('transaction-materials.detailTransaction');
+    });
+
+    Route::controller(WorkerPaymentController::class)->prefix("worker-payment")->group(function () {
+        Route::get('add/{blockID}', 'add')->name("worker-payment.add");
+        Route::get('data/{blockID}', 'data')->name("worker-payment.data");
+        Route::delete('destroy', 'destroy')->name("worker-payment.destroy");
+        Route::post('store', 'store')->name("worker-payment.store");
+    });
+
+    Route::post('uploads/process', [FileUploadController::class, 'process'])->name('uploads.process');
+    Route::post('save', [FileUploadController::class, 'save'])->name('uploads.save');
+    Route::delete('/uploads/revert', [FileUploadController::class, 'revert'])->name('uploads.revert');
+
+    Route::controller(BlockController::class)->prefix('block')->group(function () {
+        Route::get('data/{id}', 'data')->name('block.data');
+        Route::post('store/{id}', 'store')->name('block.store');
+        Route::put('update', 'update')->name('block.update');
+        Route::delete('destroy', 'destroy')->name('block.destroy');
+
+        Route::get('detail/{id}', 'detail')->name('block.detail');
+    });
+
+    Route::controller(CustomerController::class)->prefix('customer')->group(function () {
+        Route::get('', 'index')->name('customer.index');
+        Route::get('data', 'data')->name('customer.data');
+        Route::post('store', 'store')->name('customer.store');
+        Route::put('update', 'update')->name('customer.update');
+        Route::delete('destroy', 'destroy')->name('customer.destroy');
+    });
+
+    Route::controller(MaterialController::class)->prefix('material')->group(function () {
+        Route::get('', 'index')->name('material.index');
+        Route::get('data', 'data')->name('material.data');
+    });
+
+    Route::controller(TransactionController::class)->prefix('transaction')->group(function () {
+        Route::get('', 'index')->name('transaction.index');
+        Route::get('data', 'data')->name('transaction.data');
+    });
+
+    Route::controller(DistirbutionController::class)->prefix('distribution')->group(function () {
+        Route::post('', 'distribute')->name('distribution.distribute');
+    });
+
+    Route::controller(BlockMaterialDistributionController::class)->prefix('block-material')->group(function () {
+        Route::get('/{blockID}', 'data')->name('block-material.data');
+    });
+
+    Route::controller(ActivityController::class)->prefix('activity')->group(function () {
+        Route::get('/data/{blockID}', 'data')->name('activity.data');
+        Route::post('store', 'store')->name('activity.store');
+        Route::delete('destroy', 'destroy')->name('activity.destroy');
+        Route::put('update', 'update')->name('activity.update');
+    });
+
+    Route::post('/{id}', [ReturnController::class, 'return'])->name('return');
+
+    Route::controller(PaymentController::class)->prefix("payment")->group(function () {
+        Route::get('/{blockID}', 'data')->name('payment.data');
+        Route::post('/{blockID}', 'store')->name('payment.store');
+        Route::delete('destroy', 'destroy')->name('payment.destroy');
+
+        // Route::post("additional-items", 'additionalItemStore')->name("payment.additionalItemStore");
+        Route::post("payment/additional-items", 'additionalItemStore')->name("payment.additionalItemStore");
+        Route::get('additional-items/{blockID}', 'additionalItem')->name("payment.additionalItem");
+    });
+
+    Route::controller(LogController::class)->prefix("log")->group(function () {
+        Route::get('/{materialID}', 'index')->name("log.data");
+    });
+
+    Route::controller(WorkerGroupController::class)->prefix("worker-group")->group(function () {
+        Route::get('/data/{activityID}', 'data')->name('worker-group.data');
+        Route::post('store', 'store')->name('worker-group.store');
+        Route::delete('destroy', 'destroy')->name('worker-group.destroy');
+    });
+
+    Route::controller(DetailAbsensiController::class)->prefix('detail-absensi')->group(function () {
+        Route::get('/{activityID}', 'index')->name('detail-absensi.index');
+        Route::get('getDates', 'getDates')->name('detail-absensi.getDates');
+        Route::get('add/{activityID}', 'tambahAbsensi')->name("detail-absensi.tambahAbsensi");
+        Route::post('store', 'store')->name("detail-absensi.store");
+    });
+
+    Route::controller(WorkerAttendaceController::class)->prefix('absensi')->group(function () {
+        Route::get('/{activityID}', 'data')->name('absensi.data');
     });
 });
