@@ -35,7 +35,7 @@ class TukangController extends Controller
 
     public function dataForWorker()
     {
-        $tukangs = Tukang::doesntHave('workerAssignments')->get();
+        $tukangs = Tukang::doesntHave('workerGroup')->get();
 
         return DataTables::of($tukangs)->addIndexColumn()->toJson();
     }

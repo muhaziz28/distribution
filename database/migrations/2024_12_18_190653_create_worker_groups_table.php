@@ -11,25 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('worker_attendances', function (Blueprint $table) {
+        Schema::create('worker_groups', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('worker_id');
-            $table->unsignedBigInteger('activity_id');
-            $table->double('durasi_kerja');
-            $table->bigInteger('upah');
-            $table->integer('pinjaman')->nullable();
-
-            // Join Tabel Worker/Tukang
-            $table->foreign('worker_id')
+            $table->unsignedBigInteger('tukang_id');
+            $table->foreign('tukang_id')
                 ->references('id')
                 ->on('tukang')
                 ->onDelete('cascade');
-
-            // Join Tabel Activity
+            $table->unsignedBigInteger('activity_id');
             $table->foreign('activity_id')
                 ->references('id')
                 ->on('activities')
                 ->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -39,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('worker_attendances');
+        Schema::dropIfExists('worker_groups');
     }
 };

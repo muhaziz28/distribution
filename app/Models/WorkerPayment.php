@@ -11,15 +11,14 @@ class WorkerPayment extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        "project_id",
-        "transaction_date",
-        "total",
-        "attachment",
+        "block_id",
         "week",
+        "payment_date",
+        "attachment"
     ];
 
-    public function project()
+    public function workerDetailPayments()
     {
-        return $this->belongsTo(Project::class);
+        return $this->hasMany(WorkerDetailPayment::class, 'worker_payment_id');
     }
 }

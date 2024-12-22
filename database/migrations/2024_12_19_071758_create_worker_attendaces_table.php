@@ -11,19 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('activities', function (Blueprint $table) {
+        Schema::create('worker_attendaces', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('block_id');
-            $table->integer('is_block_activity')->nullable();
-            $table->string('activity_name')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
-
-            // Join Tabel Worker/Tukang
-            $table->foreign('block_id')
+            $table->unsignedBigInteger('worker_group_id');
+            $table->foreign('worker_group_id')
                 ->references('id')
-                ->on('blocks')
+                ->on('worker_groups')
                 ->onDelete('cascade');
+            $table->integer("durasi_kerja");
+            $table->date("tanggal");
+
+            $table->timestamps();
         });
     }
 
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('activities');
+        Schema::dropIfExists('worker_attendaces');
     }
 };

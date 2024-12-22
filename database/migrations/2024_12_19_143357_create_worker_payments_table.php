@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('worker_payments', function (Blueprint $table) {
             $table->id();
-            $table->date("transaction_date");
-            $table->integer("week");
-            $table->bigInteger('total');
-            $table->string("attachment")->nullable();
-            $table->unsignedBigInteger('project_id');
-            $table->foreign('project_id')
+            $table->unsignedBigInteger('block_id');
+            $table->foreign('block_id')
                 ->references('id')
-                ->on('project')
+                ->on('blocks')
                 ->onDelete('cascade');
+            $table->integer("week");
+            $table->date("payment_date");
+            $table->string("attachment")->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activities;
+use App\Models\WorkerAttendaces;
+use App\Models\WorkerGroup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -13,55 +15,62 @@ class DetailAbsensiController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(Request $request)
+    public function index($activityID)
     {
-        $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)->format('Y-m-d');
-        $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->format('Y-m-d');
+        $activity = Activities::find($activityID);
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $today = Carbon::now();
 
-        $activities = Activities::with(['workerAttendances.tukang'])
-            ->whereBetween('date', [$startDate, $endDate])
-            ->get();
+        $dates = [];
+        while ($startOfMonth <= $today) {
+            $dates[] = $startOfMonth->format('Y-m-d');
+            $startOfMonth->addDay();
+        }
+        return view('absensi.index', compact('activity', 'dates', "activityID"));
+    }
 
-        $groupedActivities = $activities->groupBy('activity_name')->map(function ($activityGroup) {
-            $mergedWorkers = collect();
+    public function getDates()
+    {
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $today = Carbon::now();
 
-            foreach ($activityGroup as $activity) {
-                foreach ($activity->workerAttendances as $attendance) {
-                    $workerId = $attendance->worker_id;
+        $dates = [];
 
-                    // Cek index worker_id di $mergedWorkers
-                    $index = $mergedWorkers->search(function ($worker) use ($workerId) {
-                        return $worker['worker_id'] === $workerId;
-                    });
-
-                    if ($index !== false) {
-                        // Ambil elemen, modifikasi, lalu timpa kembali
-                        $worker = $mergedWorkers[$index];
-                        $worker['durasi_kerja'] += $attendance->durasi_kerja;
-                        $worker['upah'] += $attendance->upah;
-
-                        $mergedWorkers->splice($index, 1, [$worker]);
-                    } else {
-                        // Jika belum ada, tambahkan worker baru
-                        $mergedWorkers->push([
-                            'worker_id' => $workerId,
-                            'nama_tukang' => $attendance->tukang->nama_tukang,
-                            'durasi_kerja' => $attendance->durasi_kerja,
-                            'upah' => $attendance->upah,
-                            'pinjaman' => $attendance->pinjaman,
-                        ]);
-                    }
-                }
-            }
-
-            return [
-                'activity_name' => $activityGroup->first()->is_block_activity ? 'Block' : 'Tidak Ada Nama Aktivitas',
-                'total_workers' => $mergedWorkers->count(),
-                'workers' => $mergedWorkers,
+        while ($startOfMonth <= $today) {
+            $dates[] = [
+                'date' => $startOfMonth->format('Y-m-d'),
+                'day' => $startOfMonth->format('l'),
             ];
-        });
+            $startOfMonth->addDay();
+        }
+        return response()->json(['data' => $dates]);
+    }
+
+    public function tambahAbsensi($activityID)
+    {
+        $worker = WorkerGroup::with("tukang")->doesntHave("workerAttendances")->get();
+
+        return view('absensi.tambah-absensi', compact('worker', 'activityID'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'worker_group_id' => 'required|array',
+            'durasi_kerja' => 'required|array',
+            'worker_group_id.*' => 'exists:worker_groups,id',
+            'durasi_kerja.*' => 'in:0,0.5,1',
+        ]);
 
 
-        return response()->json($groupedActivities);
+        foreach ($validated['worker_group_id'] as $key => $worker_id) {
+            WorkerAttendaces::create([
+                'worker_group_id' => $worker_id,
+                'durasi_kerja' => $validated['durasi_kerja'][$key],
+                'tanggal' => Carbon::now()->format('y-m-d'),
+            ]);
+        }
+
+        return redirect()->back();
     }
 }

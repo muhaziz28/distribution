@@ -30,14 +30,10 @@
                     <div class="card">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link active" href="#material"
-                                        data-toggle="tab">Material</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#tukang" data-toggle="tab">Tukang</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="#absensi" data-toggle="tab">Absensi</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="#payment" data-toggle="tab">Payment</a>
-                                </li>
+                                <li class="nav-item"><a class="nav-link active" href="#material" data-toggle="tab">Material</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#absensi" data-toggle="tab">Absensi</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#worker-payment" data-toggle="tab">Pembayaran Pekerja</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#payment" data-toggle="tab">Payment</a></li>
                             </ul>
                         </div>
                         <!-- /.card-header -->
@@ -87,66 +83,52 @@
                                 </div>
                                 {{-- Material --}}
 
-                                <!-- Tukang -->
-                                <div class="tab-pane" id="tukang">
-                                    <button type="button" class="btn btn-success mb-3" data-toggle="modal"
-                                        data-target="#modal-add-worker">
-                                        <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
-                                        Tambah Pekerja
-                                    </button>
-                                    <table id="tukang-table" class="table table-bordered table-striped" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 10px;">No</th>
-                                                <th>Nama Tukang</th>
-                                                <th>Join Date</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Nama Tukang</th>
-                                                <th>Join Date</th>
-                                                <th></th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                    @include('block.worker-modal')
-                                </div>
-                                <!-- Tukang -->
-
                                 {{-- Absensi --}}
                                 <div class="tab-pane" id="absensi">
-                                    <a href="{{ route('block-attendances.addtendancesItem', $result->id) }}"
-                                        class="btn btn-success mb-3">
+                                    <button type="button"
+                                        class="btn btn-success mb-3" data-toggle="modal"
+                                        data-target="#modal-add-activity">
                                         <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
-                                        Tambah Absensi
-                                    </a>
-
-                                    <div class="row align-items-end">
-                                        <div class="col-4">
-                                            <div class="form-group filter">
-                                                <label for="date">Tanggal</label>
-                                                <input type="text" class="form-control absensi-filter" id="date" name="date" placeholder="Pilih tanggal" autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="col-2">
-                                            <div class="form-group">
-                                                <label for="date"></label>
-                                                <button class="btn btn-success btn-block detail-absensi"><i class="fa fa-file-pdf mr-2"></i>Lihat</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                        Tambah Pekerjaan
+                                    </button>
 
                                     <table id="activity-table" class="table table-bordered table-striped"
                                         width="100%">
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px;">No</th>
-                                                <th>Tanggal</th>
+                                                <th>Pekerjaan</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Pekerjaan</th>
+                                                <th>Total</th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                {{-- Absensi --}}
+
+                                {{-- Pembayaran Pekerja --}}
+                                <div class="tab-pane" id="worker-payment">
+                                    <a href="{{ route('worker-payment.add', $result->id) }}" class="btn btn-success mb-3">
+                                        <i class="nav-icon fas fa-plus-circle"></i>&nbsp;
+                                        Tambah Pembayaran
+                                    </a>
+
+                                    <table id="worker-table" class="table table-bordered table-striped"
+                                        width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10px;">No</th>
+                                                <th>Minggu</th>
+                                                <th>Tanggal Pembayaran</th>
+                                                <th>Bukti Pembayaran</th>
                                                 <th>Total</th>
                                                 <th></th>
                                             </tr>
@@ -155,15 +137,17 @@
                                         <tfoot>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Tanggal</th>
+                                                <th>Minggu</th>
+                                                <th>Tanggal Pembayaran</th>
+                                                <th>Bukti Pembayaran</th>
                                                 <th>Total</th>
                                                 <th></th>
                                             </tr>
                                         </tfoot>
                                     </table>
+                                    <h4 id="total_keseluruhan_pembayaran_tukang"></h4>
                                 </div>
-
-                                {{-- Absensi --}}
+                                {{-- Pembayaran Pekerja --}}
 
                                 {{-- Payment --}}
                                 <div class="tab-pane" id="payment">
@@ -223,10 +207,13 @@
 @include('tukang.modal')
 @include('block.retur-modal')
 @include('block.payment-model')
+@include('block.activity-modal')
 @endsection
 
 @push('scripts')
 @include('block.payment-script')
+@include('block.activity-script')
+@include('block.worker-payment-script')
 <script>
     $.ajaxSetup({
         headers: {
@@ -313,170 +300,6 @@
         };
         initializeDataTable(table, config);
 
-        // Tukang
-        function defineColumns2() {
-            return [{
-                    data: 'DT_RowIndex',
-                },
-                {
-                    data: 'tukang.nama_tukang',
-                },
-                {
-                    data: 'join_date',
-                },
-                {
-                    data: null,
-                    render: function(data, row) {
-                        return `<button class="btn  btn-danger delete-worker" data-id="${data.id}">
-                        <i class="fas fa-trash mr-2"></i>Hapus</button>`;
-                    }
-                }
-            ];
-        }
-
-        // Tukang2
-        var table2 = $('#tukang-table');
-        var config2 = {
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('block-tukang.data', $result->id) }}",
-                type: "GET",
-                data: function(d) {
-                    d.date = $('.datepicker').val();
-                    d.vendor = $('#vendor').val();
-                }
-            },
-            paging: true,
-            ordering: true,
-            info: false,
-            searching: true,
-            lengthChange: true,
-            lengthMenu: [10, 25, 50, 100],
-            columns: defineColumns2()
-        };
-
-        initializeDataTable(table2, config2);
-
-        // Tukang3
-        function defineColumns3() {
-            return [{
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return `<input type="checkbox" class="rowCheckbox" data-id="${row.id}">`;
-                    },
-                    orderable: false,
-                },
-                {
-                    data: 'DT_RowIndex',
-                },
-                {
-                    data: 'tukang',
-                },
-                {
-                    data: 'no_hp',
-                },
-                {
-                    data: null,
-                    render: function(data, type, row) {
-                        return `
-                                    <form action="" method="POST" id="">
-                                        @csrf
-                                        <div class="action-buttons" style="display: none;" id="action-${row.id}">
-                                            <select name="durasi_kerja" id="durasi_kerja" class="form-control">&nbsp;
-                                                <option value="1">1 </option>
-                                                <option value="0.5">0.5</option>
-                                            </select>
-                                        </div>
-                                    </form>
-                                 `;
-                    },
-                    orderable: false,
-                },
-            ];
-        }
-
-        // Tukang3
-        var table3 = $('#tukangstable');
-        var config3 = {
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('block-attendances.data', $result->id) }}",
-                type: "GET",
-                data: function(d) {
-                    d.date = $('.datepicker').val();
-                    d.vendor = $('#vendor').val();
-                }
-            },
-            paging: true,
-            ordering: true,
-            info: false,
-            searching: true,
-            lengthChange: true,
-            lengthMenu: [10, 25, 50, 100],
-            columns: defineColumns3()
-        };
-        initializeDataTable(table3, config3);
-
-        // Activity
-        function defineColumns4() {
-            return [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                },
-                {
-                    data: 'date',
-                    name: 'date',
-                },
-                {
-                    data: 'total',
-                    name: 'total',
-                    render: function(data, type, row) {
-                        return formatRupiah(data)
-                    },
-                },
-                {
-                    data: null,
-                    render: function(data, type, row) {
-                        const url = "{{ route('activity.detailActivity', ':date') }}".replace(':date', data.date)
-                        console.log(url)
-                        return `
-                                <div class="btn-group">
-                                <a href="${url}" target="_blank" class="btn btn-default"><i class="fas fa-eye mr-2"></i>Detail </a>
-                                <button class="btn  btn-danger deleteActivity" data-id="${data.id}">
-                                    <i class="fas fa-trash mr-2"></i> Delete 
-                                </button>
-                                </div>
-                                 `;
-                    },
-                    orderable: false,
-                },
-            ];
-        }
-
-        // Activity
-        var table4 = $('#activity-table');
-        var config4 = {
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('block-attendances.data', $result->id) }}",
-                type: "GET",
-                data: function(d) {
-                    let dateRange = $('.absensi-filter').val();
-                    d.date = dateRange;
-                }
-            },
-            paging: true,
-            ordering: true,
-            info: false,
-            searching: true,
-            lengthChange: true,
-            lengthMenu: [10, 25, 50, 100],
-            columns: defineColumns4()
-        };
-        initializeDataTable(table4, config4);
 
         const exportAbsensi = $('.detail-absensi')
         exportAbsensi.hide()
@@ -502,10 +325,6 @@
             const startDate = dateRange.split(' - ')[0]
             const endDate = dateRange.split(' - ')[1]
 
-            const baseUrl = `{{ route('detail-absensi.index') }}`;
-
-            const url = `${baseUrl}?startDate=${startDate}&endDate=${endDate}`;
-            window.location.href = url;
         });
 
         $(".material-filter").daterangepicker({
@@ -521,27 +340,6 @@
             var endDate = picker.endDate.format('YYYY-MM-DD')
 
             table.DataTable().ajax.reload();
-        });
-
-        // Checkbok
-        $(document).ready(function() {
-            // Handle row checkbox changes
-            $('#tukangstable').on('change', '.rowCheckbox', function() {
-                const rowId = $(this).data('id');
-                const actionContainer = $(`#action-${rowId}`);
-
-                if ($(this).is(':checked')) {
-                    actionContainer.show(); // Show action buttons when checked
-                } else {
-                    actionContainer.hide(); // Hide action buttons when unchecked
-                }
-            });
-
-            // Select/Deselect all checkboxes
-            $('#selectAll').on('change', function() {
-                const isChecked = $(this).is(':checked');
-                $('.rowCheckbox').prop('checked', isChecked).trigger('change');
-            });
         });
 
         $('#form-return').on('submit', function(e) {
@@ -588,251 +386,6 @@
             $('#returned_qty').attr('max', data.distributed_qty);
             $('#max_qty').text('Max Qty: ' + data.distributed_qty);
             $('#returned_qty').val('');
-        });
-
-        // Tambah tukang
-        // $(document).on('submit', '#form-add-worker', function(e) {
-        $(".save-worker").on('click', function(e) {
-            e.preventDefault();
-
-            const form = $("#form-add-worker");
-            const formData = form.serialize();
-
-            $.ajax({
-                url: form.attr('action'),
-                method: 'POST',
-                data: formData,
-                success: function(response) {
-                    if (response.success) {
-                        toastr.success(response.message);
-                        $('#worker_id').val(null).trigger('change');
-                        $('#form-add-tukang')[0].reset();
-                        $('#modal-add-worker').modal('hide');
-                        table2.DataTable().ajax.reload(null, false);
-                    } else {
-                        toastr.error(response.message);
-                    }
-                },
-                error: function(xhr) {
-                    console.error(xhr.responseText)
-                    let response = xhr.responseJSON
-
-                    if (response && response.errors) {
-                        $.each(response.errors, function(field, messages) {
-                            messages.forEach(function(message) {
-                                toastr.error(message)
-                            });
-                        });
-                    } else {
-                        toastr.error('Terjadi kesalahan. Silakan coba lagi.')
-                    }
-                }
-            });
-        });
-
-        $(".save-next").on('click', function(e) {
-            e.preventDefault();
-
-            const form = $("#form-add-worker");
-            const formData = form.serialize();
-
-            $.ajax({
-                url: form.attr('action'),
-                method: 'POST',
-                data: formData,
-                success: function(response) {
-                    if (response.success) {
-                        toastr.success(response.message);
-                        $('#worker_id').val(null).trigger('change');
-                        table2.DataTable().ajax.reload(null, false);
-                    } else {
-                        toastr.error(response.message);
-                    }
-                },
-                error: function(xhr) {
-                    console.error(xhr.responseText)
-                    let response = xhr.responseJSON
-
-                    if (response && response.errors) {
-                        $.each(response.errors, function(field, messages) {
-                            messages.forEach(function(message) {
-                                toastr.error(message)
-                            });
-                        });
-                    } else {
-                        toastr.error('Terjadi kesalahan. Silakan coba lagi.')
-                    }
-                }
-            });
-        });
-
-        // Delete Tukang
-        $(document).on('click', '.delete', function() {
-            var id = $(this).data('id')
-            console.log(id);
-            var result = confirm('Are you sure you want to delete this worker?');
-
-            if (result) {
-                $.ajax({
-                    url: "{{ route('block-tukang.destroy', $result->id) }}",
-                    method: "DELETE",
-                    data: {
-                        id: id
-                    },
-                    success: function(response) {
-                        toastr.success(response.message);
-                        table.DataTable().ajax.reload();
-                    }
-                })
-            }
-        });
-
-        // Delete Activity
-        $(document).on('click', '.deleteActivity', function() {
-            var id = $(this).data('id')
-            console.log(id);
-            var result = confirm('Are you sure you want to delete this activity?');
-
-            if (result) {
-                $.ajax({
-                    url: "{{ route('activity.destroy', $result->id) }}",
-                    method: "DELETE",
-                    data: {
-                        id: id
-                    },
-                    success: function(response) {
-                        toastr.success(response.message);
-                        table4.DataTable().ajax.reload();
-                    }
-                })
-            }
-        });
-
-        $('#returned_qty').on('input', function() {
-            var max = $(this).attr('max');
-            var value = parseFloat($(this).val());
-
-            if (value > max) {
-                $(this).val(max);
-            }
-        });
-
-        $('#modal-return').on('hidden.bs.modal', function() {
-            $('#form-return').attr('action', '')
-            $('#modal-return').find('#title').text('Tambah Customer');
-            $('#form-return input[name="_method"]').remove();
-            $('#form-return input[name="id"]').remove();
-            $('#form-return')[0].reset();
-        })
-
-        $('#worker_id').select2({
-            ajax: {
-                url: "{{ route('tukang.dataForWorker') }}",
-                dataType: 'json',
-                data: function(params) {
-                    return {
-                        search: params.term,
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: data.data.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama_tukang,
-                            };
-                        })
-                    };
-                }
-            }
-        });
-
-        $('#tukang_id').select2({
-            ajax: {
-                url: "{{ route('tukang.dataForWorker') }}",
-                dataType: 'json',
-                data: function(params) {
-                    return {
-                        search: params.term,
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: data.data.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama_tukang,
-                                nomor_hp: item.nomor_hp,
-                            };
-                        })
-                    };
-                }
-            }
-        }).on('select2:select', function(e) {
-            const data = e.params.data;
-            addTukangToTable(data);
-        });
-
-        $('#form-add-tukang').on('submit', function(e) {
-            e.preventDefault();
-            var noHp = $('#no_hp').val();
-
-            if (noHp != "") {
-                if (noHp.length > 14 || !/^\d+$/.test(noHp)) {
-                    toastr.error('Nomor HP tidak boleh lebih dari 14 digit.');
-                    return;
-                }
-            }
-
-            var form = new FormData(this);
-            $.ajax({
-                url: $(this).attr('action'),
-                method: "POST",
-                data: form,
-                processData: false,
-                dataType: 'json',
-                contentType: false,
-                beforeSend: function() {
-                    $('#form-add-tukang button[type="submit"]').attr('disabled', true);
-                    $('#form-add-tukang button[type="submit"]').html('Loading...');
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $('#modal-add-tukang').modal('hide');
-                        $('#form-add-tukang')[0].reset();
-                        toastr.success(response.message);
-                        table.DataTable().ajax.reload();
-                    } else {
-                        toastr.error(response.message);
-                    }
-                    $('#form-add-tukang button[type="submit"]').attr('disabled', false);
-                    $('#form-add-tukang button[type="submit"]').html('Submit');
-                }
-            });
-        });
-
-        $(document).on('click', '.delete-worker', function() {
-            var id = $(this).data('id')
-            console.log(id);
-            var result = confirm('hapus pekerja dari blok ini?');
-
-            if (result) {
-                $.ajax({
-                    url: "{{ route('block-tukang.destroy', $result->id) }}",
-                    method: "DELETE",
-                    data: {
-                        id: id
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success(response.message);
-                            table2.DataTable().ajax.reload(null, false);
-                        } else {
-                            toastr.success(response.message);
-                        }
-                    }
-                })
-            }
         });
     })
 </script>

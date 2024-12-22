@@ -3,11 +3,8 @@
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AuthOtpController;
 use App\Http\Controllers\BahanController;
-use App\Http\Controllers\BlockActivityDistributionController;
-use App\Http\Controllers\BlockAttendancesDistributionController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\BlockMaterialDistributionController;
-use App\Http\Controllers\BlockTukangDistributionController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DetailAbsensiController;
 use App\Http\Controllers\DetailProjectController;
@@ -26,7 +23,10 @@ use App\Http\Controllers\TransactionMaterialController;
 use App\Http\Controllers\TukangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\WorkerAttendaceController;
+use App\Http\Controllers\WorkerGroupController;
 use App\Http\Controllers\WorkerPaymentController;
+use App\Models\WorkerAttendaces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -144,7 +144,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::controller(WorkerPaymentController::class)->prefix("worker-payment")->group(function () {
-        Route::get('/{projectID}', 'data')->name("worker-payment.data");
+        Route::get('add/{blockID}', 'add')->name("worker-payment.add");
+        Route::get('data/{blockID}', 'data')->name("worker-payment.data");
         Route::delete('destroy', 'destroy')->name("worker-payment.destroy");
         Route::post('store', 'store')->name("worker-payment.store");
     });
@@ -188,27 +189,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/{blockID}', 'data')->name('block-material.data');
     });
 
-    Route::controller(BlockTukangDistributionController::class)->prefix('block-tukang')->group(function () {
-        Route::get('/{blockTukangId}', 'data')->name('block-tukang.data');
-        Route::post('/{blockID}', 'store')->name('block-tukang.store');
-        Route::delete('destroy', 'destroy')->name('block-tukang.destroy');
-    });
-
-    Route::controller(BlockAttendancesDistributionController::class)->prefix('block-attendances')->group(function () {
-        Route::get('/{blockID}', 'data')->name('block-attendances.data');
-
-        // Halaman tambah
-        Route::get('attendances-items/{blockID}', 'addtendancesItem')->name("block-attendances.addtendancesItem");
-        Route::post("store", 'store')->name("block-attendances.store");
-    });
-
     Route::controller(ActivityController::class)->prefix('activity')->group(function () {
         Route::get('/data/{blockID}', 'data')->name('activity.data');
-        Route::get('/detailActivity/{blockID}', 'detailActivity')->name('activity.detailActivity');
+        Route::post('store', 'store')->name('activity.store');
         Route::delete('destroy', 'destroy')->name('activity.destroy');
-        Route::post('/activityTambah/{blockID}', 'store')->name('activity.store');
+        Route::put('update', 'update')->name('activity.update');
     });
-
 
     Route::post('/{id}', [ReturnController::class, 'return'])->name('return');
 
@@ -226,7 +212,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/{materialID}', 'index')->name("log.data");
     });
 
+    Route::controller(WorkerGroupController::class)->prefix("worker-group")->group(function () {
+        Route::get('/data/{activityID}', 'data')->name('worker-group.data');
+        Route::post('store', 'store')->name('worker-group.store');
+        Route::delete('destroy', 'destroy')->name('worker-group.destroy');
+    });
+
     Route::controller(DetailAbsensiController::class)->prefix('detail-absensi')->group(function () {
-        Route::get('', 'index')->name('detail-absensi.index');
+        Route::get('/{activityID}', 'index')->name('detail-absensi.index');
+        Route::get('getDates', 'getDates')->name('detail-absensi.getDates');
+        Route::get('add/{activityID}', 'tambahAbsensi')->name("detail-absensi.tambahAbsensi");
+        Route::post('store', 'store')->name("detail-absensi.store");
+    });
+
+    Route::controller(WorkerAttendaceController::class)->prefix('absensi')->group(function () {
+        Route::get('/{activityID}', 'data')->name('absensi.data');
     });
 });
