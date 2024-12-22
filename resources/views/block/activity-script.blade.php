@@ -21,9 +21,6 @@
                 },
                 {
                     data: null,
-                },
-                {
-                    data: null,
                     render: function(data, type, row) {
                         const url = "{{ route('detail-absensi.index', ':id') }}".replace(':id', row.id)
                         return `<div class="btn-group">

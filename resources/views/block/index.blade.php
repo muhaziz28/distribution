@@ -98,7 +98,6 @@
                                             <tr>
                                                 <th style="width: 10px;">No</th>
                                                 <th>Pekerjaan</th>
-                                                <th>Total</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -130,6 +129,7 @@
                                                 <th>Minggu</th>
                                                 <th>Tanggal Pembayaran</th>
                                                 <th>Bukti Pembayaran</th>
+                                                <th>Total</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -140,10 +140,12 @@
                                                 <th>Minggu</th>
                                                 <th>Tanggal Pembayaran</th>
                                                 <th>Bukti Pembayaran</th>
+                                                <th>Total</th>
                                                 <th></th>
                                             </tr>
                                         </tfoot>
                                     </table>
+                                    <h4 id="total_keseluruhan_pembayaran_tukang"></h4>
                                 </div>
                                 {{-- Pembayaran Pekerja --}}
 

@@ -16,4 +16,9 @@ class WorkerPayment extends Model
         "payment_date",
         "attachment"
     ];
+
+    public function workerDetailPayments()
+    {
+        return $this->hasMany(WorkerDetailPayment::class, 'worker_payment_id');
+    }
 }

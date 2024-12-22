@@ -21,9 +21,28 @@
                 },
                 {
                     data: 'attachment',
+                    render: function(data, type, row) {
+                        if (data != null || data != undefined) {
+                            return `<a href="${row.attachment_url}" target="_blank" class="btn btn-default btn-sm">
+                            <i class="fa fa-link mr-2"></i>Lihat FIle</a>`
+                        }
+                        return ''
+                    }
+                },
+                {
+                    data: 'total',
+                    render: function(data, type, row) {
+                        return formatRupiah(data)
+                    }
                 },
                 {
                     data: null,
+                    render: function(data, row) {
+                        return `<button class="btn btn-sm btn-danger delete-worker-payment" data-id="${data.id}">
+                                <i class="fas fa-trash mr-2"></i>
+                                Delete
+                            </button>`
+                    }
                 }
             ];
         }
@@ -41,6 +60,11 @@
             searching: true,
             lengthChange: true,
             lengthMenu: [10, 25, 50, 100],
+            footerCallback: function(row, data, start, end, display) {
+                let total = data.reduce((sum, item) => sum + item.total, 0);
+                let formattedTotal = formatRupiah(total)
+                $('#total_keseluruhan_pembayaran_tukang').text(`Total Keseluruhan: ${formattedTotal}`);
+            },
             columns: defineColumnsWorkerPayment()
         };
 
@@ -165,6 +189,26 @@
             $('#form-add-activity input[name="id"]').remove();
             $('#form-add-activity').attr('action', '{{ route("activity.store") }}');
             $('#form-add-activity')[0].reset();
+        })
+
+        $(document).on('click', '.delete-worker-payment', function() {
+            var id = $(this).data('id')
+            console.log(id);
+            var result = confirm('Apakah anda ingin menghapus data pembayaran ini?');
+
+            if (result) {
+                $.ajax({
+                    url: '{{ route("worker-payment.destroy") }}',
+                    method: "DELETE",
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        toastr.success(response.message);
+                        tableWorker.DataTable().ajax.reload(null, false);
+                    }
+                })
+            }
         })
     })
 </script>
