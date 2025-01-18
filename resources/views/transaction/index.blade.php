@@ -86,7 +86,7 @@
                     data: 'attachment',
                     render: function(data, type, row) {
                         if (data != null || data != undefined) {
-                            return `<a href="${data}" target="_blank" class="btn btn-default btn-sm">
+                            return `<a href="${row.attachment_url}" target="_blank" class="btn btn-default btn-sm">
                             <i class="fa fa-link mr-2"></i>Lihat FIle</a>`
                         }
                         return ''

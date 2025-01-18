@@ -106,7 +106,7 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Pekerjaan</th>
-                                                <th>Total</th>
+                                               
                                                 <th></th>
                                             </tr>
                                         </tfoot>

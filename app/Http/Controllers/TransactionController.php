@@ -22,12 +22,18 @@ class TransactionController extends Controller
     {
         $purchase = MaterialPurchases::with('materialPurchaseItems', 'vendor')->get();
 
-        $data = $purchase->map(function ($purchase) {
+	$data = $purchase->map(function ($purchase) {
+		if($purchase->attachment){
+			$purchase->attachment_url = asset('storage/'. $purchase->attachment);
+		}else {
+			$purchase->attachment_url = null;
+		}
             return [
                 'id'                => $purchase->id,
                 'vendor_id'         => $purchase->vendor_id,
                 'attachment'        => $purchase->attachment,
-                'transaction_date'  => $purchase->transaction_date,
+		'attachment_url'    => $purchase->attachment_url,
+		'transaction_date'  => $purchase->transaction_date,
                 'total'             => $purchase->total,
                 'vendor'            => $purchase->vendor,
                 'detail_url'        => route('transaction-materials.detailTransaction', $purchase->id),
