@@ -53,7 +53,7 @@ class DetailAbsensiController extends Controller
         return view('absensi.tambah-absensi', compact('worker', 'activityID'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $activityID)
     {
         $validated = $request->validate([
             'worker_group_id' => 'required|array',
@@ -62,7 +62,6 @@ class DetailAbsensiController extends Controller
             'durasi_kerja.*' => 'in:0,0.5,1',
         ]);
 
-
         foreach ($validated['worker_group_id'] as $key => $worker_id) {
             WorkerAttendaces::create([
                 'worker_group_id' => $worker_id,
@@ -70,7 +69,6 @@ class DetailAbsensiController extends Controller
                 'tanggal' => Carbon::now()->format('y-m-d'),
             ]);
         }
-
-        return redirect()->back();
+        return redirect()->route('detail-absensi.index', ['activityID' => $activityID]);
     }
 }

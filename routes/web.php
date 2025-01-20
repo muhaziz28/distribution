@@ -222,7 +222,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{activityID}', 'index')->name('detail-absensi.index');
         Route::get('getDates', 'getDates')->name('detail-absensi.getDates');
         Route::get('add/{activityID}', 'tambahAbsensi')->name("detail-absensi.tambahAbsensi");
-        Route::post('store', 'store')->name("detail-absensi.store");
+        Route::post('store/{activityID}', 'store')->name("detail-absensi.store");
     });
 
     Route::controller(WorkerAttendaceController::class)->prefix('absensi')->group(function () {
