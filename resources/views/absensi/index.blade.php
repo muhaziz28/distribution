@@ -72,11 +72,22 @@
                                         <i class="fas fa-history mr-2"></i>
                                         Reload
                                     </button>
-                                    <a href="{{ route('detail-absensi.tambahAbsensi', $activityID) }}" target="_blank"
-                                        class="btn btn-success mb-3">
-                                        <i class="fas fa-plus-circle mr-2"></i>
-                                        Tambah Absensi
-                                    </a>
+
+                                    @if (!$absensiLengkap)
+                                        <a href="{{ route('detail-absensi.tambahAbsensi', $activityID) }}" target="_blank"
+                                            class="btn btn-success mb-3">
+                                            <i class="fas fa-plus-circle mr-2"></i>
+                                            Tambah Absensi
+                                        </a>
+                                    @else
+                                        <button class="btn btn-secondary mb-3" disabled>
+                                            <i class="fas fa-check-circle mr-2"></i>
+                                            Absensi Sudah Tercatat
+                                        </button>
+                                    @endif
+
+
+
                                 </div>
 
                                 <table id="absensi-table" class="table table-bordered table-striped">

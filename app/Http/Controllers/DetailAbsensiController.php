@@ -26,8 +26,18 @@ class DetailAbsensiController extends Controller
             $dates[] = $startOfMonth->format('Y-m-d');
             $startOfMonth->addDay();
         }
-        return view('absensi.index', compact('activity', 'dates', "activityID"));
+
+        $pekerja = WorkerGroup::where('activity_id', $activityID)->pluck('id');
+        $absensiHariIni = WorkerAttendaces::where('tanggal', $today->format('Y-m-d'))
+            ->whereIn('worker_group_id', $pekerja)
+            ->pluck('worker_group_id');
+
+        $absensiLengkap = $pekerja->diff($absensiHariIni)->isEmpty();
+
+        return view('absensi.index', compact('activity', 'dates', 'activityID', 'absensiLengkap'));
     }
+
+
 
     public function getDates()
     {

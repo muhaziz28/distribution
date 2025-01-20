@@ -14,4 +14,10 @@ class WorkerAttendaces extends Model
         "durasi_kerja",
         "tanggal"
     ];
+
+
+    public function workerGroup()
+    {
+        return $this->belongsTo(WorkerGroup::class, 'worker_group_id', 'id');
+    }
 }
